@@ -406,17 +406,8 @@
       }
       styleDiv.innerHTML = "";
       unloadDefaultTheme();
-      if (css !== "wr34743" && css !== "Light") {
+      if (css !== "Light") {
         styleDiv.appendChild(link);
-      }
-      
-      if (css === "wr34743") {
-        custom.style.display = "block";
-        theme.updated.body = theme.updated.text = theme.updated.other = true;
-        updateTheme();
-      } else {
-        custom.style.display = "none";
-        theme.changed = true;
       }
     };
     bgcolor = document.getElementById("wr-bg-color");
