@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hand</title>
+    <link rel="stylesheet" href="cm/lib/codemirror.css">
+    <link rel="stylesheet" href="cm/addon/dialog/dialog.css">
+    <link rel="stylesheet" href="css/prompt.css">
+    <link rel="stylesheet" href="spectrum/spectrum.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="Themes/Light/Light.css">
+  </head>
+  <body>
+    <div id="user-css"></div>
+    <input type="file" id="open">
+    <input type="file" id="save" nwsaveas>
+    <div id="prompt">
+      <div id="prompt-box">
+        <div id="prompt-title"></div>
+        <div id="prompt-text"></div>
+        <div id="prompt-buttons"></div>
+      </div>
+    </div>
+    <div id="wr-customizer">
+      <div id="wr-hider">&lt;</div>
+      <h1>Pick a theme</h1>
+      <select id="wr-themes">
+        <option value="Light" id="wr-theme-Light">Light</option>
+        <option value="Dark" id="wr-theme-Dark">Dark</option>
+        <option value="Terminal" id="wr-theme-Terminal">Terminal</option>
+        <option value="Blue Yonder" id="wr-theme-Blue-Yonder">Blue Yonder</option>
+        <optgroup label="Custom Themes" id="wr-themes-custom"></optgroup>
+        <option value="wr34743">New...</option>
+      </select>
+      <fieldset class="wr-custombox" id="wr-customtheme">
+        <legend>Customizer</legend>
+        <h1>Background</h1>
+        Color: <input type="text" value="#ffffff" id="wr-bg-color"> 
+        <br>
+        Background Image:<br>
+        <input type="file" value="Background" accept="image/*" id="wr-bg-img">
+        <div class="wr-tabbed">
+          <input type="checkbox" id="wr-bg-repeat-y" checked> Repeat vertically <br>
+          <input type="checkbox" id="wr-bg-repeat-x" checked> Repeat horizontally <br>
+          <input type="checkbox" id="wr-bg-stretch"> Stretch image to fit screen <br>
+        </div>
+        <h1>Text</h1>
+        Color: <input type="text" id="wr-text-color" value="#000000">
+        <br>
+        Font: 
+        <select id="wr-text-font">
+          <option selected="selected">Vera Mono</option>
+          <option>Helvetica Neue</option>
+          <option>Helvetica</option>
+          <option>Arial</option>
+          <option>Times New Roman</option>
+          <option>Courier New</option>
+          <!--<option>Other...</option>-->
+        </select>
+        <br>
+        Size: <input type="number" id="wr-text-size" min="0" value="12" style="width: 3em;">
+        <select id="wr-text-size-unit">
+          <option selected="selected" value="px">px</option>
+          <option value="%">%</option>
+          <option value="em">em</option>
+        </select>
+        <br>
+        Weight:
+        <select id="wr-text-weight">
+          <option value="100">Extra Light</option>
+          <option value="300">Light</option>
+          <option value="400" selected="selected">Regular</option>
+          <option value="500">Bold</option>
+          <option value="900">Extra Bold</option>
+        </select>
+        <br>
+        Italics: <input type="checkbox" id="wr-text-style"> 
+        <h1>Misc</h1>
+        Highlight Color: <input type="text" id="wr-highlight-color" value="rgba(0, 196, 254, 0.46)"> 
+        <br>
+        Scrollbar Color: <input type="text" id="wr-scroll-color" value="rgba(0, 0, 0, 0.35)">
+        <br>
+        Scrollbar Track Color: <input type="text" id="wr-scrolltrack-color" value="rgba(255, 255, 255, 0)">
+      </fieldset>
+      <h1>Audio</h1>
+      <input type="checkbox" id="wr-audio-play" checked="checked"> 
+      Play audio (fullscreen)
+      <br>
+      Mood: <select id="wr-audio-select">
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+      <br>
+      <input type="checkbox" id="wr-audio-clicks-play" checked="checked">
+      Play click sounds while typing (fullscreen)
+      <br>
+      Clicks:
+      <select id="wr-clicks-select">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <br>
+      <button class="btn btn-red" id="wr-save">Save Settings</button>
+      <button class="btn" id="wr-close">Close</button>
+    </div>
+    <div id="user-html"></div>
+    <div id="counter" class="cm-s-default">
+      <span id="wr-wc"></span>
+      <span id="wr-dirt"></span>
+    </div>
+    <audio id="wr-audio" loop></audio>
+    <script type="text/javascript" src="cm/lib/codemirror.js"></script>
+    <script type="text/javascript" src="cm/addon/dialog/dialog.js"></script>
+    <script type="text/javascript" src="cm/addon/search/searchcursor.js"></script>
+    <script type="text/javascript" src="cm/addon/search/search.js"></script>
+    <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="spectrum/spectrum.js"></script>
+    <script type="text/javascript" src="prompt.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <div id="user-js"></div>
+  </body>
+</html>

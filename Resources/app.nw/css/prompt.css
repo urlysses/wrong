@@ -1,0 +1,120 @@
+#prompt {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.57);
+  font-family: "Helvetica Neue";
+  display: none;
+  position: absolute;
+  z-index: 10000;
+}
+
+#prompt-box {
+  width: 40%;
+  min-width: 350px;
+  background: white;
+  height: 144px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 17px rgba(0, 0, 0, 0.29);
+  margin: auto;
+  position: absolute;
+  top: -25%; 
+  left: 0; 
+  bottom: 0; 
+  right: 0;
+}
+
+#prompt-title {
+  padding: 6px;
+  background: rgb(218, 218, 218);
+  color: #383838;
+  text-shadow: 1px 1px 0px rgb(231, 231, 231);
+  text-align: center;
+  border-bottom: 1px solid rgb(196, 196, 196);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  height: 18px;
+  overflow: hidden;
+}
+
+#prompt-text {
+  padding: 10px;
+  color: #383838;
+  border-bottom: 1px solid rgb(196, 196, 196);
+  height: 44px;
+  overflow-y: auto;
+}
+
+#prompt-buttons {
+  color: #383838;
+  padding: 10px;
+  position: absolute;
+  bottom: 0px;
+}
+
+.btn {
+  background: rgb(241, 241, 241);
+  border: 1px solid rgb(180, 180, 180);
+  text-shadow: 1px 1px 1px rgb(247, 247, 247);
+  color: #383838;
+  padding: 4px;
+  border-radius: 3px;
+  border-bottom-width: 2px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 0.7em;
+}
+
+.btn:hover {
+  background: rgb(221, 221, 221);
+  cursor: pointer;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow:0 0 5px #007eff;
+}
+
+.btn-blue {
+  background: rgb(24, 153, 255);
+  border-color: rgb(0, 131, 218);
+  text-shadow: 1px 1px 1px rgb(0, 120, 214);
+  color: white;
+}
+
+.btn-blue:hover {
+  background: rgb(7, 131, 230);
+  border-color: rgb(0, 108, 180);
+}
+
+.btn-red { 
+  color: white;
+  background: rgb(255, 58, 58);
+  border-color: rgb(163, 0, 0);
+  text-shadow: 1px 1px 1px rgb(216, 37, 37);
+}
+
+.btn-red:hover {
+  background: rgb(240, 36, 36);
+  border-color: rgb(194, 23, 23);
+}
+
+.btn-green {
+  background: rgb(41, 162, 79);
+  border-color: rgb(21, 102, 46);
+  text-shadow: 1px 1px 1px rgb(16, 119, 48);
+}
+
+.btn-green:hover {
+  background: rgb(32, 129, 62);
+  border-color: rgb(14, 66, 30);
+}
+
+.btn-disabled, .btn[disabled] {
+  color: #999;
+  border-color: #C4C4C4;
+  background: rgb(241, 241, 241);
+}
+
+.btn-disabled:hover, .btn[disabled]:hover {
+  cursor: default;
+}
