@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Hand</title>
-    <link rel="stylesheet" href="cm/lib/codemirror.css">
-    <link rel="stylesheet" href="cm/addon/dialog/dialog.css">
+    <title>Wreathe</title>
+    <link rel="stylesheet" href="public/cm/lib/codemirror.css">
+    <link rel="stylesheet" href="public/cm/addon/dialog/dialog.css">
     <link rel="stylesheet" href="public/css/prompt.css">
     <link rel="stylesheet" href="public/spectrum/spectrum.css">
     <link rel="stylesheet" href="public/css/app.css">
@@ -11,8 +11,10 @@
   </head>
   <body>
     <div id="user-css"></div>
-    <input type="file" id="open">
-    <input type="file" id="save" nwsaveas>
+    <form action>
+        <input type="file" id="open">
+        <input type="file" id="save" nwsaveas>
+    </form>
     <div id="prompt">
       <div id="prompt-box">
         <div id="prompt-title"></div>
@@ -23,6 +25,14 @@
     <div id="wr-customizer">
       <div id="wr-hider">&lt;</div>
       <h1>Pick a theme</h1>
+      <ul id="wr-themes">
+          <li id="wr-theme-Light">Light</li>
+          <li id="wr-theme-Dark">Dark</li>
+          <li id="wr-theme-Terminal">Terminal</li>
+          <li id="wr-theme-Blue-Yonder">Blue Yonder</li>
+          <li id="wr-themes-custom"></li>
+      </ul>
+      <!--
       <select id="wr-themes">
         <option value="Light" id="wr-theme-Light">Light</option>
         <option value="Dark" id="wr-theme-Dark">Dark</option>
@@ -30,6 +40,7 @@
         <option value="Blue Yonder" id="wr-theme-Blue-Yonder">Blue Yonder</option>
         <optgroup label="Custom Themes" id="wr-themes-custom"></optgroup>
       </select>
+      -->
       <fieldset class="wr-custombox" id="wr-customtheme">
         <legend>Customizer</legend>
         <h1>Background</h1>
@@ -99,7 +110,7 @@
         <option value="3">3</option>
       </select>
       <br>
-      <button class="btn btn-red" id="wr-save">Save Settings</button>
+      <button class="btn btn-red" id="wr-reset">Reset</button>
       <button class="btn" id="wr-close">Close</button>
     </div>
     <div id="user-html"></div>
@@ -108,10 +119,10 @@
       <span id="wr-dirt"></span>
     </div>
     <audio id="wr-audio" loop></audio>
-    <script type="text/javascript" src="cm/lib/codemirror.js"></script>
-    <script type="text/javascript" src="cm/addon/dialog/dialog.js"></script>
-    <script type="text/javascript" src="cm/addon/search/searchcursor.js"></script>
-    <script type="text/javascript" src="cm/addon/search/search.js"></script>
+    <script type="text/javascript" src="public/cm/lib/codemirror.js"></script>
+    <script type="text/javascript" src="public/cm/addon/dialog/dialog.js"></script>
+    <script type="text/javascript" src="public/cm/addon/search/searchcursor.js"></script>
+    <script type="text/javascript" src="public/cm/addon/search/search.js"></script>
     <script type="text/javascript" src="public/js/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="public/spectrum/spectrum.js"></script>
     <script type="text/javascript" src="public/js/prompt.js"></script>

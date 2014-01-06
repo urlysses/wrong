@@ -1,143 +1,155 @@
 @font-face {
-  font-family: "Vera Mono";
-  src: url("../fonts/VeraMono.ttf");
+    font-family: "Vera Mono";
+    src: url("../fonts/VeraMono.ttf");
 }
 
 html, body, .CodeMirror {
-  height: 100%;
+    height: 100%;
 }
 
 body { 
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  background: white;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background: white;
 }
 
 .CodeMirror {
-  display: block;
-  background: none;
-  border: none;
-  width: 100%;
-  margin: 0;
-  outline: none;
-  resize: none;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  padding: 0;
-  padding-bottom: 6.6%;
+    display: block;
+    background: none;
+    border: none;
+    width: 100%;
+    margin: 0;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 0;
+    padding-bottom: 6.6%;
 }
 
 .CodeMirror-scroll {
-  padding-top: 6.5%;
-  padding-left: 25%;
-  padding-right: 25%;
+    padding-top: 6.5%;
+    padding-left: 25%;
+    padding-right: 25%;
 }
 
 #open, #save, #user-css, #wr-bod-style, 
 #wr-cem-style, #wr-oth-style, #wr-audio {
-  display: none;
+    display: none;
 }
 
 #counter {
-  position: fixed;
-  bottom: 5px;
-  left: 5px;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
 }
 #wr-wc {
-  margin-right: -3px;
+    margin-right: -3px;
 }
 
 #wr-customizer {
-  display: none;
-  height: 100%;
-  width: 280px;
-  padding: 10px;
-  position: fixed;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.73);
-  font-family: "Helvetica Neue";
-  font-size: 13px;
-  color: rgb(228, 228, 228);
-  overflow: scroll;
-  padding-left: 5px;
-  padding-right: 16px;
+    display: none;
+    height: 100%;
+    width: 280px;
+    padding: 10px;
+    position: fixed;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.73);
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    color: rgb(228, 228, 228);
+    overflow: scroll;
+    padding-left: 5px;
+    padding-right: 16px;
 }
 #wr-customizer h1 {
-  margin: 0;
-  padding: 0;
-  font-size: 15px;
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
 }
 #wr-customizer .wr-tabbed {
-  margin-left: 2em;
+    margin-left: 2em;
 }
 #wr-customizer .wr-custombox {
-  border: solid 1px #d3d3d3;
-  padding: 10px;
-  padding-top: 0;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-radius: 4px;
+    border: solid 1px #d3d3d3;
+    padding: 10px;
+    padding-top: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
 }
 #wr-customizer .btn {
-  font-size: 1em;
+    font-size: 1em;
 }
 #wr-customizer #wr-hider {
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-weight: 900;
-  height: 100%;
-  padding-right: 2px;
-  padding-left: 2px;
-  font-family: "Consolas", sans-serif;
-  background: rgba(255, 255, 255, 0.07);
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-weight: 900;
+    height: 100%;
+    padding-right: 2px;
+    padding-left: 2px;
+    font-family: "Consolas", sans-serif;
+    background: rgba(255, 255, 255, 0.07);
 }
 #wr-customizer #wr-hider:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 #wr-customizer #wr-themes-custom {
-  display: none;
+    display: none;
+}
+#wr-themes {
+    padding: 0;
+    list-style: none;
+}
+#wr-themes li {
+    cursor: pointer;
+    display: inline-block;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
 }
 
 .sp-replacer {
-  border: none;
-  padding: 1px;
-
+    border: none;
+    padding: 1px;
 } 
 .sp-preview {
-  margin-right: 0;
-  width: 9px;
-  height: 9px;
+    margin-right: 0;
+    width: 9px;
+    height: 9px;
 }
 .sp-dd {
-  display: none;
+    display: none;
 }
 .sp-container, .sp-color, .sp-hue, .sp-input {
-  border: none;
+    border: none;
 }
 
 @media (max-width: 800px) {
-  body { 
-    border-top: 1px solid #8B8B8B;
-  }
-  #blurred {
-    border-top-color: #aaa;
-  }
-  .CodeMirror {
-    padding: 5px;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  .CodeMirror-scroll {
-    padding-top: 0;
-    padding-left: 0;
-    padding-right: 33px;
-  }
-  #counter {
-    display: none;
-  }
-  #wr-customizer, .sp-container {
-    display: none !important;
-  }
+    body { 
+        border-top: 1px solid #8B8B8B;
+    }
+    #blurred {
+        border-top-color: #aaa;
+    }
+    .CodeMirror {
+        padding: 5px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .CodeMirror-scroll {
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 33px;
+    }
+    #counter {
+        display: none;
+    }
+    #wr-customizer, .sp-container {
+        display: none !important;
+    }
 }

@@ -75,6 +75,7 @@
     sounds.mood = [];
     sounds.clicks = [{name: "switch", len: 8, format: "wav"}];
 
+    // User settings are stored in localStorage under "parcel"
     if (localStorage.parcel) {
         parcel = JSON.parse(localStorage.parcel);
     } else {
@@ -129,7 +130,7 @@
         if (localStorage.defaultTheme && theme.loaded === true) {
             // there's a defaultTheme. css link will always be HEAD's lastchild
             // (we don't add to HEAD except during global.onload or in calling 
-            //  loadDefaultTheme();)
+            // loadDefaultTheme();)
             document.getElementsByTagName("head")[0].lastChild.remove();
             theme.loaded = false;
         }
@@ -318,11 +319,11 @@
     };
 
     openSettings = function () {
-        var customizer, themes, close, save, hider, updateTheme, updateElement,
+        var customizer, themes, closer, hider, updateTheme, updateElement,
             styleDiv, bgimg, bgimgy, bgimgx, bgimgcover, bgcolor, textfont,
             textsize, textsizeunit, textweight, textstyle, textcolor,
-            texthighlight, scrollcolor, scrolltrackcolor, saveTheme, allowaudio,
-            allowclicks, audioselect, clickselect;
+            texthighlight, scrollcolor, scrolltrackcolor, allowaudio,
+            allowclicks, saveTheme, audioselect, clickselect, reset, oldCss;
 
         styleDiv = document.getElementById("user-css");
 
@@ -705,11 +706,18 @@
             }
         };
 
-        saveTheme = function (themeName, themesPath) {
+        saveTheme = function () {
+        };
+
+        // old file-based saveTheme.
+        /*saveTheme = function (themeName, themesPath) {
             var compileCss, writeCss, fullPath;
 
             fullPath = themesPath + themeName + "/";
 
+            ////////////////////////////////////////////////////////////////////
+            ////////////////////// SAVE compileCss FOR THE ONLINE THEME BUILDER.
+            ////////////////////////////////////////////////////////////////////
             compileCss = function (fullPath, callback) {
                 var i, bod, cem, oth, allCss, fileName, bgThemePath;
                 bod = cem = oth = allCss = "";
@@ -795,7 +803,6 @@
                     callback();
                 });
             };
-
             fs.exists(fullPath, function (exists) {
                 if (exists) {
                     var overwrite = confirm("There is already a theme under that name. Overwrite?");
@@ -826,9 +833,16 @@
                     });
                 }
             });
+        };*/
+
+        reset = document.getElementById("wr-reset");
+        reset.onclick = function () {
         };
 
-        save = document.getElementById("wr-save");
+        ////////////////////////////////////////////////////////////////////////
+        ///////////////////// RE-USE THIS SAVE CODE IN THE ONLINE THEME BUILDER.
+        ////////////////////////////////////////////////////////////////////////
+        /*save = document.getElementById("wr-save");
         save.onclick = function () {
             if (themes.value === "wr34743") {
                 if (theme.saved === false && theme.customized === true) {
@@ -856,84 +870,12 @@
                     theme.changed = false;
                 }
             }
-        };
-        close = document.getElementById("wr-close");
-        close.onclick = function () {
-            var P;
-            if (themes.value === "wr34743") {
-                if (theme.saved === false && theme.customized === true) {
-                    P = new PROMPT.init("Themer",
-                        "Your custom theme remains unsaved. Close without saving?");
-                    P.addBtn({
-                        text: "Save Theme",
-                        onclick: function (e) {
-                            save.click();
-                            customizer.style.display = "none";
-                            cm.focus();
-                        },
-                        type: "btn-red",
-                        focus: true
-                    }).addBtn({
-                        text: "Cancel",
-                        onclick: function (e) {
-                            customizer.focus();
-                            return false;
-                        }
-                    }).addBtn({
-                        text: "Discard Theme",
-                        onclick: function (e) {
-                            customizer.style.display = "none";
-                            theme.body = [];
-                            theme.cm = [];
-                            theme.other = [];
-                            theme.customized = false;
-                            styleDiv.innerHTML = "";
-                            loadDefaultTheme();
-                            cm.focus();
-                        },
-                        type: "btn-blue"
-                    });
-                    P.show();
-                } else {
-                    customizer.style.display = "none";
-                    loadDefaultTheme();
-                    cm.focus();
-                }
-            } else {
-                if (theme.changed === true) {
-                    P = new PROMPT.init("Themer",
-                        "Close themer without saving customized settings?");
-                    P.addBtn({
-                        text: "Save Settings",
-                        onclick: function (e) {
-                            save.click();
-                            customizer.style.display = "none";
-                            cm.focus();
-                        },
-                        type: "btn-red",
-                        focus: true
-                    }).addBtn({
-                        text: "Cancel",
-                        onclick: function (e) {
-                            customizer.focus();
-                            return false;
-                        }
-                    }).addBtn({
-                        text: "Discard Changed Settings",
-                        onclick: function (e) {
-                            customizer.style.display = "none";
-                            loadDefaultTheme();
-                            cm.focus();
-                        },
-                        type: "btn-blue"
-                    });
-                    P.show();
-                } else {
-                    customizer.style.display = "none";
-                    loadDefaultTheme();
-                    cm.focus();
-                }
-            }
+        };*/
+        closer = document.getElementById("wr-close");
+        closer.onclick = function () {
+            customizer.style.display = "none";
+            loadDefaultTheme();
+            cm.focus();
         };
         hider = document.getElementById("wr-hider");
         hider.onclick = function () {
