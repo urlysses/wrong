@@ -115,7 +115,6 @@ body {
     padding-top: 0;
     margin-top: 10px;
     margin-bottom: 10px;
-    border-radius: 4px;
 }
 #wr-customizer .btn {
     font-size: 1em;
@@ -138,8 +137,11 @@ body {
 #wr-customizer #wr-themes-custom {
     display: none;
 }
+#wr-customizer .is-chosen {
+    color: rgba(0, 202, 253, 1);
+}
 #wr-themes, #wr-text-font, #wr-text-sizes, #wr-text-weight,
-#wr-text-style {
+#wr-text-style, #wr-fullscreen-audio, #wr-fullscreen-clicks {
     padding: 0;
     -webkit-margin-before: 5px;
     -webkit-margin-after: 5px;
@@ -147,7 +149,7 @@ body {
     display: table;
 }
 #wr-themes li, #wr-text-color, #wr-text-font li, #wr-text-sizes li, #wr-text-weight li,
-#wr-text-style li {
+#wr-text-style li, #wr-fullscreen-audio li, #wr-fullscreen-clicks li {
     cursor: pointer;
     display: inline-block;
     color: white;
@@ -157,7 +159,7 @@ body {
     padding-bottom: 7px;
 }
 #wr-text-color, #wr-text-font li, #wr-text-sizes li, #wr-text-weight li,
-#wr-text-style li {
+#wr-text-style li, #wr-fullscreen-audio li, #wr-fullscreen-clicks li {
     width: 30px;
     height: 30px;
     padding: 0;
@@ -169,7 +171,7 @@ body {
     vertical-align: top;
 }
 #wr-text-color span, #wr-text-font li span, #wr-text-sizes li span, #wr-text-weight li span,
-#wr-text-style li span {
+#wr-text-style li span, #wr-fullscreen-audio li span, #wr-fullscreen-clicks li span {
     display: table-cell;
     vertical-align: middle;
 }
@@ -265,6 +267,40 @@ li#wr-text-sizer {
     -webkit-text-stroke: 0.6px rgba(255,255,255,0.68);
     color: black;
     text-shadow: -1px 1px 3px rgb(68, 68, 68);
+}
+
+#wr-scroller {
+    background: white;
+    border-radius: 4px;
+}
+#wr-scrolltrack-color {
+    cursor: pointer;
+    height: 9px;
+    background: rgba(255, 255, 255, 0);
+    -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.33);
+}
+#wr-scroll-color {
+    cursor: pointer;
+    height: 9px;
+    width: 30%;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.35);
+    margin-left: 164px;
+    margin-top: -9px;
+}
+
+#wr-fullscreen-audio, #wr-fullscreen-clicks {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+
+#wr-audio-stop span {
+    display: block !important;
+    font-weight: 900;
+}
+li#wr-audio-stop span:last-child {
+    margin-top: -13px;
+    margin-left: -2px;
 }
 
 .sp-replacer {

@@ -569,9 +569,11 @@
             this.style.fontFamily = font;
         }).click(function () {
             var font = this;
-            updateElement("text", theme.cm, "font-family", "'" +
+            if (font.dataset.value !== "...") {
+                updateElement("text", theme.cm, "font-family", "'" +
                     font.dataset.value + "'");
-            updateTheme();
+                updateTheme();
+            }
         });
         textsizes = document.getElementById("wr-text-sizes");
         textsizer = document.getElementById("wr-text-sizer");
@@ -671,8 +673,8 @@
             }
         });
         scrollcolor = document.getElementById("wr-scroll-color");
-        $("#wr-scroll-color").spectrum({
-            color: scrollcolor.value,
+        $(scrollcolor).spectrum({
+            color: scrollcolor.dataset.value,
             showAlpha: true,
             clickoutFiresChange: true,
             showInput: true,
@@ -681,23 +683,26 @@
                     color.toPercentageRgbString(),
                     "::-webkit-scrollbar-thumb");
                 updateTheme();
+                scrollcolor.style.backgroundColor = color;
             },
             hide: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
                     "::-webkit-scrollbar-thumb");
                 updateTheme();
+                scrollcolor.style.backgroundColor = color;
             },
             change: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
                     "::-webkit-scrollbar-thumb");
                 updateTheme();
+                scrollcolor.style.backgroundColor = color;
             }
         });
         scrolltrackcolor = document.getElementById("wr-scrolltrack-color");
-        $("#wr-scrolltrack-color").spectrum({
-            color: scrolltrackcolor.value,
+        $(scrolltrackcolor).spectrum({
+            color: scrolltrackcolor.dataset.value,
             showAlpha: true,
             clickoutFiresChange: true,
             showInput: true,
@@ -706,44 +711,51 @@
                     color.toPercentageRgbString(),
                     "::-webkit-scrollbar-track");
                 updateTheme();
+                scrolltrackcolor.style.backgroundColor = color;
             },
             hide: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
                     "::-webkit-scrollbar-track");
                 updateTheme();
+                scrolltrackcolor.style.backgroundColor = color;
             },
             change: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
                     "::-webkit-scrollbar-track");
                 updateTheme();
+                scrolltrackcolor.style.backgroundColor = color;
             }
         });
-        allowaudio = document.getElementById("wr-audio-play");
+        allowaudio = document.getElementById("wr-audio-stop");
         if (parcel.playaudio === false) {
-            allowaudio.checked = false;
+            allowaudio.className += "is-chosen";
         }
-        allowaudio.onchange = function () {
-            if (allowaudio.checked) {
+        audioselect = document.getElementById("wr-fullscreen-audio");
+        $(audioselect.children).click(function () {
+            var audio = this.dataset.value;
+            if (audio !== "off") {
                 updateParcel("playaudio", true);
                 toggleAudio();
             } else {
                 toggleAudio();
                 updateParcel("playaudio", false);
             }
-        };
-        allowclicks = document.getElementById("wr-audio-clicks-play");
+        });
+        allowclicks = document.getElementById("wr-clicks-stop");
         if (parcel.playclicks === false) {
-            allowclicks.checked = false;
+            allowclicks.className += "is-chosen";
         }
-        allowclicks.onchange = function () {
-            if (allowclicks.checked) {
+        clickselect = document.getElementById("wr-fullscreen-clicks");
+        $(clickselect).click(function () {
+            var clicks = this.dataset.value;
+            if (clicks !== "off") {
                 updateParcel("playclicks", true);
             } else {
                 updateParcel("playclicks", false);
             }
-        };
+        });
 
         saveTheme = function () {
         };

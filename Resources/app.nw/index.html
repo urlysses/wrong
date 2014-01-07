@@ -60,7 +60,7 @@
                     <li data-value="Times New Roman"><span>Aa</span></li>
                     <li data-value="Helvetica Neue"><span>Aa</span></li>
                     <li data-value="Courier New"><span>Aa</span></li>
-                    <li data-value="..."><span>...</span></li>
+                    <!--<li data-value="..."><span>...</span></li>-->
                 </ul>
                 <ul id="wr-text-sizes">
                     <li data-value="10"><span>A</span></li>
@@ -94,30 +94,23 @@
                 </div>
                 <hr>
                 <div id="wr-scroller">
+                    <div data-value="rgba(255, 255, 255, 0.3)" id="wr-scrolltrack-color"></div>
                     <div data-value="rgba(0, 0, 0, 0.35)" id="wr-scroll-color"></div>
-                    <div data-value="rgba(255, 255, 255, 0)" id="wr-scrolltrack-color"></div>
                 </div>
             </fieldset>
-            <h1>Audio</h1>
-            <input type="checkbox" id="wr-audio-play" checked="checked"> 
-            Play audio (fullscreen)
-            <br>
-            Mood:
-            <select id="wr-audio-select">
-                <option value="1">1</option>
-                <option value="2">2</option>
-            </select>
-            <br>
-            <input type="checkbox" id="wr-audio-clicks-play" checked="checked">
-            Play click sounds while typing (fullscreen) &#9000;
-            <br>
-            Clicks:
-            <select id="wr-clicks-select">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
-            <br>
+            <ul id="wr-fullscreen-audio">
+                <li data-value="0" id="wr-song-0"><span>&#x266B;</span></li>
+                <li data-value="1" id="wr-song-1"><span>&#x266C;</span></li>
+                <li data-alue="off" id="wr-audio-stop">
+                    <span>&#x1D110;</span>
+                    <span>&mdash;</span>
+                </li>
+            </ul>
+            <ul id="wr-fullscreen-clicks">
+                <li data-value="0" id="wr-clicks-0"><span>&#9000;</span></li>
+                <li data-value="1" id="wr-clicks-1"><span>&#9000;</span></li>
+                <li data-value="off" id="wr-clicks-stop"><span>&#9000;</span></li>
+            </ul>
             <button class="btn btn-red" id="wr-reset">Reset</button>
             <button class="btn" id="wr-close">Close</button>
         </div>
