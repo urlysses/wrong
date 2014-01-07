@@ -156,7 +156,9 @@
         extraKeys: {
             // DEV STUFF
             "Cmd-Alt-J": function (instance) { win.showDevTools(); },
+            "Cmd-R": function (instance) { win.reloadDev(); },
             // END DEV STUFF
+            "Cmd-,": function (instance) { openSettings(); },
             "Cmd-S": function (instance) { saveFile(filePath); },
             "Shift-Cmd-S": function (instance) { saveFile(); },
             "Cmd-N": function (instance) { newFile(); },
