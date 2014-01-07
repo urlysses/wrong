@@ -25,6 +25,7 @@
         toggleAudio,
         closeWindow,
         saveAndClose,
+        menubar,
         findmenu,
         filemenu,
         viewmenu,
@@ -736,13 +737,16 @@
         }
         audioselect = document.getElementById("wr-fullscreen-audio");
         $(audioselect.children).click(function () {
-            var audio = this.dataset.value;
-            if (audio !== "off") {
-                updateParcel("playaudio", true);
-                toggleAudio();
-            } else {
-                toggleAudio();
-                updateParcel("playaudio", false);
+            if (this.className.indexOf("wr-noclick") === -1) {
+                var audio = this.dataset.value;
+                if (audio !== "off") {
+                    updateParcel("playaudio", true);
+                    toggleAudio(true);
+                    // play song choice
+                } else {
+                    toggleAudio(false);
+                    updateParcel("playaudio", false);
+                }
             }
         });
         allowclicks = document.getElementById("wr-clicks-stop");
@@ -750,12 +754,14 @@
             allowclicks.className += "is-chosen";
         }
         clickselect = document.getElementById("wr-fullscreen-clicks");
-        $(clickselect).click(function () {
-            var clicks = this.dataset.value;
-            if (clicks !== "off") {
-                updateParcel("playclicks", true);
-            } else {
-                updateParcel("playclicks", false);
+        $(clickselect.children).click(function () {
+            if (this.className.indexOf("wr-noclick") === -1) {
+                var clicks = this.dataset.value;
+                if (clicks !== "off") {
+                    updateParcel("playclicks", true);
+                } else {
+                    updateParcel("playclicks", false);
+                }
             }
         });
 
@@ -958,6 +964,9 @@
     * Delete: \u232B
     **/
 
+    menubar = new gui.Menu({type: "menubar"});
+    win.menu = menubar;
+
     /* MENUS */
     // (Menus) File >
     filemenu = new gui.Menu();
@@ -1043,61 +1052,35 @@
         }
     }));
 
-    menu.append(new gui.MenuItem({
-        label: "File",
-        submenu: filemenu
-    }));
-
-    // (Menus) Edit >
+    // (Right-click menus) Edit >
     editmenu = new gui.Menu();
     editmenu.append(new gui.MenuItem({
-        label: "Undo  (\u2318Z)",
-        click: function () {
-            CodeMirror.commands.undo(cm);
-        }
-    }));
-    editmenu.append(new gui.MenuItem({
-        label: "Redo  (\u2318Y)",
-        click: function () {
-            CodeMirror.commands.redo(cm);
-        }
-    }));
-
-    editmenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    editmenu.append(new gui.MenuItem({
-        label: "Cut  (\u2318X)",
+        label: "Cut",
         click: function () {
             clip.set(cm.getSelection());
             cm.replaceSelection("");
         }
     }));
     editmenu.append(new gui.MenuItem({
-        label: "Copy  (\u2318C)",
+        label: "Copy",
         click: function () {
             clip.set(cm.getSelection());
         }
     }));
     editmenu.append(new gui.MenuItem({
-        label: "Paste (\u2318P)",
+        label: "Paste",
         click: function () {
             cm.replaceSelection(clip.get());
         }
     }));
     editmenu.append(new gui.MenuItem({
-        label: "Select All (\u2318A)",
+        label: "Select All",
         click: function () {
             CodeMirror.commands.selectAll(cm);
         }
     }));
 
-    editmenu.append(new gui.MenuItem({
-        type: "separator"
-    }));
-
-    // (Menus) Edit > Find >
+    // (Menus) Find >
     findmenu = new gui.Menu();
     findmenu.append(new gui.MenuItem({
         label: "Find  (\u2318F)",
@@ -1132,16 +1115,6 @@
         click: function () {
             CodeMirror.commands.replaceAll(cm);
         }
-    }));
-
-    editmenu.append(new gui.MenuItem({
-        label: "Find",
-        submenu: findmenu
-    }));
-
-    menu.append(new gui.MenuItem({
-        label: "Edit",
-        submenu: editmenu
     }));
 
     // (Menus) View >
@@ -1217,28 +1190,52 @@
         }
     }));
 
-    menu.append(new gui.MenuItem({
+    // Insert these submenus into the app menu.
+    // Should give:
+    // App | File | Edit | Find | View | Window
+    win.menu.insert(new gui.MenuItem({
+        label: "File",
+        submenu: filemenu
+    }), 1);
+    win.menu.insert(new gui.MenuItem({
         label: "View",
         submenu: viewmenu
-    }));
+    }), 3);
+    win.menu.insert(new gui.MenuItem({
+        label: "Find",
+        submenu: findmenu
+    }), 3);
 
+    // Insert editmenu on right-click.
     document.body.addEventListener("contextmenu", function (e) {
         e.preventDefault();
-        menu.popup(e.x, e.y);
+        editmenu.popup(e.x, e.y);
         return false;
     });
     /* END MENUS */
 
-    toggleAudio = function () {
-        if (parcel.playaudio !== false) {
-            if (win.isFullscreen === true) {
-                if (audio.paused === true) {
-                    audio.play();
+    toggleAudio = function (playAudio) {
+        if (playAudio === undefined) {
+            if (parcel.playaudio !== false) {
+                if (win.isFullscreen === true) {
+                    if (audio.paused === true) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
                 } else {
                     audio.pause();
                 }
+            }
+        } else {
+            if (playAudio === true) {
+                if (audio.paused === true) {
+                    audio.play();
+                }
             } else {
-                audio.pause();
+                if (audio.paused !== true) {
+                    audio.pause();
+                }
             }
         }
     };

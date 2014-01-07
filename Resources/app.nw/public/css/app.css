@@ -160,6 +160,9 @@ body {
     padding-top: 7px;
     padding-bottom: 7px;
 }
+li.wr-noclick {
+    cursor: default !important;
+}
 #wr-text-color, #wr-text-font li, #wr-text-sizes li, #wr-text-weight li,
 #wr-text-style li, #wr-fullscreen-audio li, #wr-fullscreen-clicks li {
     width: 30px;

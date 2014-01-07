@@ -1,3 +1,5 @@
++ make changes to node-webkit allowing for 
+  [this](https://github.com/rogerwang/node-webkit/issues/367)?
 + make app's own filetype (.wreath?) => 
   make special no-delete modes? only crosses out or obfuscates text when 
   "delete" is pressed. Also allow for inline comments (/* */ style?)
@@ -13,12 +15,7 @@
   the newly created letters float away into the distance and join the growing
   universe behind the text while (if there is text after the cursor) letters
   float in from the universe behind to create the words ahead.
-+ Redesign entire "Settings" user interface. 
-  Click "settings" -> nice animation of triangular buttons sliding in from left.
-  Get rid of entire translucid black background flat part and instead give each 
-  button/element its own translucid black bg with white text/icon. 
-  Triangular buttons arranged in down-up manner. \/\/\/\/\
-  Also: No longer need to "save" or "create" themes. Settings save automatically
-  unless the button "Reset" is pressed & confirmed. this app is about focus
-  and writing, it's not about creating themes (put theme creator on website). 
++ Settings save automatically unless the button "Reset" is pressed & confirmed. 
+  this app is about focus and writing, it's not about creating themes
+  (can put more advanced theme creator on website). 
   Get out of your own way when designing things; it's not about you.
