@@ -319,11 +319,14 @@
     };
 
     openSettings = function () {
-        var customizer, themes, closer, hider, updateTheme, updateElement,
-            styleDiv, bgimg, bgimgy, bgimgx, bgimgcover, bgcolor, textfont,
-            textsize, textsizeunit, textweight, textstyle, textcolor,
-            texthighlight, scrollcolor, scrolltrackcolor, allowaudio,
-            allowclicks, saveTheme, audioselect, clickselect, reset, oldCss;
+        var customizer, closer, hider, colorSpectrum,
+            themes, saveTheme, updateTheme, updateElement,
+            styleDiv, bgimg, bgimgy, bgimgx, bgimgcover, bgcolor,
+            textfont, textsize, textsizes, textsizer, textsizeunit,
+            textweight, textstyle, textcolor, texthighlight,
+            textsizetoggle,
+            scrollcolor, scrolltrackcolor, allowaudio,
+            allowclicks, audioselect, clickselect, reset, oldCss;
 
         styleDiv = document.getElementById("user-css");
 
@@ -420,15 +423,16 @@
         customizer = document.getElementById("wr-customizer");
         customizer.style.display = "block";
         themes = document.getElementById("wr-themes");
-        themes.onchange = function () {
-            var css = themes.value,
+        $(themes.children).click(function (ev) {
+            var theme = this,
+                css = theme.dataset.value,
                 link,
                 custom = document.getElementById("wr-customtheme");
 
             link = document.createElement("link");
             link.rel = "stylesheet";
             link.type = "text/css";
-            if (themes.selectedOptions[0].parentNode.id === "wr-themes-custom") {
+            if (theme.parentNode.id === "wr-themes-custom") {
                 link.href = gui.App.dataPath + "/Themes/" + css + "/" + css + ".css";
             } else {
                 link.href = "Themes/" + css + "/" + css + ".css";
@@ -438,6 +442,30 @@
             if (css !== "Light") {
                 styleDiv.appendChild(link);
             }
+        });
+        colorSpectrum = function (type, where, cssName, color) {
+            updateElement(type, where, cssName,
+                color.toPercentageRgbString());
+            updateTheme();
+            texthighlight.style.color = color;
+            if (type === "text") {
+                textcolor.children[0].style.color = color;
+                // find contrast by calculating the YIQ and compare against
+                // half of white (255 / 2 ~= 128).
+                // (http://24ways.org/2010/calculating-color-contrast/)
+                var col = color.toHex(),
+                    r = parseInt(col.substr(0, 2), 16),
+                    g = parseInt(col.substr(2, 2), 16),
+                    b = parseInt(col.substr(4, 2), 16),
+                    yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+                if (yiq >= 128) {
+                    textcolor.style.backgroundColor = "rgba(0,0,0,0.7)";
+                    textcolor.style.borderColor = "transparent";
+                } else {
+                    textcolor.style.backgroundColor = "rgba(255,255,255,0.9)";
+                    textcolor.style.borderColor = "black";
+                }
+            }
         };
         bgcolor = document.getElementById("wr-bg-color");
         $("#wr-bg-color").spectrum({
@@ -446,19 +474,13 @@
             clickoutFiresChange: true,
             showInput: true,
             move: function (color) {
-                updateElement("body", theme.body, "background-color",
-                    color.toPercentageRgbString());
-                updateTheme();
+                colorSpectrum("body", theme.body, "background-color", color);
             },
             hide: function (color) {
-                updateElement("body", theme.body, "background-color",
-                    color.toPercentageRgbString());
-                updateTheme();
+                colorSpectrum("body", theme.body, "background-color", color);
             },
             change: function (color) {
-                updateElement("body", theme.body, "background-color",
-                    color.toPercentageRgbString());
-                updateTheme();
+                colorSpectrum("body", theme.body, "background-color", color);
             }
         });
         bgimg = document.getElementById("wr-bg-img");
@@ -526,38 +548,53 @@
             updateTheme();
         };
         textcolor = document.getElementById("wr-text-color");
-        $("#wr-text-color").spectrum({
-            color: textcolor.value,
+        $(textcolor).spectrum({
+            color: textcolor.dataset.value,
             showAlpha: true,
             clickoutFiresChange: true,
             showInput: true,
             move: function (color) {
-                updateElement("text", theme.cm, "color",
-                    color.toPercentageRgbString());
-                updateTheme();
+                colorSpectrum("text", theme.cm, "color", color);
             },
             hide: function (color) {
-                updateElement("text", theme.cm, "color",
-                    color.toPercentageRgbString());
-                updateTheme();
+                colorSpectrum("text", theme.cm, "color", color);
             },
             change: function (color) {
-                updateElement("text", theme.cm, "color",
-                    color.toPercentageRgbString());
-                updateTheme();
+                colorSpectrum("text", theme.cm, "color", color);
             }
         });
         textfont = document.getElementById("wr-text-font");
-        textfont.onchange = function () {
+        $(textfont.children).each(function (index) {
+            var font = this.dataset.value;
+            this.style.fontFamily = font;
+        }).click(function () {
+            var font = this;
             updateElement("text", theme.cm, "font-family", "'" +
-                    textfont.value + "'");
+                    font.dataset.value + "'");
             updateTheme();
-        };
+        });
+        textsizes = document.getElementById("wr-text-sizes");
+        textsizer = document.getElementById("wr-text-sizer");
         textsize = document.getElementById("wr-text-size");
         textsizeunit = document.getElementById("wr-text-size-unit");
+        $(textsizes.children).click(function () {
+            var size = this.dataset.value;
+            if (size !== "...") {
+                textsize.value = size;
+                $(textsize).change();
+                if (textsizetoggle.style.display === "none") {
+                    textsizetoggle.style.display = "inline-table";
+                    textsizer.style.display = "none";
+                }
+            } else {
+                textsizetoggle = this;
+                textsizetoggle.style.display = "none";
+                textsizer.style.display = "inline-table";
+            }
+        });
         textsize.onchange = function () {
             updateElement("text", theme.cm, "font-size",
-                    textsize.value + textsizeunit.value);
+                textsize.value + textsizeunit.value);
             updateTheme();
         };
         textsizeunit.onchange = function () {
@@ -566,22 +603,21 @@
             updateTheme();
         };
         textweight = document.getElementById("wr-text-weight");
-        textweight.onchange = function () {
-            updateElement("text", theme.cm, "font-weight", textweight.value);
+        $(textweight.children).each(function () {
+            this.style.fontWeight = this.dataset.value;
+        }).click(function () {
+            updateElement("text", theme.cm, "font-weight", this.dataset.value);
             updateTheme();
-        };
+        });
         textstyle = document.getElementById("wr-text-style");
-        textstyle.onchange = function () {
-            if (textstyle.checked) {
-                updateElement("text", theme.cm, "font-style", "italic");
-            } else {
-                updateElement("text", theme.cm, "font-style");
-            }
+        $(textstyle.children).click(function () {
+            var styl = this.dataset.value;
+            updateElement("text", theme.cm, "font-style", styl);
             updateTheme();
-        };
+        });
         texthighlight = document.getElementById("wr-highlight-color");
-        $("#wr-highlight-color").spectrum({
-            color: texthighlight.value,
+        $(texthighlight).spectrum({
+            color: texthighlight.dataset.value,
             showAlpha: true,
             clickoutFiresChange: true,
             showInput: true,
@@ -599,6 +635,7 @@
                     color.toPercentageRgbString(),
                     ".cm-s-default div.CodeMirror-selected");
                 updateTheme();
+                texthighlight.children[0].style.backgroundColor = color;
             },
             hide: function (color) {
                 updateElement("other", theme.other, "background",
@@ -614,6 +651,7 @@
                     color.toPercentageRgbString(),
                     ".cm-s-default div.CodeMirror-selected");
                 updateTheme();
+                texthighlight.children[0].style.backgroundColor = color;
             },
             change: function (color) {
                 updateElement("other", theme.other, "background",
@@ -629,6 +667,7 @@
                     color.toPercentageRgbString(),
                     ".cm-s-default div.CodeMirror-selected");
                 updateTheme();
+                texthighlight.children[0].style.backgroundColor = color;
             }
         });
         scrollcolor = document.getElementById("wr-scroll-color");
