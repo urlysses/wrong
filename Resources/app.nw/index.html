@@ -40,19 +40,22 @@
             </ul>
             <fieldset class="wr-custombox" id="wr-customtheme">
                 <legend>Customizer</legend>
-                <h1>Background</h1>
-                Color: <input type="text" value="#ffffff" id="wr-bg-color"> 
-                <br>
-                Background Image:<br>
+                <div data-value="#ffffff" id="wr-bg-color"></div>
                 <input type="file" value="Background" accept="image/*" id="wr-bg-img">
-                <div class="wr-tabbed">
-                    <input type="checkbox" id="wr-bg-repeat-y" checked>
-                    Repeat vertically <br>
-                    <input type="checkbox" id="wr-bg-repeat-x" checked>
-                    Repeat horizontally <br>
-                    <input type="checkbox" id="wr-bg-stretch">
-                    Stretch image to fit screen <br>
-                </div>
+                <input id="wr-bg-text" type="file" disabled="disabled" title="">
+                <ul id="wr-tabbed">
+                    <li data-value="repeat-y" data-checked="true" id="wr-bg-repeat-y">
+                        <span>&#8597;</span>
+                    </li>
+                    <li data-value="repeat-x" data-checked="true" id="wr-bg-repeat-x">
+                        <span>&#8596;</span>
+                    </li>
+                    <li data-value="cover" data-checked="false" id="wr-bg-stretch">
+                        <!--<span>&#x292a;</span>
+                        <span>&#x2928;</span>-->
+                        <span>&#x2042;</span>
+                    </li>
+                </ul>
                 <hr>
                 <div data-value="#000000" id="wr-text-color"><span>Aa</span></div>
                 <ul id="wr-text-font">
@@ -61,6 +64,7 @@
                     <li data-value="Helvetica Neue"><span>Aa</span></li>
                     <li data-value="Courier New"><span>Aa</span></li>
                     <!--<li data-value="..."><span>...</span></li>-->
+                    <!--http://www.jquery4u.com/snippets/system-fonts-javascript/-->
                 </ul>
                 <ul id="wr-text-sizes">
                     <li data-value="10"><span>A</span></li>
@@ -113,7 +117,7 @@
                 <li data-value="2" id="wr-clicks-2"><span>&#x266A;</span></li>
                 <li data-value="off" id="wr-clicks-stop"><span>&#x2716;</span></li>
             </ul>
-            <button class="btn btn-red" id="wr-reset">&#x20E0;</button>
+            <button class="btn btn-red" id="wr-reset">&#8635;</button>
             <button class="btn" id="wr-close">&#10003;</button>
         </div>
         <div id="user-html"></div>

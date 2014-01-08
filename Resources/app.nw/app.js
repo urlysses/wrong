@@ -469,10 +469,14 @@
                     textcolor.style.borderColor = "black";
                 }
             }
+
+            if (cssName === "background-color") {
+                bgcolor.style.backgroundColor = color;
+            }
         };
         bgcolor = document.getElementById("wr-bg-color");
-        $("#wr-bg-color").spectrum({
-            color: bgcolor.value,
+        $(bgcolor).spectrum({
+            color: bgcolor.dataset.value,
             showAlpha: true,
             clickoutFiresChange: true,
             showInput: true,
@@ -493,8 +497,10 @@
                 updateElement("body", theme.body, "background-image",
                         "url('" + img + "')");
                 theme.bgImg = img;
+                bgimg.style.backgroundImage = "url('" + img + "')";
             } else {
-                updateElement("body", theme.body, "background-image");
+                updateElement("body", theme.body, "background-image", "none");
+                bgimg.style.backgroundImage = "none";
                 if (theme.bgImg) {
                     delete theme.bgImg;
                 }
@@ -503,50 +509,67 @@
         };
         bgimgy = document.getElementById("wr-bg-repeat-y");
         bgimgx = document.getElementById("wr-bg-repeat-x");
-        bgimgy.onchange = function () {
-            if (!bgimgy.checked) {
-                if (!bgimgx.checked) {
+        bgimgy.onclick = function () {
+            if (bgimgy.dataset.checked === "true") {
+                // button WAS selected, now being deselected.
+                if (bgimgx.dataset.checked === "false") {
+                    // no repeat selected.
                     updateElement("body", theme.body, "background-repeat",
                             "no-repeat");
                 } else {
+                    // repeat-x selected.
                     updateElement("body", theme.body, "background-repeat",
                             "repeat-x");
                 }
+                bgimgy.dataset.checked = false;
             } else {
-                if (bgimgx.checked) {
-                    updateElement("body", theme.body, "background-repeat");
+                if (bgimgx.dataset.checked === "true") {
+                    // repeat all.
+                    updateElement("body", theme.body, "background-repeat", "repeat");
                 } else {
+                    // repeat-y only.
                     updateElement("body", theme.body, "background-repeat",
                             "repeat-y");
                 }
+                bgimgy.dataset.checked = true;
             }
             updateTheme();
         };
-        bgimgx.onchange = function () {
-            if (!bgimgx.checked) {
-                if (!bgimgy.checked) {
+        bgimgx.onclick = function () {
+            if (bgimgx.dataset.checked === "true") {
+                // button WAS selected, now deselected.
+                if (bgimgy.dataset.checked === "false") {
+                    // none selected.
                     updateElement("body", theme.body, "background-repeat",
                             "no-repeat");
                 } else {
+                    // repeat y selected.
                     updateElement("body", theme.body, "background-repeat",
                             "repeat-y");
                 }
+                bgimgx.dataset.checked = false;
             } else {
-                if (bgimgy.checked) {
-                    updateElement("body", theme.body, "background-repeat");
+                if (bgimgy.dataset.checked === "true") {
+                    // all selected.
+                    updateElement("body", theme.body, "background-repeat", "repeat");
                 } else {
+                    // repeat-x only.
                     updateElement("body", theme.body, "background-repeat",
                             "repeat-x");
                 }
+                bgimgx.dataset.checked = true;
             }
             updateTheme();
         };
         bgimgcover = document.getElementById("wr-bg-stretch");
-        bgimgcover.onchange = function () {
-            if (bgimgcover.checked) {
+        bgimgcover.onclick = function () {
+            if (bgimgcover.dataset.checked === "false") {
+                // button wasn't selected. clicked, so select it.
+                bgimgcover.dataset.checked = true;
                 updateElement("body", theme.body, "background-size", "cover");
             } else {
-                updateElement("body", theme.body, "background-size");
+                bgimgcover.dataset.checked = false;
+                updateElement("body", theme.body, "background-size", "auto");
             }
             updateTheme();
         };
