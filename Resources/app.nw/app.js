@@ -14,6 +14,7 @@
         parcel,
         updateParcel,
         cm,
+        tm,
         saveFile,
         filePath,
         fileDirty,
@@ -173,6 +174,13 @@
             "Cmd-O": function (instance) { openFileDialog(); }
         }
     });
+
+    tm = document.createElement("textarea");
+    // add codemirror classes
+    // add search
+    // add keybindings
+    // add other cm functions called through this file (like getValue)
+    document.body.appendChild(tm);
 
     cm.on("change", function () {
         setFileDirty(true);
