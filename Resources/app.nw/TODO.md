@@ -18,4 +18,6 @@
 + Settings save automatically unless the button "Reset" is pressed & confirmed. 
   this app is about focus and writing, it's not about creating themes
   (can put more advanced theme creator on website). 
-  Get out of your own way when designing things; it's not about you.
+  Get out of your own way when designing things: it's not about you.
++ Rewrite all external libs on your own (codemirror, spectrum or w/e).
++ Speech-based writing and editing (using modes?).
