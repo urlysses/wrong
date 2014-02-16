@@ -2,26 +2,28 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BuildMachineOSBuild</key>
+	<string>12C3006</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>Wreathe</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
-        <dict>
-            <key>CFBundleTypeName</key>
-            <string>Wreath</string>
-            <key>CFBundleTypeIconFile</key>
-            <string>app.icns</string>
-            <key>LSHandlerRank</key>
-            <string>Alternate</string>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>LSItemContentTypes</key>
-            <array>
-                <string>com.handstrings.wreath</string>
-            </array>
-        </dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Wreath</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>app.icns</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.handstrings.wreath</string>
+			</array>
+		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
@@ -73,7 +75,15 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.9.4</string>
 	<key>CFBundleVersion</key>
-	<string>1599.66</string>
+	<string>1700.107</string>
+	<key>DTSDKBuild</key>
+	<string>11E52</string>
+	<key>DTSDKName</key>
+	<string>macosx10.7</string>
+	<key>DTXcode</key>
+	<string>0452</string>
+	<key>DTXcodeBuild</key>
+	<string>4G2008a</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSFileQuarantineEnabled</key>
@@ -85,26 +95,26 @@
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 	<key>SCMRevision</key>
-	<string>222137</string>
+	<string>239963</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
-        <dict>
-            <key>UTTypeConformsTo</key>
-            <array>
-                <string>public.text</string>
-            </array>
-            <key>UTTypeDescription</key>
-            <string>Wreathe File</string>
-            <key>UTTypeIdentifier</key>
-            <string>com.handstrings.wreath</string>
-            <key>UTTypeTagSpecification</key>
-            <dict>
-                <key>public.filename-extension</key>
-                <array>
-                    <string>wreath</string>
-                </array>
-            </dict>
-        </dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Wreathe File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.handstrings.wreath</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>wreath</string>
+				</array>
+			</dict>
+		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
