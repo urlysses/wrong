@@ -157,6 +157,7 @@
         this.value = val;
         this.selectionStart = 0;
         this.selectionEnd = 0;
+        this.searchPos = 0;
     }
     TM.prototype = {
         get value() {
@@ -165,6 +166,12 @@
         set value(value) {
             this.doc.innerText = value;
             this._value = value;
+        },
+        get text() {
+            return this.value.split("\n").join("");
+        },
+        set text(value) {
+            this.value = value;
         },
         get selectionStart() {
             this._selection();
@@ -236,10 +243,33 @@
     };
     TM.prototype.select = function () {
         this.selectionStart = 0;
-        this.selectionEnd = this.value.split("\n").join("").length;
+        this.selectionEnd = this.text.length;
     };
-    tm = new TM("");
+    TM.prototype.find = function (value, looping) {
+        var pos = this.text.indexOf(value, this.searchPos);
+        if (pos !== -1) {
+            this.selectionStart = pos;
+            this.selectionEnd = pos + value.length;
+            this.searchPos = pos + value.length;
+            this.scrollToSelection();
+        } else {
+            this.searchPos = 0;
+            if (!looping) {
+                // loop once to go back to start of document if at bottom.
+                this.find(value, true);
+            } else {
+                console.log("'" + value + "' not found");
+                return false;
+            }
+        }
+    };
+    TM.prototype.scrollToSelection = function () {
+        var range = window.getSelection().getRangeAt(0),
+            t = range.getBoundingClientRect().top;
+        this.doc.scrollTop += t;
+    };
 
+    tm = new TM("");
     tm.doc.addEventListener("input", function () {
         setFileDirty(true);
         displayWordCount();
@@ -274,12 +304,16 @@
             if (!alt && !shift && k === 188) {
                 openSettings();
             }
+            // Cmd-O
+            if (!alt && !shift && k === 79) {
+                openFileDialog();
+            }
             // Cmd-S
             if (!alt && !shift && k === 83) {
                 saveFile(filePath);
             }
             // Shift-Cmd-S 
-            if (shift && !alt && k === 83) {
+            if (!alt && shift && k === 83) {
                 saveFile();
             }
             // Cmd-N
@@ -287,12 +321,8 @@
                 newFile();
             }
             // Shift-Cmd-F
-            if ((shift && !alt && k === 70) || (cmd && !alt && !shift && k === 13)) {
+            if ((!alt && shift && k === 70) || (cmd && !alt && !shift && k === 13)) {
                 toggleFullscreen();
-            }
-            // Cmd-O
-            if (!alt && !shift && k === 79) {
-                openFileDialog();
             }
         }
         // Esc
