@@ -52,7 +52,6 @@
         submenuLoadTheme,
         updateCounterDirt,
         toggleSuperfluous,
-        $scrollbar,
         $counter,
         playClicks;
 
@@ -158,9 +157,9 @@
         setFileDirty(true);
         displayWordCount();
     });
-    document.onmousemove = function () {
-        displayWordCount();
-    };
+    //document.onmousemove = function () {
+      //  displayWordCount();
+    //};
     tm.addEventListener("keydown", function () {
         toggleSuperfluous(true);
     });
@@ -262,30 +261,20 @@
     toggleSuperfluous = function (hide, override) {
         // "override" is for special case when app leaves fullscreen and needs
         // to unhide all superfluous.
+        // TODO: bring back fading?
         var duration, scrollCss, counterCss;
-        duration = 200;
+        duration = 0;
         if (win.isFullscreen || override === true) {
-            scrollCss = $scrollbar.css("opacity");
+            scrollCss = $(tm).css("overflow-y");
             counterCss = $counter.css("display");
             if (hide) {
-                if (counterCss === "block" || scrollCss === 1) {
-                    $scrollbar.fadeOut(duration, function () {
-                        // gotta set the scrollbar opacity to 0 since cm 
-                        // automatically sets vscrollbar to block on key event,
-                        // making the fadeout useless.
-                        $scrollbar.css("opacity", 0);
-                    });
+                if (counterCss === "block" || scrollCss === "scroll") {
+                    $(tm).css("overflow-y", "hidden");
                     $counter.fadeOut(duration);
                 }
             } else {
-                if (counterCss === "none" || scrollCss === 0) {
-                    $scrollbar.css("display", "none");
-                    $scrollbar.css("opacity", 1);
-                    $scrollbar.fadeIn(duration, function () {
-                        // redundant but at least it fades in nicely for the 
-                        // user.
-                        $scrollbar.css("opacity", 1);
-                    });
+                if (counterCss === "none" || scrollCss === "hidden") {
+                    $(tm).css("overflow-y", "scroll");
                     if (win.isFullscreen) {
                         $counter.fadeIn(duration);
                     }
@@ -1554,7 +1543,6 @@
     // SUPERFLUOUS
     // might as well use jQuery for fading here since we've already imported 
     // it for the color picker
-        $scrollbar = $(".CodeMirror-vscrollbar");
         $counter = $("#counter");
 
         var argv = gui.App.argv,
