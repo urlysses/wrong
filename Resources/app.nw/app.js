@@ -149,6 +149,7 @@
         document.getElementById("wr-theme-" + themeName).selected = true;
     };
 
+    // TODO:
     // add search
     // add document history
     function TM(val) {
@@ -186,13 +187,14 @@
         // regular stuff.
         var range = window.getSelection().getRangeAt(0);
         var preCaretRange = range.cloneRange();
-        preCaretRange.selectNodeContents(tm.doc);
+        preCaretRange.selectNodeContents(this.doc);
         preCaretRange.setEnd(range.startContainer, range.startOffset);
         this._selectionStart = preCaretRange.toString().length;
         preCaretRange.setEnd(range.endContainer, range.endOffset);
         this._selectionEnd = preCaretRange.toString().length;
     };
     TM.prototype.select = function () {
+        //TODO: update setters for both selectionStart & selectionEnd
     };
     tm = new TM("");
 
@@ -209,6 +211,9 @@
     document.onmousemove = function () {
         displayWordCount();
     };
+    tm.doc.addEventListener("mouseup", function () {
+        displayWordCount();
+    });
     // Keyboard Shortcuts
     document.addEventListener("keydown", function (e) {
         var k = e.keyCode,
@@ -265,7 +270,6 @@
             selection = tm.value.substring(tm.selectionStart, tm.selectionEnd).match(/\S+/g),
             docCount,
             selectCount;
-        console.log(tm.selectionStart, tm.selectionEnd);
         if (selection) {
             selectCount = selection.length;
         } else {
@@ -303,7 +307,6 @@
     toggleSuperfluous = function (hide, override) {
         // "override" is for special case when app leaves fullscreen and needs
         // to unhide all superfluous.
-        // TODO: bring back fading?
         var duration, scrollCss, counterCss;
         duration = 0;
         if (win.isFullscreen || override === true) {
@@ -316,6 +319,10 @@
                 $(tm.doc).css("overflow-y", "scroll");
                 if (win.isFullscreen) {
                     $counter.fadeIn(duration);
+                }
+
+                if (override) {
+                    $counter.fadeOut(duration);
                 }
             }
         }
