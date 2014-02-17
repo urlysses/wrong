@@ -7,13 +7,10 @@
     border-color: rgb(170, 170, 170) !important;
   }
 
-  .cm-s-default {
+  #TextMap, #counter {
     color: rgb(170, 170, 170);
   }
-  .cm-s-default span.CodeMirror-matchhighlight { background: rgba(75, 75, 75, 0.54);}
-  .cm-s-default.CodeMirror-focused span.CodeMirror-matchhighlight { background: rgba(75, 75, 75, 0.54);}
-  .cm-s-default .activeline {background: rgba(75, 75, 75, 0.54);}
-  .cm-s-default div.CodeMirror-selected {background: rgba(75, 75, 75, 0.54);}
+  ::selection {background: rgba(75, 75, 75, 0.54);}
   ::-webkit-scrollbar-track        {
     background: rgba(70, 70, 70, 0.39);
     -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0);

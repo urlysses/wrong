@@ -13,7 +13,6 @@
         theme,
         parcel,
         updateParcel,
-        cm,
         tm,
         saveFile,
         filePath,
@@ -151,52 +150,70 @@
         document.getElementById("wr-theme-" + themeName).selected = true;
     };
 
-    cm = new CodeMirror(document.body, {
-        autofocus: true,
-        lineWrapping: true,
-        pollInterval: 1,
-        extraKeys: {
-            // DEV STUFF
-            "Cmd-Alt-J": function (instance) { win.showDevTools(); },
-            "Cmd-R": function (instance) { win.reloadDev(); },
-            // END DEV STUFF
-            "Cmd-,": function (instance) { openSettings(); },
-            "Cmd-S": function (instance) { saveFile(filePath); },
-            "Shift-Cmd-S": function (instance) { saveFile(); },
-            "Cmd-N": function (instance) { newFile(); },
-            "Shift-Cmd-F": function (instance) { toggleFullscreen(); },
-            "Cmd-Enter": function (instance) { toggleFullscreen(); },
-            "Esc": function (instance) {
-                if (win.isFullscreen === true) {
-                    toggleFullscreen();
-                }
-            },
-            "Cmd-O": function (instance) { openFileDialog(); }
-        }
-    });
-
     tm = document.createElement("textarea");
-    // add codemirror classes
     // add search
-    // add keybindings
-    // add other cm functions called through this file (like getValue)
+    // add document history
+    tm.setAttribute("id", "TextMap");
     document.body.appendChild(tm);
 
-    cm.on("change", function () {
+    tm.addEventListener("change", function () {
         setFileDirty(true);
         displayWordCount();
     });
-
-    cm.on("cursorActivity", function () {
+    document.onmousemove = function () {
         displayWordCount();
-    });
-
-    cm.on("keydown", function () {
+    };
+    tm.addEventListener("keydown", function () {
         toggleSuperfluous(true);
     });
-
-    cm.on("keypress", function () {
+    tm.addEventListener("keypress", function () {
         playClicks();
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener("keydown", function (e) {
+        if (e.metaKey === true) {
+            var k = e.keyCode,
+                cmd = e.metaKey,
+                alt = e.altKey,
+                shift = e.shiftKey;
+            /* Dev shortcuts */
+            // Cmd-Alt-J
+            if (cmd && alt && !shift && k === 74) {
+                win.showDevTools();
+            }
+            /* Editor shortcuts */
+            // Cmd-,
+            if (cmd && !alt && !shift && k === 188) {
+                openSettings();
+            }
+            // Cmd-S
+            if (cmd && !alt && !shift && k === 83) {
+                saveFile(filePath);
+            }
+            // Shift-Cmd-S 
+            if (shift && cmd && !alt && k === 83) {
+                saveFile();
+            }
+            // Cmd-N
+            if (cmd && !alt && !shift && k === 78) {
+                newFile();
+            }
+            // Shift-Cmd-F
+            if ((shift && cmd && !alt && k === 70) || (cmd && !alt && !shift && k === 13)) {
+                toggleFullscreen();
+            }
+            // Cmd-O
+            if (cmd && !alt && !shift && k === 79) {
+                openFileDialog();
+            }
+            // Esc
+            if (k === 27) {
+                if (win.isFullscreen === true) {
+                    toggleFullscreen();
+                }
+            }
+        }
     });
 
     window.onmousemove = function () {
@@ -204,8 +221,8 @@
     };
 
     getWordCount = function () {
-        var doc = cm.getValue().match(/\S+/g),
-            selection = cm.getSelection().match(/\S+/g),
+        var doc = tm.value.match(/\S+/g),
+            selection = tm.value.substring(tm.selectionStart, tm.selectionEnd).match(/\S+/g),
             docCount,
             selectCount;
 
@@ -384,7 +401,6 @@
                         bodAll += "@media (min-width: 800px) {" + bod;
                         bodAll += "}</style></div>";
                         styleDiv.innerHTML += bodAll;
-                        cm.refresh();
                     }
                 });
             }
@@ -402,7 +418,6 @@
                         cemAll += "@media (min-width: 800px) {" + cem;
                         cemAll += "}</style></div>";
                         styleDiv.innerHTML += cemAll;
-                        cm.refresh();
                     }
                 });
             }
@@ -421,7 +436,6 @@
                         othAll += "@media (min-width: 800px) {" + oth;
                         othAll += "}</style></div>";
                         styleDiv.innerHTML += othAll;
-                        cm.refresh();
                     }
                 });
             }
@@ -965,7 +979,7 @@
         closer.onclick = function () {
             customizer.style.display = "none";
             loadDefaultTheme();
-            cm.focus();
+            tm.focus();
         };
         hider = document.getElementById("wr-hider");
         hider.onclick = function () {
@@ -974,7 +988,7 @@
                 customizer.style.left = "-281px";
                 hider.innerHTML = "&gt;";
                 hider.className = "wr-close-closed";
-                cm.focus();
+                tm.focus();
             } else {
                 customizer.style.left = "0";
                 hider.innerHTML = "&lt;";
@@ -1029,7 +1043,7 @@
             openmenu.append(new gui.MenuItem({
                 label: element,
                 click: function () {
-                    var docVal = cm.doc.getValue();
+                    var docVal = tm.value;
                     if (filePath) {
                         newFile(element);
                     } else {
@@ -1088,26 +1102,32 @@
     editmenu.append(new gui.MenuItem({
         label: "Cut",
         click: function () {
-            clip.set(cm.getSelection());
-            cm.replaceSelection("");
+            var selection = tm.value.substring(tm.selectionStart, tm.selectionEnd);
+            clip.set(selection);
+            // replace selection with ""
+            tm.value = tm.value.slice(0, tm.selectionStart) +
+                tm.value.slice(tm.selectionEnd, tm.value.length - 1);
         }
     }));
     editmenu.append(new gui.MenuItem({
         label: "Copy",
         click: function () {
-            clip.set(cm.getSelection());
+            clip.set(tm.value.substring(tm.selectionStart, tm.selectionEnd));
         }
     }));
     editmenu.append(new gui.MenuItem({
         label: "Paste",
         click: function () {
-            cm.replaceSelection(clip.get());
+            var selection = tm.value.substring(tm.selectionStart, tm.selectionEnd);
+            // replace selection with clipboard content.
+            tm.value = tm.value.slice(0, tm.selectionStart) + clip.get() +
+                tm.value.slice(tm.selectionEnd, tm.value.length - 1);
         }
     }));
     editmenu.append(new gui.MenuItem({
         label: "Select All",
         click: function () {
-            CodeMirror.commands.selectAll(cm);
+            tm.select();
         }
     }));
 
@@ -1116,35 +1136,40 @@
     findmenu.append(new gui.MenuItem({
         label: "Find  (\u2318F)",
         click: function () {
-            CodeMirror.commands.find(cm);
+            // CodeMirror.commands.find(cm);
+            // TODO.
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Find Next  (\u2318G)",
         click: function () {
-            CodeMirror.commands.findNext(cm);
+            // CodeMirror.commands.findNext(cm);
+            // TODO.
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Find Previous  (\u21E7\u2318G)",
         click: function () {
-            CodeMirror.commands.findPrev(cm);
+            // CodeMirror.commands.findPrev(cm);
+            // TODO.
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Find & Replace  (\u2325\u2318F)",
         click: function () {
-            CodeMirror.commands.replace(cm);
+            // CodeMirror.commands.replace(cm);
+            // TODO.
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Replace All  (\u21E7\u2325\u2318F)",
         click: function () {
-            CodeMirror.commands.replaceAll(cm);
+            // CodeMirror.commands.replaceAll(cm);
+            // TODO.
         }
     }));
 
@@ -1296,10 +1321,11 @@
         var fd = false;
         if (isDirty === true) {
             // file edited
-            if (cm.doc.getHistory().done.length !== 0) {
-                // not at oldest document change
-                fd = true;
-            }
+        //if (cm.doc.getHistory().done.length !== 0) {
+            //TODO. document history.
+            // not at oldest document change
+            fd = true;
+        //}
         }
 
         fileDirty = fd;
@@ -1364,7 +1390,7 @@
 
     saveFile = function (path, callback) {
         if (path !== undefined && typeof path !== "function") {
-            fs.writeFile(path, cm.getValue(), function (err) {
+            fs.writeFile(path, tm.value, function (err) {
                 if (err) {
                     alert("Couldn't save file: " + err);
                 }
@@ -1451,10 +1477,11 @@
             updateRecentFiles(path);
             // update document title
             setPageTitle(path);
-            // add data to codemirror
-            cm.setValue(String(data));
-            // reset undo history so that cmd-z doesn't undo the entire file.
-            cm.doc.clearHistory();
+            // add data to textarea
+            tm.value = String(data);
+                // reset undo history so that cmd-z doesn't undo the entire file.
+                // cm.doc.clearHistory(); 
+            // TODO, clear doc history.
             // clear the dirt
             setFileDirty(false);
             if (callback) {
@@ -1476,7 +1503,6 @@
 
     toggleFullscreen = function () {
         win.toggleFullscreen();
-        cm.refresh();
     };
 
     win.on("enter-fullscreen", function () {
@@ -1491,13 +1517,13 @@
     // deal with the audio player on blur and focus
     win.on("focus", function () {
         document.body.id = "";
-        cm.focus();
+        tm.focus();
         toggleAudio();
     });
 
     win.on("blur", function () {
         document.body.id = "blurred";
-        cm.getInputField().blur();
+        tm.blur();
         toggleAudio();
     });
 
@@ -1522,7 +1548,7 @@
             }).addBtn({
                 text: "Cancel",
                 onclick: function (e) {
-                    cm.focus();
+                    tm.focus();
                     return false;
                 }
             }).addBtn({
@@ -1613,10 +1639,9 @@
         }
     };
 
-    global.cm = cm;
-    global.CodeMirror = CodeMirror;
+    global.tm = tm;
     global.win = win;
     global.menu = menu;
-    global.wreathe = {openFile: openFile, newFile: newFile, saveFile: saveFile,
+    global.Wreathe = {openFile: openFile, newFile: newFile, saveFile: saveFile,
         openFileDialog: openFileDialog};
 }(this));

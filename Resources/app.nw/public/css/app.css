@@ -3,7 +3,7 @@
     src: url("../fonts/VeraMono.ttf");
 }
 
-html, body, .CodeMirror {
+html, body, #TextMap {
     height: 100%;
 }
 
@@ -14,7 +14,7 @@ body {
     background: white;
 }
 
-.CodeMirror {
+#TextMap {
     display: block;
     background: none;
     border: none;
@@ -24,11 +24,7 @@ body {
     resize: none;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    padding: 0;
     padding-bottom: 6.6%;
-}
-
-.CodeMirror-scroll {
     padding-top: 6.5%;
     padding-left: 25%;
     padding-right: 25%;
@@ -415,15 +411,8 @@ li#wr-audio-stop span:last-child {
     #blurred {
         border-top-color: #aaa;
     }
-    .CodeMirror {
+    #TextMap {
         padding: 5px;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
-    .CodeMirror-scroll {
-        padding-top: 0;
-        padding-left: 0;
-        padding-right: 33px;
     }
     #counter {
         display: none;
