@@ -150,13 +150,11 @@
         document.getElementById("wr-theme-" + themeName).selected = true;
     };
 
-    tm = document.createElement("textarea");
     // add search
     // add document history
-    tm.setAttribute("id", "TextMap");
-    document.body.appendChild(tm);
+    tm = document.getElementById("TextMap");
 
-    tm.addEventListener("change", function () {
+    tm.addEventListener("input", function () {
         setFileDirty(true);
         displayWordCount();
     });
@@ -172,46 +170,47 @@
 
     // Keyboard Shortcuts
     document.addEventListener("keydown", function (e) {
-        if (e.metaKey === true) {
-            var k = e.keyCode,
-                cmd = e.metaKey,
-                alt = e.altKey,
-                shift = e.shiftKey;
+        var k = e.keyCode,
+            cmd = e.metaKey,
+            alt = e.altKey,
+            shift = e.shiftKey;
+        if (cmd === true) {
+            // All shortcuts here include "cmd" so no need to check for it.
             /* Dev shortcuts */
             // Cmd-Alt-J
-            if (cmd && alt && !shift && k === 74) {
+            if (alt && !shift && k === 74) {
                 win.showDevTools();
             }
             /* Editor shortcuts */
             // Cmd-,
-            if (cmd && !alt && !shift && k === 188) {
+            if (!alt && !shift && k === 188) {
                 openSettings();
             }
             // Cmd-S
-            if (cmd && !alt && !shift && k === 83) {
+            if (!alt && !shift && k === 83) {
                 saveFile(filePath);
             }
             // Shift-Cmd-S 
-            if (shift && cmd && !alt && k === 83) {
+            if (shift && !alt && k === 83) {
                 saveFile();
             }
             // Cmd-N
-            if (cmd && !alt && !shift && k === 78) {
+            if (!alt && !shift && k === 78) {
                 newFile();
             }
             // Shift-Cmd-F
-            if ((shift && cmd && !alt && k === 70) || (cmd && !alt && !shift && k === 13)) {
+            if ((shift && !alt && k === 70) || (cmd && !alt && !shift && k === 13)) {
                 toggleFullscreen();
             }
             // Cmd-O
-            if (cmd && !alt && !shift && k === 79) {
+            if (!alt && !shift && k === 79) {
                 openFileDialog();
             }
-            // Esc
-            if (k === 27) {
-                if (win.isFullscreen === true) {
-                    toggleFullscreen();
-                }
+        }
+        // Esc
+        if (!cmd && !alt && !shift && k === 27) {
+            if (win.isFullscreen === true) {
+                toggleFullscreen();
             }
         }
     });
@@ -385,7 +384,7 @@
         };
 
         updateTheme = function () {
-            var bod = "body {", cem = ".cm-s-default {", oth = "",
+            var bod = "body {", cem = "#TextMap {", oth = "",
                 bodAll = "", cemAll = "", othAll = "";
             if (theme.updated.body) {
                 theme.updated.body = false;
@@ -674,48 +673,21 @@
             move: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    ".cm-s-default span.CodeMirror-matchhighlight");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default.CodeMirror-focused span.CodeMirror-matchhighlight");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default .activeline");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default div.CodeMirror-selected");
+                    "::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             hide: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    ".cm-s-default span.CodeMirror-matchhighlight");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default.CodeMirror-focused span.CodeMirror-matchhighlight");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default .activeline");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default div.CodeMirror-selected");
+                    "::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             change: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    ".cm-s-default span.CodeMirror-matchhighlight");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default.CodeMirror-focused span.CodeMirror-matchhighlight");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default .activeline");
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    ".cm-s-default div.CodeMirror-selected");
+                    "::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             }
@@ -1523,7 +1495,7 @@
 
     win.on("blur", function () {
         document.body.id = "blurred";
-        tm.blur();
+        //tm.blur();
         toggleAudio();
     });
 

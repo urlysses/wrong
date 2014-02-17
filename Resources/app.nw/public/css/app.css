@@ -28,6 +28,7 @@ body {
     padding-top: 6.5%;
     padding-left: 25%;
     padding-right: 25%;
+    overflow-y: scroll;
 }
 
 #open, #save, #user-css, #wr-bod-style, 
