@@ -151,22 +151,64 @@
 
     // add search
     // add document history
-    tm = document.getElementById("TextMap");
+    function TM(val) {
+        this.doc = document.getElementById("TextMap");
+        this.value = val;
+    }
+    TM.prototype = {
+        get value() {
+            return this._value;
+        },
+        set value(value) {
+            this.doc.innerText = value;
+            this._value = value;
+        },
+        get selectionStart() {
+            this._selection();
+            return this._selectionStart;
+        },
+        set selectionStart(value) {
+            this._selectionStart = value;
+        },
+        get selectionEnd() {
+            return this._selectionEnd;
+        },
+        set selectionEnd(value) {
+            this._selectionEnd = value;
+        }
+    };
+    TM.prototype.focus = function () {
+        this.doc.focus();
+    };
+    TM.prototype._selection = function () {
+        // range fix.
+        window.getSelection().addRange(document.createRange());
+        // regular stuff.
+        var range = window.getSelection().getRangeAt(0);
+        var preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(tm.doc);
+        preCaretRange.setEnd(range.startContainer, range.startOffset);
+        this._selectionStart = preCaretRange.toString().length;
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        this._selectionEnd = preCaretRange.toString().length;
+    };
+    TM.prototype.select = function () {
+    };
+    tm = new TM("");
 
-    tm.addEventListener("input", function () {
+    tm.doc.addEventListener("input", function () {
         setFileDirty(true);
         displayWordCount();
     });
-    //document.onmousemove = function () {
-      //  displayWordCount();
-    //};
-    tm.addEventListener("keydown", function () {
+    tm.doc.addEventListener("keydown", function () {
         toggleSuperfluous(true);
     });
-    tm.addEventListener("keypress", function () {
+    tm.doc.addEventListener("keypress", function () {
         playClicks();
     });
-
+    document.onmousemove = function () {
+        displayWordCount();
+    };
     // Keyboard Shortcuts
     document.addEventListener("keydown", function (e) {
         var k = e.keyCode,
@@ -223,7 +265,7 @@
             selection = tm.value.substring(tm.selectionStart, tm.selectionEnd).match(/\S+/g),
             docCount,
             selectCount;
-
+        console.log(tm.selectionStart, tm.selectionEnd);
         if (selection) {
             selectCount = selection.length;
         } else {
@@ -265,19 +307,15 @@
         var duration, scrollCss, counterCss;
         duration = 0;
         if (win.isFullscreen || override === true) {
-            scrollCss = $(tm).css("overflow-y");
+            scrollCss = $(tm.doc).css("overflow-y");
             counterCss = $counter.css("display");
             if (hide) {
-                if (counterCss === "block" || scrollCss === "scroll") {
-                    $(tm).css("overflow-y", "hidden");
-                    $counter.fadeOut(duration);
-                }
+                $(tm.doc).css("overflow-y", "hidden");
+                $counter.fadeOut(duration);
             } else {
-                if (counterCss === "none" || scrollCss === "hidden") {
-                    $(tm).css("overflow-y", "scroll");
-                    if (win.isFullscreen) {
-                        $counter.fadeIn(duration);
-                    }
+                $(tm.doc).css("overflow-y", "scroll");
+                if (win.isFullscreen) {
+                    $counter.fadeIn(duration);
                 }
             }
         }
@@ -662,21 +700,21 @@
             move: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    "::selection");
+                    "#TextMap::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             hide: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    "::selection");
+                    "#TextMap::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             change: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    "::selection");
+                    "#TextMap::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             }
@@ -774,168 +812,9 @@
         saveTheme = function () {
         };
 
-        // old file-based saveTheme.
-        /*saveTheme = function (themeName, themesPath) {
-            var compileCss, writeCss, fullPath;
-
-            fullPath = themesPath + themeName + "/";
-
-            ////////////////////////////////////////////////////////////////////
-            ////////////////////// SAVE compileCss FOR THE ONLINE THEME BUILDER.
-            ////////////////////////////////////////////////////////////////////
-            compileCss = function (fullPath, callback) {
-                var i, bod, cem, oth, allCss, fileName, bgThemePath;
-                bod = cem = oth = allCss = "";
-                if (theme.body.length !== 0) {
-                    bod += "body {";
-                    for (i = 0; i < theme.body.length; i += 1) {
-                        if (theme.body[i].name === "background-image") {
-                            fileName = theme.bgImg.split("/").pop();
-                            bgThemePath = fullPath + "img/" + fileName;
-                            bod += theme.body[i].name + ":url('" +
-                                bgThemePath + "');";
-                        } else {
-                            bod += theme.body[i].name + ":" +
-                                theme.body[i].value + ";";
-                        }
-                    }
-                    bod += "} ";
-                }
-
-                if (theme.cm.length !== 0) {
-                    cem += ".cm-s-default {";
-                    for (i = 0; i < theme.cm.length; i += 1) {
-                        cem += theme.cm[i].name + ":" + theme.cm[i].value + ";";
-                    }
-                    cem += "} ";
-                }
-
-                for (i = 0; i < theme.other.length; i += 1) {
-                    oth += theme.other[i].selector + " { ";
-                    oth += theme.other[i].name + ":" +
-                        theme.other[i].value + ";";
-                    oth += "} ";
-                }
-
-                allCss += "@media (min-width: 800px) { ";
-                allCss += bod + cem + oth;
-                allCss += "}";
-                callback(allCss);
-            };
-            writeCss = function (fullPath, themeName, css, callback) {
-                var cssName = themeName + ".css",
-                    cssPath = fullPath + cssName,
-                    fileName,
-                    imgThemePath,
-                    bgThemePath,
-                    getImgStr,
-                    putImgStr;
-                if (theme.bgImg) {
-                    fileName = theme.bgImg.split("/").pop();
-                    imgThemePath = fullPath + "img/";
-                    bgThemePath = imgThemePath + fileName;
-
-                    fs.exists(imgThemePath, function (exists) {
-                        if (exists) {
-                            getImgStr = fs.createReadStream(theme.bgImg);
-                            putImgStr = fs.createWriteStream(bgThemePath);
-                            putImgStr.on("open", function (fd) {
-                                fs.writeFile(bgThemePath, "");
-                            });
-                            getImgStr.pipe(putImgStr);
-                        } else {
-                            fs.mkdir(imgThemePath, function (e) {
-                                if (e) {
-                                    alert("Couldn't save theme: " + e);
-                                    return false;
-                                }
-                                getImgStr = fs.createReadStream(theme.bgImg);
-                                putImgStr = fs.createWriteStream(bgThemePath);
-                                putImgStr.on("open", function (fd) {
-                                    fs.writeFile(bgThemePath, "");
-                                });
-                                getImgStr.pipe(putImgStr);
-                            });
-                        }
-                    });
-                }
-
-                fs.writeFile(cssPath, css, function (err) {
-                    if (err) {
-                        alert("Couldn't save theme: " + err);
-                        return false;
-                    }
-                    callback();
-                });
-            };
-            fs.exists(fullPath, function (exists) {
-                if (exists) {
-                    var overwrite = confirm("There is already a theme under that name. Overwrite?");
-                    if (overwrite) {
-                        compileCss(fullPath, function (css) {
-                            writeCss(fullPath, themeName, css, function () {
-                                alert("Your theme has been saved!");
-                                theme.saved = true;
-                                setDefaultTheme(themeName, true);
-                            });
-                        });
-                    } else {
-                        alert("Theme not overwritten. Try giving this one a different name.");
-                    }
-                } else {
-                    fs.mkdir(fullPath, function (e) {
-                        if (e) {
-                            alert("Couldn't save theme: " + e);
-                            return false;
-                        }
-                        compileCss(fullPath, function (css) {
-                            writeCss(fullPath, themeName, css, function () {
-                                alert("Your theme has been saved!");
-                                theme.saved = true;
-                                setDefaultTheme(themeName, true);
-                            });
-                        });
-                    });
-                }
-            });
-        };*/
-
         reset = document.getElementById("wr-reset");
         reset.onclick = function () {
         };
-
-        ////////////////////////////////////////////////////////////////////////
-        ///////////////////// RE-USE THIS SAVE CODE IN THE ONLINE THEME BUILDER.
-        ////////////////////////////////////////////////////////////////////////
-        /*save = document.getElementById("wr-save");
-        save.onclick = function () {
-            if (themes.value === "wr34743") {
-                if (theme.saved === false && theme.customized === true) {
-                    var themeName = prompt("What should we call this theme?"),
-                        themesPath = gui.App.dataPath[0] + "/Themes/";
-                    if (themeName) {
-                        fs.exists(themesPath, function (exists) {
-                            if (exists) {
-                                saveTheme(themeName, themesPath);
-                            } else {
-                                fs.mkdir(themesPath, function (e) {
-                                    if (e) {
-                                        alert("Couldn't save theme: " + e);
-                                        return false;
-                                    }
-                                    saveTheme(themeName, themesPath);
-                                });
-                            }
-                        });
-                    }
-                }
-            } else {
-                if (theme.changed === true) {
-                    setDefaultTheme(themes.value, false);
-                    theme.changed = false;
-                }
-            }
-        };*/
         closer = document.getElementById("wr-close");
         closer.onclick = function () {
             customizer.style.display = "none";

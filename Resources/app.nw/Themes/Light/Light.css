@@ -10,7 +10,7 @@
 }
 
 /* maybe also try color rgba(0, 254, 14, 0.46) ?? */
-::selection {
+#TextMap::selection {
     background: rgba(0, 196, 254, 0.46);
 }
 
