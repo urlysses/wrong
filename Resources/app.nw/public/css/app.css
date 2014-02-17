@@ -28,7 +28,7 @@ body {
     padding-top: 6.5%;
     padding-left: 25%;
     padding-right: 25%;
-    overflow-y: scroll;
+    overflow-y: overlay;
 }
 
 #open, #save, #user-css, #wr-bod-style, 
@@ -44,20 +44,6 @@ body {
 #wr-wc {
     margin-right: -3px;
 }
-#wr-customizer-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    z-index: -1;
-}
-#wr-customizer-bg div {
-    position: absolute;
-    display: block;
-    width: 292px;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.73);
-}
 #wr-clip-top {
     clip: rect(auto, auto, 410px, auto);
 }
@@ -70,11 +56,20 @@ body {
 #wr-clip-right {
     clip: rect(410px, auto, 449px, 263px);
 }
+.wr-c-element {
+    padding: 10px;
+    padding-left: 5px;
+    padding-right: 16px;
+    background: rgba(0, 0, 0, 0.73);
+}
+.wr-c-element-bottom {
+    height: 50%;
+}
 #wr-customizer {
     display: none;
     height: 100%;
     width: 280px;
-    padding: 10px;
+    padding: 0;
     position: fixed;
     z-index: 1000;
     font-family: "Helvetica Neue";
@@ -82,8 +77,6 @@ body {
     color: rgb(228, 228, 228);
     overflow-y: scroll;
     overflow-x: hidden;
-    padding-left: 5px;
-    padding-right: 16px;
 }
 #wr-customizer::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.25);
@@ -316,7 +309,8 @@ li#wr-text-sizer {
     padding-bottom: 10px;
     padding-left: 5px;
     -webkit-font-smoothing: antialiased;
-    position: relative;
+    border-left: 5px solid rgba(0,0,0,0.73);
+    border-right: 40px solid rgba(0,0,0,0.73);
 }
 #wr-highlight-selected {
     background: rgba(0, 196, 254, 0.46);
@@ -336,6 +330,7 @@ li#wr-text-sizer {
 #wr-scroller {
     background: white;
     border-radius: 4px;
+    width: 48%;
 }
 #wr-scrolltrack-color {
     cursor: pointer;
@@ -349,7 +344,7 @@ li#wr-text-sizer {
     width: 30%;
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.35);
-    margin-left: 164px;
+    margin-left: 60%;
     margin-top: -9px;
 }
 
@@ -414,6 +409,7 @@ li#wr-audio-stop span:last-child {
     }
     #TextMap {
         padding: 5px;
+        padding-right: 14px;
     }
     #counter {
         display: none;

@@ -155,6 +155,8 @@
     function TM(val) {
         this.doc = document.getElementById("TextMap");
         this.value = val;
+        this.selectionStart = 0;
+        this.selectionEnd = 0;
     }
     TM.prototype = {
         get value() {
@@ -170,12 +172,15 @@
         },
         set selectionStart(value) {
             this._selectionStart = value;
+            this._updateSelection();
         },
         get selectionEnd() {
+            this._selection();
             return this._selectionEnd;
         },
         set selectionEnd(value) {
             this._selectionEnd = value;
+            this._updateSelection();
         }
     };
     TM.prototype.focus = function () {
@@ -186,15 +191,52 @@
         window.getSelection().addRange(document.createRange());
         // regular stuff.
         var range = window.getSelection().getRangeAt(0);
-        var preCaretRange = range.cloneRange();
-        preCaretRange.selectNodeContents(this.doc);
-        preCaretRange.setEnd(range.startContainer, range.startOffset);
-        this._selectionStart = preCaretRange.toString().length;
-        preCaretRange.setEnd(range.endContainer, range.endOffset);
-        this._selectionEnd = preCaretRange.toString().length;
+        var rangeClone = range.cloneRange();
+        rangeClone.selectNodeContents(this.doc);
+        rangeClone.setEnd(range.startContainer, range.startOffset);
+        this._selectionStart = rangeClone.toString().length;
+        rangeClone.setEnd(range.endContainer, range.endOffset);
+        this._selectionEnd = rangeClone.toString().length;
+    };
+    TM.prototype._updateSelection = function () {
+        // TODO: Rewrite this.
+        var range = document.createRange(),
+            winselection = window.getSelection(),
+            charIndex = 0,
+            nodeStack = [this.doc],
+            node,
+            foundStart = false,
+            start = this._selectionStart,
+            end = this._selectionEnd,
+            stop = false;
+        range.setStart(this.doc, 0);
+        range.collapse(true);
+        while (!stop && (nodeStack.length > 0)) {
+            node = nodeStack.pop();
+            if (node.nodeType === 3) {
+                var nextCharIndex = charIndex + node.length;
+                if (!foundStart && start >= charIndex && start <= nextCharIndex) {
+                    range.setStart(node, start - charIndex);
+                    foundStart = true;
+                }
+                if (foundStart && end >= charIndex && end <= nextCharIndex) {
+                    range.setEnd(node, end - charIndex);
+                    stop = true;
+                }
+                charIndex = nextCharIndex;
+            } else {
+                var i = node.childNodes.length;
+                while (i--) {
+                    nodeStack.push(node.childNodes[i]);
+                }
+            }
+        }
+        winselection.removeAllRanges();
+        winselection.addRange(range);
     };
     TM.prototype.select = function () {
-        //TODO: update setters for both selectionStart & selectionEnd
+        this.selectionStart = 0;
+        this.selectionEnd = this.value.split("\n").join("").length;
     };
     tm = new TM("");
 
@@ -316,7 +358,7 @@
                 $(tm.doc).css("overflow-y", "hidden");
                 $counter.fadeOut(duration);
             } else {
-                $(tm.doc).css("overflow-y", "scroll");
+                $(tm.doc).css("overflow-y", "overlay");
                 if (win.isFullscreen) {
                     $counter.fadeIn(duration);
                 }
@@ -505,8 +547,8 @@
             updateElement(type, where, cssName,
                 color.toPercentageRgbString());
             updateTheme();
-            texthighlight.style.color = color;
             if (type === "text") {
+                texthighlight.style.color = color;
                 textcolor.children[0].style.color = color;
                 // find contrast by calculating the YIQ and compare against
                 // half of white (255 / 2 ~= 128).
@@ -662,6 +704,7 @@
         textsizeunit = document.getElementById("wr-text-size-unit");
         $(textsizes.children).click(function () {
             var size = this.dataset.value;
+            textsizetoggle = this;
             if (size !== "...") {
                 textsize.value = size;
                 $(textsize).change();
@@ -670,7 +713,6 @@
                     textsizer.style.display = "none";
                 }
             } else {
-                textsizetoggle = this;
                 textsizetoggle.style.display = "none";
                 textsizer.style.display = "inline-table";
             }
