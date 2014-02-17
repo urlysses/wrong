@@ -874,7 +874,7 @@
         hider.onclick = function () {
             // customizer.style.display = "none";
             if (hider.className.indexOf("wr-close-closed") === -1) {
-                customizer.style.left = "-281px";
+                customizer.style.left = "-260px";
                 hider.innerHTML = "&gt;";
                 hider.className = "wr-close-closed";
                 tm.focus();
