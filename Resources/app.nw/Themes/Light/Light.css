@@ -2,7 +2,7 @@
   border-color: black !important;
 }
 
-#TextMap, #counter {
+.tm-w-default {
   font-family: "Vera Mono", "Tahoma", sans-serif;
   font-size: 12px;
   line-height: 1.3em;
@@ -10,7 +10,7 @@
 }
 
 /* maybe also try color rgba(0, 254, 14, 0.46) ?? */
-#TextMap::selection {
+.tm-w-default::selection {
     background: rgba(0, 196, 254, 0.46);
 }
 

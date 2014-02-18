@@ -521,7 +521,7 @@
         };
 
         updateTheme = function () {
-            var bod = "body {", cem = "#TextMap {", oth = "",
+            var bod = "body {", cem = ".tm-w-default {", oth = "",
                 bodAll = "", cemAll = "", othAll = "";
             if (theme.updated.body) {
                 theme.updated.body = false;
@@ -810,21 +810,21 @@
             move: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    "#TextMap::selection");
+                    ".tm-w-default::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             hide: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    "#TextMap::selection");
+                    ".tm-w-default::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             change: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    "#TextMap::selection");
+                    ".tm-w-default::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             }
@@ -1437,9 +1437,6 @@
             data = new Buffer(tmp);
             // add data to textarea
             tm.value = data.toString("utf8");
-                // reset undo history so that cmd-z doesn't undo the entire file.
-                // cm.doc.clearHistory(); 
-            // TODO, clear doc history.
             // clear the dirt
             setFileDirty(false);
             if (callback) {
