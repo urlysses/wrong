@@ -246,11 +246,24 @@
         this.selectionStart = 0;
         this.selectionEnd = this.text.length;
     };
-    TM.prototype.find = function (value, looping) {
+    TM.prototype.find = function (value, backward, looping) {
         // TODO: check typeof value for regex? (value instanceof RegExp)
-        // TODO: findPrev -> 
-        //       this.text.lastIndexOf(value, this.searchPos-(value.length+1));
-        var pos = this.text.indexOf(value, this.searchPos);
+        var pos;
+        if (backward) { // findPrev
+            var cal;
+            if (this.searchPos === 0) { // at top, search from bottom
+                cal = this.text.length;
+            } else { // search above position.
+                cal = this.searchPos - (value.length + 1);
+            }
+            pos =  this.text.lastIndexOf(value, cal);
+        } else { // findNext
+            pos = this.text.indexOf(value, this.searchPos);
+            if (backward === undefined) {
+                backward = false;
+            }
+        }
+
         if (pos !== -1) {
             this.selectionStart = pos;
             this.selectionEnd = pos + value.length;
@@ -260,23 +273,26 @@
         }
 
         // Query not anywhere found after current position. Loop back to start
-        // once and return false if query still not found.
+        // once.
         this.searchPos = 0;
         if (!looping) {
             // loop once to go back to start of document if at bottom.
-            this.find(value, true);
-        } else {
-            console.log("'" + value + "' not found");
-            return false;
+            return this.find(value, backward, true);
         }
+
+        // Looped and still nothing found.
+        console.log("'" + value + "' not found");
+        return false;
     };
-    TM.prototype.replace = function (value, replacement) {
-        // TODO: replacePrev through findPrev.
-        var found = this.find(value); // find and select thing
+    TM.prototype.replace = function (value, replacement, backward) {
+        var found = this.find(value, backward); // find and select thing
         if (found) {
             // replace selected text through insertText
             document.execCommand("insertText", false, replacement);
+            return true;
         }
+
+        return false;
     };
     TM.prototype.scrollToSelection = function () {
         var range = window.getSelection().getRangeAt(0),
