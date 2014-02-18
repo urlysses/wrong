@@ -157,7 +157,6 @@
         this.selectionStart = 0;
         this.selectionEnd = 0;
         this.searchPos = 0;
-        this.literalPos = 0;
     }
     TM.prototype = {
         get value() {
@@ -249,6 +248,8 @@
     };
     TM.prototype.find = function (value, looping) {
         // TODO: check typeof value for regex? (value instanceof RegExp)
+        // TODO: findPrev -> 
+        //       this.text.lastIndexOf(value, this.searchPos-(value.length+1));
         var pos = this.text.indexOf(value, this.searchPos);
         if (pos !== -1) {
             this.selectionStart = pos;
@@ -258,7 +259,7 @@
             return true;
         }
 
-        // Query not found after current position. Loop back to start
+        // Query not anywhere found after current position. Loop back to start
         // once and return false if query still not found.
         this.searchPos = 0;
         if (!looping) {
@@ -270,6 +271,7 @@
         }
     };
     TM.prototype.replace = function (value, replacement) {
+        // TODO: replacePrev through findPrev.
         var found = this.find(value); // find and select thing
         if (found) {
             // replace selected text through insertText
