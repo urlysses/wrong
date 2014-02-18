@@ -151,16 +151,17 @@
 
     // TODO:
     // add search
-    // add document history
     function TM(val) {
         this.doc = document.getElementById("TextMap");
         this.value = val;
         this.selectionStart = 0;
         this.selectionEnd = 0;
         this.searchPos = 0;
+        this.literalPos = 0;
     }
     TM.prototype = {
         get value() {
+            this._value = this.doc.innerText;
             return this._value;
         },
         set value(value) {
@@ -168,7 +169,7 @@
             this._value = value;
         },
         get text() {
-            return this.value.split("\n").join("");
+            return this.doc.innerHTML.replace(/(<([^>]+)>)/ig, "");
         },
         set text(value) {
             this.value = value;
@@ -242,25 +243,37 @@
         winselection.addRange(range);
     };
     TM.prototype.select = function () {
+        // selects whole document (textarea default functionality).
         this.selectionStart = 0;
         this.selectionEnd = this.text.length;
     };
     TM.prototype.find = function (value, looping) {
+        // TODO: check typeof value for regex? (value instanceof RegExp)
         var pos = this.text.indexOf(value, this.searchPos);
         if (pos !== -1) {
             this.selectionStart = pos;
             this.selectionEnd = pos + value.length;
             this.searchPos = pos + value.length;
             this.scrollToSelection();
+            return true;
+        }
+
+        // Query not found after current position. Loop back to start
+        // once and return false if query still not found.
+        this.searchPos = 0;
+        if (!looping) {
+            // loop once to go back to start of document if at bottom.
+            this.find(value, true);
         } else {
-            this.searchPos = 0;
-            if (!looping) {
-                // loop once to go back to start of document if at bottom.
-                this.find(value, true);
-            } else {
-                console.log("'" + value + "' not found");
-                return false;
-            }
+            console.log("'" + value + "' not found");
+            return false;
+        }
+    };
+    TM.prototype.replace = function (value, replacement) {
+        var found = this.find(value); // find and select thing
+        if (found) {
+            // replace selected text through insertText
+            document.execCommand("insertText", false, replacement);
         }
     };
     TM.prototype.scrollToSelection = function () {
@@ -1240,11 +1253,10 @@
         var fd = false;
         if (isDirty === true) {
             // file edited
-        //if (cm.doc.getHistory().done.length !== 0) {
-            //TODO. document history.
-            // not at oldest document change
-            fd = true;
-        //}
+            if (document.queryCommandEnabled("undo") === true) {
+                // Not at oldest document change.
+                fd = true;
+            }
         }
 
         fileDirty = fd;
@@ -1360,7 +1372,7 @@
 
         winNext.on("loaded", function () {
             if (file) {
-                winNext.window.wreathe.openFile(file);
+                winNext.window.Wreathe.openFile(file);
                 winNext.window.madeNew = true;
                 win.window.madeNew = true;
             }
@@ -1396,8 +1408,17 @@
             updateRecentFiles(path);
             // update document title
             setPageTitle(path);
+            var tmp = [],
+                i;
+            for (i = 0; i < data.length; i++) {
+                // remove null values from buffer?
+                if (data[i] !== 0) {
+                    tmp.push(data[i]);
+                }
+            }
+            data = new Buffer(tmp);
             // add data to textarea
-            tm.value = String(data);
+            tm.value = data.toString("utf8");
                 // reset undo history so that cmd-z doesn't undo the entire file.
                 // cm.doc.clearHistory(); 
             // TODO, clear doc history.
