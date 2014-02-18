@@ -3,19 +3,15 @@
     background: black;
   }
 
-  .CodeMirror-cursor {
-    border-color: rgb(58, 219, 58) !important;
-  }
-
   .tm-w-default {
     color: rgb(58, 219, 58);
   }
-  .tm-w-default::selection {background: rgba(3, 126, 23, 0.54);}
-  ::-webkit-scrollbar-track        {
+  ::selection {background: rgba(3, 126, 23, 0.54);}
+  ::-webkit-scrollbar-track {
     background: rgba(2, 73, 8, 0.39);
     -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0);
   }
-  ::-webkit-scrollbar-thumb  {
+  ::-webkit-scrollbar-thumb {
     background: rgba(58, 219, 58, 0.32);
     border-radius: 4px;
   }

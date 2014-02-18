@@ -14,6 +14,7 @@
         parcel,
         updateParcel,
         tm,
+        makeUTF8,
         saveFile,
         filePath,
         fileDirty,
@@ -168,7 +169,8 @@
             this._value = value;
         },
         get text() {
-            return this.doc.innerHTML.replace(/(<([^>]+)>)/ig, "");
+            // return this.doc.innerHTML.replace(/(<([^>]+)>)/ig, "");
+            return this.doc.textContent; // same as above.
         },
         set text(value) {
             this.value = value;
@@ -311,12 +313,16 @@
     tm.doc.addEventListener("keypress", function () {
         playClicks();
     });
-    document.onmousemove = function () {
-        displayWordCount();
-    };
     tm.doc.addEventListener("mouseup", function () {
         displayWordCount();
     });
+    tm.doc.onpaste = function (e) {
+        tm.value = e.clipboardData.getData('text/plain');
+        return false;
+    };
+    document.onmousemove = function () {
+        displayWordCount();
+    };
     // Keyboard Shortcuts
     document.addEventListener("keydown", function (e) {
         var k = e.keyCode,
@@ -810,21 +816,21 @@
             move: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    ".tm-w-default::selection");
+                    "::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             hide: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    ".tm-w-default::selection");
+                    "::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             },
             change: function (color) {
                 updateElement("other", theme.other, "background",
                     color.toPercentageRgbString(),
-                    ".tm-w-default::selection");
+                    "::selection");
                 updateTheme();
                 texthighlight.children[0].style.backgroundColor = color;
             }
@@ -1337,9 +1343,15 @@
         document.getElementById("wr-dirt").innerText = dirt;
     };
 
+    makeUTF8 = function (data) {
+        // Sanitizes the txt contents.
+        return JSON.parse(new Buffer(JSON.stringify(data)).toString("utf8"));
+    };
+
     saveFile = function (path, callback) {
         if (path !== undefined && typeof path !== "function") {
-            fs.writeFile(path, tm.value, function (err) {
+            var data = makeUTF8(tm.value);
+            fs.writeFile(path, data, function (err) {
                 if (err) {
                     alert("Couldn't save file: " + err);
                 }
@@ -1426,17 +1438,8 @@
             updateRecentFiles(path);
             // update document title
             setPageTitle(path);
-            var tmp = [],
-                i;
-            for (i = 0; i < data.length; i++) {
-                // remove null values from buffer?
-                if (data[i] !== 0) {
-                    tmp.push(data[i]);
-                }
-            }
-            data = new Buffer(tmp);
             // add data to textarea
-            tm.value = data.toString("utf8");
+            tm.value = makeUTF8(data.toString("utf8"));
             // clear the dirt
             setFileDirty(false);
             if (callback) {
