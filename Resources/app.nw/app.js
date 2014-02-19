@@ -302,24 +302,22 @@
         this.doc.scrollTop += t;
     };
     function CMD() {
-        this.finder = "";
-        this.finderOpened = false;
+        this.controlpack = document.createElement("div");
+        this.controlpack.id = "tm-wr-control";
+        this.control = document.createElement("input");
+        this.control.type = "text";
+        this.control.id = "tm-control";
+        this.controlpack.appendChild(this.control);
+        this.controlOpened = false;
         this.query = "";
     }
-    CMD.prototype.find = function (machine) {
-        if (this.finderOpened === false) {
-            this.finder = document.createElement("div");
-            this.finder.id = "tm-wr-finder";
-            this.finder.innerHTML = "<input id='' placeholder='Find' type='text'> " +
-                "<button id=''>Find Next</button> " +
-                "<button id=''>Find Previous</button> <br>" +
-                "<input id='' placeholder='Replace With' type='text'> " +
-                "<button id=''>Replace Next</button> " +
-                "<button id=''>Replace Previous</button> " +
-                "<button id=''>Replace All</button>";
-            machine.doc.parentNode.insertBefore(this.finder, machine.doc);
-            this.finderOpened = true;
+    CMD.prototype.show = function (machine) {
+        if (this.controlOpened === false) {
+            machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
+            this.controlOpened = true;
         }
+    };
+    CMD.prototype.find = function (machine) {
     };
     CMD.prototype.findNext = function () {
     };

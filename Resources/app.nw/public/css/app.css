@@ -364,12 +364,25 @@ li#wr-audio-stop span:last-child {
     margin-left: -2px;
 }
 
-#tm-wr-finder {
+#tm-wr-control {
     position: fixed;
     z-index: 100;
     background-image: -webkit-linear-gradient(left, white 40%, transparent 90%);
     width: 100%;
     padding: 5px;
+}
+
+#tm-control {
+    width: 97%;
+    margin: 0;
+    padding: 4px;
+    background: transparent;
+    background-image: -webkit-linear-gradient(left, rgb(231, 231, 231), transparent);
+    border: none;
+    display: block;
+    outline: none;
+    font-size: 1.2em;
+    -webkit-font-smoothing: antialiased;
 }
 
 .sp-replacer {
