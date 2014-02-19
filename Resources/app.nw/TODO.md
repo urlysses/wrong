@@ -7,7 +7,6 @@
   (into ~/Library/Application Support/Wreathe/Backups/file(date).wreath)
 + allow users to upload own sounds (ambient only? e.g. can't upload click sounds
   from settings ui)
-+ please make an icon.
 + allow the app to check for updates on startup.
 + add focus mode? (e.g. document centers & focuses on current line while typing)
 + COSMOGENESIS: create a living, changing, colourful universe out of the user's
@@ -20,4 +19,6 @@
   (can put more advanced theme creator on website). 
   Get out of your own way when designing things: it's not about you.
 + Rewrite all external libs on your own (codemirror, spectrum or w/e).
-+ Speech-based writing and editing (using modes?).
++ Speech-based writing and editing (using modes?)?
++ create in-app menu where you can execute commands by text
+  ("find jdjd", "define sdmsd", etc)
