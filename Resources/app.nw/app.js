@@ -301,6 +301,35 @@
             t = range.getBoundingClientRect().top;
         this.doc.scrollTop += t;
     };
+    function CMD() {
+        this.finder = "";
+        this.finderOpened = false;
+        this.query = "";
+    }
+    CMD.prototype.find = function (machine) {
+        if (this.finderOpened === false) {
+            this.finder = document.createElement("div");
+            this.finder.id = "tm-wr-finder";
+            this.finder.innerHTML = "<input id='' placeholder='Find' type='text'> " +
+                "<button id=''>Find Next</button> " +
+                "<button id=''>Find Previous</button> <br>" +
+                "<input id='' placeholder='Replace With' type='text'> " +
+                "<button id=''>Replace Next</button> " +
+                "<button id=''>Replace Previous</button> " +
+                "<button id=''>Replace All</button>";
+            machine.doc.parentNode.insertBefore(this.finder, machine.doc);
+            this.finderOpened = true;
+        }
+    };
+    CMD.prototype.findNext = function () {
+    };
+    CMD.prototype.findPrev = function () {
+    };
+    CMD.prototype.replace = function () {
+    };
+    CMD.prototype.replaceAll = function () {
+    };
+    TM.control = new CMD();
 
     tm = new TM("");
     tm.doc.addEventListener("input", function () {
@@ -1597,6 +1626,7 @@
     };
 
     global.tm = tm;
+    global.TM = TM;
     global.win = win;
     global.menu = menu;
     global.Wreathe = {openFile: openFile, newFile: newFile, saveFile: saveFile,
