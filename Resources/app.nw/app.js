@@ -302,6 +302,7 @@
         this.doc.scrollTop += t;
     };
     function CMD() {
+        // Control & Control Pack
         this.controlpack = document.createElement("div");
         this.controlpack.id = "tm-wr-control";
         this.control = document.createElement("input");
@@ -309,6 +310,7 @@
         this.control.id = "tm-control";
         this.controlpack.appendChild(this.control);
         this.controlOpened = false;
+        // Query Misc
         this.findquery = "";
         this.replacequery = "";
         this.definequery = "";
@@ -345,6 +347,7 @@
     CMD.prototype.define = function (machine) {
         this.show(machine);
         this.control.value = "define ";
+        // yeah idk how i'm going to do this.
     };
     TM.control = new CMD();
 
