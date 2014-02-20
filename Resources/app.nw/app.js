@@ -309,23 +309,36 @@
         this.control.id = "tm-control";
         this.controlpack.appendChild(this.control);
         this.controlOpened = false;
-        this.query = "";
+        this.findquery = "";
+        this.replacequery = "";
+        this.definequery = "";
     }
     CMD.prototype.show = function (machine) {
         if (this.controlOpened === false) {
             machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
+            machine.doc.classList.add("tm-control-on");
             this.controlOpened = true;
+        }
+    };
+    CMD.prototype.hide = function (machine) {
+        if (this.controlOpened === true) {
+            machine.doc.parentNode.removeChild(this.controlpack);
+            machine.doc.classList.remove("tm-control-on");
+            // clear input?
+            this.controlOpened = false;
         }
     };
     CMD.prototype.find = function (machine) {
     };
-    CMD.prototype.findNext = function () {
+    CMD.prototype.findNext = function (machine) {
     };
-    CMD.prototype.findPrev = function () {
+    CMD.prototype.findPrev = function (machine) {
     };
-    CMD.prototype.replace = function () {
+    CMD.prototype.replace = function (machine) {
     };
-    CMD.prototype.replaceAll = function () {
+    CMD.prototype.replaceAll = function (machine) {
+    };
+    CMD.prototype.define = function (machine) {
     };
     TM.control = new CMD();
 

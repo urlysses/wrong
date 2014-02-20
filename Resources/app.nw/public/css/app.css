@@ -371,7 +371,6 @@ li#wr-audio-stop span:last-child {
     width: 100%;
     padding: 5px;
 }
-
 #tm-control {
     width: 97%;
     margin: 0;
@@ -383,6 +382,9 @@ li#wr-audio-stop span:last-child {
     outline: none;
     font-size: 1.2em;
     -webkit-font-smoothing: antialiased;
+}
+.tm-control-on {
+    padding-top: 45px !important;
 }
 
 .sp-replacer {
