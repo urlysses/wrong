@@ -317,6 +317,7 @@
         if (this.controlOpened === false) {
             machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
             machine.doc.classList.add("tm-control-on");
+            this.control.focus();
             this.controlOpened = true;
         }
     };
@@ -324,11 +325,14 @@
         if (this.controlOpened === true) {
             machine.doc.parentNode.removeChild(this.controlpack);
             machine.doc.classList.remove("tm-control-on");
+            machine.focus(); //TODO: back to previous position.
             // clear input?
             this.controlOpened = false;
         }
     };
     CMD.prototype.find = function (machine) {
+        this.show(machine);
+        this.control.value = "find ";
     };
     CMD.prototype.findNext = function (machine) {
     };
@@ -339,6 +343,8 @@
     CMD.prototype.replaceAll = function (machine) {
     };
     CMD.prototype.define = function (machine) {
+        this.show(machine);
+        this.control.value = "define ";
     };
     TM.control = new CMD();
 
