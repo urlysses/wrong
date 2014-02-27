@@ -22,3 +22,4 @@
 + Speech-based writing and editing (using modes?)?
 + create in-app menu where you can execute commands by text
   ("find jdjd", "define sdmsd", etc)
++ IMPORTANT: Remove frame, total flat ui, then ADD TABS INSTEAD OF WINDOWS ?? !!
