@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="is-frameless">
     <head>
         <title>Wreathe</title>
         <link rel="stylesheet" href="public/css/prompt.css">
@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="public/css/app.css">
         <link rel="stylesheet" href="Themes/Light/Light.css">
     </head>
-        <body>
+        <body class="is-frameless">
         <div id="user-css"></div>
         <form action>
             <input type="file" id="open">
@@ -112,6 +112,19 @@
                 <button class="btn btn-red" id="wr-reset">&#8635;</button>
                 <button class="btn" id="wr-close">&#10003;</button>
             </div>
+        </div>
+        <div id="titlebar">
+            <ul id="wr-window-buttons">
+                <li id="wr-close-button"></li>
+                <li id="wr-minimize-button"></li>
+                <li id="wr-maximize-button"></li>
+            </ul>
+            <ul id="wr-tabs">
+                <li>document 1</li>
+                <li>doc 2</li>
+                <li>tab 3</li>
+            </ul>
+            <div id="wr-fullscreen-button"></div>
         </div>
         <div id="TextMap" class="tm-w-default" contentEditable></div>
         <div id="user-html"></div>

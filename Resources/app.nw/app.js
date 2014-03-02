@@ -14,6 +14,9 @@
         parcel,
         updateParcel,
         tm,
+        titlebar,
+        fullscreenbutton,
+        windowbuttons,
         makeUTF8,
         saveFile,
         filePath,
@@ -24,6 +27,9 @@
         openFile,
         toggleFullscreen,
         toggleAudio,
+        toggleTitlebar,
+        focusWindowButtons,
+        blurWindowButtons,
         closeWindow,
         saveAndClose,
         menubar,
@@ -41,6 +47,7 @@
         removeRecentFile,
         completeInit,
         setPageTitle,
+        updateCloseDirt,
         updateTitleDirt,
         openSettings,
         displayWordCount,
@@ -1268,13 +1275,43 @@
     }), 3);
 
     // Insert editmenu on right-click.
-    document.body.addEventListener("contextmenu", function (e) {
+    tm.doc.addEventListener("contextmenu", function (e) {
         e.preventDefault();
         editmenu.popup(e.x, e.y);
         return false;
     });
     /* END MENUS */
 
+    /* TITLEBAR */
+    titlebar = document.getElementById("titlebar");
+    fullscreenbutton = document.getElementById("wr-fullscreen-button");
+    windowbuttons = document.getElementById("wr-window-buttons");
+    fullscreenbutton.onclick = function () {
+        toggleFullscreen();
+    };
+    windowbuttons.addEventListener("mouseover", function () {
+        var i;
+        for (i = 0; i < windowbuttons.children.length; i++) {
+            windowbuttons.children[i].classList.add("wr-window-button-hover");
+        }
+    });
+    windowbuttons.addEventListener("mouseout", function () {
+        var i;
+        for (i = 0; i < windowbuttons.children.length; i++) {
+            windowbuttons.children[i].classList.remove("wr-window-button-hover");
+        }
+    });
+    document.getElementById("wr-close-button").onclick = function () {
+        win.close();
+    };
+    document.getElementById("wr-minimize-button").onclick = function () {
+        win.minimize();
+    };
+    document.getElementById("wr-maximize-button").onclick = function () {
+        win.maximize();
+    };
+
+    /* MISC FULLSCREEN & WINDOW FUNCTIONS */
     toggleAudio = function (playAudio) {
         if (playAudio === undefined) {
             if (parcel.playaudio !== false) {
@@ -1333,6 +1370,7 @@
         }
 
         fileDirty = fd;
+        updateCloseDirt(fileDirty);
         updateTitleDirt(fileDirty);
         updateCounterDirt(fileDirty);
     };
@@ -1349,6 +1387,15 @@
         newTitle = docName;
 
         document.title = newTitle;
+    };
+
+    updateCloseDirt = function (isDirty) {
+        var closer = document.getElementById("wr-close-button");
+        if (isDirty) {
+            closer.classList.add("wr-window-dirty");
+        } else {
+            closer.classList.remove("wr-window-dirty");
+        }
     };
 
     updateTitleDirt = function (isDirty) {
@@ -1512,12 +1559,38 @@
         win.toggleFullscreen();
     };
 
+    toggleTitlebar = function () {
+        if (titlebar.style.display !== "none") {
+            titlebar.style.display = "none";
+        } else {
+            titlebar.style.display = "block";
+        }
+    };
+
+    focusWindowButtons = function () {
+        var i;
+        for (i = 0; i < windowbuttons.children.length; i++) {
+            windowbuttons.children[i].classList.remove("wr-window-blurred");
+        }
+        fullscreenbutton.classList.remove("wr-window-blurred");
+    };
+
+    blurWindowButtons = function () {
+        var i;
+        for (i = 0; i < windowbuttons.children.length; i++) {
+            windowbuttons.children[i].classList.add("wr-window-blurred");
+        }
+        fullscreenbutton.classList.add("wr-window-blurred");
+    };
+
     win.on("enter-fullscreen", function () {
+        toggleTitlebar();
         toggleAudio();
     });
 
     win.on("leave-fullscreen", function () {
         toggleAudio();
+        toggleTitlebar();
         toggleSuperfluous(false, true);
     });
 
@@ -1526,12 +1599,14 @@
         document.body.id = "";
         tm.focus();
         toggleAudio();
+        focusWindowButtons();
     });
 
     win.on("blur", function () {
         document.body.id = "blurred";
         //tm.blur();
         toggleAudio();
+        blurWindowButtons();
     });
 
     // load file into the textarea

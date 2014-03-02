@@ -2,11 +2,9 @@
     font-family: "Vera Mono";
     src: url("../fonts/VeraMono.ttf");
 }
-
 html, body, #TextMap {
     height: 100%;
 }
-
 body { 
     padding: 0;
     margin: 0;
@@ -364,11 +362,95 @@ li#wr-audio-stop span:last-child {
     margin-left: -2px;
 }
 
+/*** TITLEBAR ***/
+#titlebar {
+    cursor: default;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    padding: 4px;
+    display: block;
+}
+#wr-window-buttons, #wr-tabs {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    list-style-type: none;
+    -webkit-user-select: none;
+}
+#wr-window-buttons li, #wr-tabs li, #wr-fullscreen-button {
+    display: inline-block;
+    -webkit-app-region: no-drag;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+#wr-window-buttons li {
+    width: 14px;
+    height: 14px;
+    cursor: default;
+    background-color: transparent;
+    background-image: url("../img/titlebarbuttons.png");
+}
+#wr-close-button {
+    background-position: 0px -14px;
+}
+#wr-close-button.wr-window-button-hover {
+    background-position: 0px -28px;
+}
+#wr-close-button:active {
+    background-position: 0px -42px;
+}
+#wr-minimize-button {
+    background-position: -14px -14px;
+}
+#wr-minimize-button.wr-window-button-hover {
+    background-position: -14px -28px;
+}
+#wr-minimize-button:active {
+    background-position: -14px -42px;
+}
+#wr-maximize-button {
+    background-position: -28px -14px;
+}
+#wr-maximize-button.wr-window-button-hover {
+    background-position: -28px -28px;
+}
+#wr-maximize-button:active {
+    background-position: -28px -42px;
+}
+#wr-fullscreen-button {
+    width: 14px;
+    height: 15px;
+    float: right; /* position absolute; right: 4px; instead? */
+    background-color: transparent;
+    background-image: url("../img/fullscreenbuttons.png");
+    background-position: -14px 0px;
+}
+#wr-fullscreen-button:hover {
+    background-position: -28px 0px;
+}
+#wr-fullscreen-button:active {
+    background-position: -42px 0px;
+}
+#wr-fullscreen-button.wr-window-blurred, #wr-close-button.wr-window-blurred,
+#wr-minimize-button.wr-window-blurred, #wr-maximize-button.wr-window-blurred {
+    background-position: 0px 0px;
+}
+#wr-close-button.wr-window-dirty {
+    background-position: 0px -56px;
+}
+#wr-close-button.wr-window-dirty:active {
+    background-position: -14px -56px;
+}
+#wr-close-button.wr-window-dirty.wr-window-blurred {
+    background-position: -14px 0px;
+}
+
+/*** CONTROL ***/
 #tm-wr-control {
     position: fixed;
     z-index: 100;
     background-image: -webkit-linear-gradient(left, white 40%, transparent 90%);
-    width: 100%;
+    width: 98%;
     padding: 5px;
 }
 #tm-control {
@@ -387,6 +469,7 @@ li#wr-audio-stop span:last-child {
     padding-top: 45px !important;
 }
 
+/*** IDK. OLD CODEMIRROR STUFF? ***/
 .sp-replacer {
     border: none;
     padding: 1px;
@@ -432,6 +515,14 @@ li#wr-audio-stop span:last-child {
     #blurred {
         border-top-color: #aaa;
     }
+    html.is-frameless {
+        border-radius: 4px;
+        background: transparent;
+    }
+    body.is-frameless {
+        border-top: none;
+    }
+
     #TextMap {
         padding: 5px;
         padding-right: 14px;
