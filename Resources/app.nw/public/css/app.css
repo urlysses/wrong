@@ -13,6 +13,7 @@ body {
 }
 
 #TextMap {
+    height: 93.7%; /* fix for frameless thing... */
     display: block;
     background: none;
     border: none;
@@ -369,6 +370,9 @@ li#wr-audio-stop span:last-child {
     -webkit-app-region: drag;
     padding: 4px;
     display: block;
+    background: rgb(231, 231, 231);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 #wr-window-buttons, #wr-tabs {
     margin: 0;
@@ -376,6 +380,7 @@ li#wr-audio-stop span:last-child {
     display: inline-block;
     list-style-type: none;
     -webkit-user-select: none;
+    -webkit-app-region: no-drag;
 }
 #wr-window-buttons li, #wr-tabs li, #wr-fullscreen-button {
     display: inline-block;
@@ -383,12 +388,19 @@ li#wr-audio-stop span:last-child {
     -webkit-user-select: none;
     cursor: pointer;
 }
+#wr-window-buttons {
+    height: 14px;
+}
 #wr-window-buttons li {
     width: 14px;
     height: 14px;
     cursor: default;
     background-color: transparent;
     background-image: url("../img/titlebarbuttons.png");
+}
+#wr-fullscreen-button.wr-window-blurred, #wr-close-button.wr-window-blurred,
+#wr-minimize-button.wr-window-blurred, #wr-maximize-button.wr-window-blurred {
+    background-position: 0px 0px;
 }
 #wr-close-button {
     background-position: 0px -14px;
@@ -430,10 +442,6 @@ li#wr-audio-stop span:last-child {
 }
 #wr-fullscreen-button:active {
     background-position: -42px 0px;
-}
-#wr-fullscreen-button.wr-window-blurred, #wr-close-button.wr-window-blurred,
-#wr-minimize-button.wr-window-blurred, #wr-maximize-button.wr-window-blurred {
-    background-position: 0px 0px;
 }
 #wr-close-button.wr-window-dirty {
     background-position: 0px -56px;
@@ -520,6 +528,7 @@ li#wr-audio-stop span:last-child {
         background: transparent;
     }
     body.is-frameless {
+        border-radius: 4px;
         border-top: none;
     }
 
