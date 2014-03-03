@@ -2,7 +2,7 @@
     font-family: "Vera Mono";
     src: url("../fonts/VeraMono.ttf");
 }
-html, body, #TextMap {
+html, body {
     height: 100%;
 }
 body { 
@@ -15,6 +15,7 @@ body {
 }
 
 #TextMap {
+    height: 96%;
     display: block;
     background: none;
     border: none;
@@ -373,7 +374,7 @@ li#wr-audio-stop span:last-child {
     -webkit-app-region: drag;
     padding: 4px;
     padding-bottom: 0px;
-    display: table;
+    display: flex;
     background: rgba(0, 0, 0, 0.04); /* transparent; */ /* #f4f4f4; */
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -386,8 +387,8 @@ li#wr-audio-stop span:last-child {
     -webkit-user-select: none;
     -webkit-app-region: no-drag;
 }
-#wr-window-buttons, #wr-tabs-holder, #wr-window-fullscreen, #wr-tabs li {
-    display: table-cell;
+#wr-window-buttons, #wr-tabs-holder, #wr-window-fullscreen {
+    flex: 1 1 auto;
 }
 #wr-window-buttons li, #wr-tabs li, #wr-fullscreen-button {
     display: inline-block;
@@ -464,6 +465,9 @@ li#wr-audio-stop span:last-child {
 #wr-close-button.wr-window-dirty.wr-window-blurred {
     background-position: -14px 0px;
 }
+#wr-close-button.wr-window-dirty.wr-window-blurred.wr-window-button-hover {
+    background-position: 0px -56px;
+}
 
 #wr-tabs-holder {
     width: 100%;
@@ -474,16 +478,19 @@ li#wr-audio-stop span:last-child {
     width: 80%;
     margin: 0 auto;
     border-radius: 2px;
-    display: table;
     position: relative;
-    top: -4px;
-    left: -22px;
+    top: -1px;
+    left: -24px;
+    display: flex;
+    flex-direction: row;
 }
 #wr-tabs li {
     color: rgba(0, 0, 0, 0.21);
     text-align: center;
-    display: table-cell;
-    width: 10%;
+    width: 100%;
+    flex: 1 1 auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 #wr-tabs li:hover {
     background: rgba(0, 0, 0, 0.09);
@@ -493,6 +500,9 @@ li#wr-audio-stop span:last-child {
 }
 #wr-tabs li#wr-tab-selected:hover {
     background: transparent;
+}
+#wr-window-fullscreen {
+    width: 16px;
 }
 
 /*** CONTROL ***/

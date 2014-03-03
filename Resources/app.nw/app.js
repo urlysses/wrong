@@ -1564,7 +1564,7 @@
         if (titlebar.style.display !== "none") {
             titlebar.style.display = "none";
         } else {
-            titlebar.style.display = "block";
+            titlebar.style.display = "flex";
         }
     };
 
