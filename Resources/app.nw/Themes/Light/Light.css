@@ -20,11 +20,9 @@
 
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.35);
-  border-radius: 0px;
-  border-left: 3px solid #f4f4f4;
-  border-right: 2px solid #f4f4f4;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f4f4f4;
+  background: rgba(0, 0, 0, 0.04);
 }

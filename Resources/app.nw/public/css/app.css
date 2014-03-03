@@ -10,10 +10,11 @@ body {
     margin: 0;
     overflow: hidden;
     background: white;
+    display: flex;
+    flex-direction: column;
 }
 
 #TextMap {
-    height: 90%; /* fix for frameless thing... */
     display: block;
     background: none;
     border: none;
@@ -28,6 +29,8 @@ body {
     padding-left: 25%;
     padding-right: 25%;
     overflow-y: overlay;
+    overflow-x: hidden;
+    flex: 1 1 auto;
 }
 
 #open, #save, #user-css, #wr-bod-style, 
@@ -369,10 +372,12 @@ li#wr-audio-stop span:last-child {
     -webkit-user-select: none;
     -webkit-app-region: drag;
     padding: 4px;
+    padding-bottom: 0px;
     display: table;
-    background: transparent; /* #f4f4f4; */
+    background: rgba(0, 0, 0, 0.04); /* transparent; */ /* #f4f4f4; */
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    flex: 1 1 auto;
 }
 #wr-window-buttons, #wr-tabs {
     margin: 0;
@@ -466,7 +471,7 @@ li#wr-audio-stop span:last-child {
 #wr-tabs {
     height: 14px;
     border: solid 1px #000;
-    width: 90%;
+    width: 80%;
     margin: 0 auto;
     border-radius: 2px;
     display: table;
