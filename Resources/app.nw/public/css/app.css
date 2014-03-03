@@ -13,7 +13,7 @@ body {
 }
 
 #TextMap {
-    height: 93.7%; /* fix for frameless thing... */
+    height: 90%; /* fix for frameless thing... */
     display: block;
     background: none;
     border: none;
@@ -369,18 +369,20 @@ li#wr-audio-stop span:last-child {
     -webkit-user-select: none;
     -webkit-app-region: drag;
     padding: 4px;
-    display: block;
-    background: rgb(231, 231, 231);
+    display: table;
+    background: transparent; /* #f4f4f4; */
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
 #wr-window-buttons, #wr-tabs {
     margin: 0;
     padding: 0;
-    display: inline-block;
     list-style-type: none;
     -webkit-user-select: none;
     -webkit-app-region: no-drag;
+}
+#wr-window-buttons, #wr-tabs-holder, #wr-window-fullscreen, #wr-tabs li {
+    display: table-cell;
 }
 #wr-window-buttons li, #wr-tabs li, #wr-fullscreen-button {
     display: inline-block;
@@ -390,11 +392,16 @@ li#wr-audio-stop span:last-child {
 }
 #wr-window-buttons {
     height: 14px;
+    padding-left: 1px;
+    margin-top: 1px;
+    min-width: 58px;
+    width: 60px;
 }
 #wr-window-buttons li {
     width: 14px;
     height: 14px;
     cursor: default;
+    margin-left: 2px;
     background-color: transparent;
     background-image: url("../img/titlebarbuttons.png");
 }
@@ -432,10 +439,10 @@ li#wr-audio-stop span:last-child {
 #wr-fullscreen-button {
     width: 14px;
     height: 15px;
-    float: right; /* position absolute; right: 4px; instead? */
     background-color: transparent;
     background-image: url("../img/fullscreenbuttons.png");
     background-position: -14px 0px;
+    background-repeat: no-repeat;
 }
 #wr-fullscreen-button:hover {
     background-position: -28px 0px;
@@ -451,6 +458,36 @@ li#wr-audio-stop span:last-child {
 }
 #wr-close-button.wr-window-dirty.wr-window-blurred {
     background-position: -14px 0px;
+}
+
+#wr-tabs-holder {
+    width: 100%;
+}
+#wr-tabs {
+    height: 14px;
+    border: solid 1px #000;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 2px;
+    display: table;
+    position: relative;
+    top: -4px;
+    left: -22px;
+}
+#wr-tabs li {
+    color: rgba(0, 0, 0, 0.21);
+    text-align: center;
+    display: table-cell;
+    width: 10%;
+}
+#wr-tabs li:hover {
+    background: rgba(0, 0, 0, 0.09);
+}
+#wr-tabs li#wr-tab-selected {
+    color: #000;
+}
+#wr-tabs li#wr-tab-selected:hover {
+    background: transparent;
 }
 
 /*** CONTROL ***/

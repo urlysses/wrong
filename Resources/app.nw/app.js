@@ -373,7 +373,8 @@
         displayWordCount();
     });
     tm.doc.onpaste = function (e) {
-        tm.value = e.clipboardData.getData('text/plain');
+        var content = e.clipboardData.getData('text/plain');
+        document.execCommand("insertText", false, content);
         return false;
     };
     document.onmousemove = function () {
