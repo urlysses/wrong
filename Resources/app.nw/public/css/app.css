@@ -501,6 +501,9 @@ li#wr-audio-stop span:last-child {
 #wr-tabs li#wr-tab-selected:hover {
     background: transparent;
 }
+#wr-tabs li#wr-tab-selected span:last-child {
+    color: rgba(0, 0, 0, 0.47);
+}
 #wr-window-fullscreen {
     width: 16px;
 }

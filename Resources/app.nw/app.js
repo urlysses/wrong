@@ -1388,6 +1388,8 @@
         newTitle = docName;
 
         document.title = newTitle;
+        updateTitleDirt(false);
+        document.getElementById("wr-tab-selected").children[0].innerText = newTitle;
     };
 
     updateCloseDirt = function (isDirty) {
@@ -1420,10 +1422,13 @@
             } else {
                 newTitle = dirt + newTitle;
             }
+            document.getElementById("wr-tab-selected").children[1].innerHTML =
+                "&mdash; Edited";
         } else {
             if (!oldDirt) {
                 newTitle = oldTitle;
             }
+            document.getElementById("wr-tab-selected").children[1].innerHTML = "";
         }
 
         document.title = newTitle;
@@ -1482,7 +1487,7 @@
     };
 
     newFile = function (file) {
-        var x = win.x + 15,
+        /*var x = win.x + 15,
             y = win.y + 15,
             width   = 717,
             height  = 419,
@@ -1503,7 +1508,17 @@
                 winNext.window.madeNew = true;
                 win.window.madeNew = true;
             }
-        });
+        });*/
+        var tabsbar = document.getElementById("wr-tabs"),
+            currentTab = document.getElementById("wr-tab-selected"),
+            newTab = document.createElement("li");
+        newTab.id = currentTab.id;
+        currentTab.removeAttribute("id");
+        newTab.innerHTML = "<span>Untitled</span><span></span>";
+        tabsbar.appendChild(newTab);
+        if (file) {
+            openFile(file);
+        }
     };
 
     openFileDialog = function () {

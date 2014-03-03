@@ -7,7 +7,7 @@
     "min_height": 200,
     "width": 717,
     "height": 419,
-    "show": false,
+    "show": true,
     "frame": false,
     "toolbar": false
   },
