@@ -384,9 +384,9 @@
         displayWordCount();
     });
     tm.doc.onpaste = function (e) {
-        var content = e.clipboardData.getData('text/plain');
+        e.preventDefault();
+        var content = e.clipboardData.getData("text/plain");
         document.execCommand("insertText", false, content);
-        return false;
     };
     document.onmousemove = function () {
         displayWordCount();
@@ -1513,16 +1513,17 @@
             updateTabs(file);
         }
         newTab.dataset.file = file;
-        newTab.addEventListener("click", function () {
+        newTab.onclick = function () {
             var file = this.dataset.file,
                 currentTab = document.getElementById("wr-tab-selected");
             if (this !== currentTab) {
                 currentTab.removeAttribute("id");
                 tabs[currentTab.dataset.file] = tm.value;
                 this.id = "wr-tab-selected";
+                localStorage.filePath = file;
                 tm.value = tabs[file];
             }
-        }, false);
+        };
     };
 
     openFileDialog = function () {
@@ -1549,7 +1550,7 @@
             }
 
             // set global filePath to this new path
-            filePath = path;
+            filePath = path; // TODO: doesn't seem to work.
             // update the recentFiles list for the "Open Recent >" submenu
             updateRecentFiles(path);
             // update document title
