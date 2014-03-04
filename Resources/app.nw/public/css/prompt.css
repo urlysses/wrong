@@ -57,8 +57,7 @@
   text-shadow: 1px 1px 1px rgb(247, 247, 247);
   color: #383838;
   padding: 4px;
-  border-radius: 3px;
-  border-bottom-width: 2px;
+  border-bottom-width: 3px;
   padding-left: 12px;
   padding-right: 12px;
   font-size: 0.7em;
@@ -72,6 +71,12 @@
 .btn:focus {
   outline: none;
   box-shadow:0 0 5px #007eff;
+}
+
+.btn:active {
+    border-bottom-width: 1px;
+    position: relative;
+    top: 2px;
 }
 
 .btn-blue {

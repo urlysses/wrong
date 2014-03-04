@@ -15,6 +15,8 @@
         updateParcel,
         tm,
         titlebar,
+        tabs,
+        updateTabs,
         fullscreenbutton,
         windowbuttons,
         makeUTF8,
@@ -89,6 +91,8 @@
     } else {
         parcel = {};
     }
+
+    tabs = {};
 
     updateParcel = function (name, value) {
         parcel[name] = value;
@@ -199,8 +203,15 @@
             this._updateSelection();
         }
     };
+    TM.prototype.blur = function () {
+        var start = this.selectionStart,
+            end = this.selectionEnd;
+        this.doc.blur();
+    };
     TM.prototype.focus = function () {
         this.doc.focus();
+        this.selectionStart = this._selectionStart;
+        this.selectionEnd = this._selectionEnd;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -1056,16 +1067,7 @@
             openmenu.append(new gui.MenuItem({
                 label: element,
                 click: function () {
-                    var docVal = tm.value;
-                    if (filePath) {
-                        newFile(element);
-                    } else {
-                        if (docVal !== "") {
-                            newFile(element);
-                        } else {
-                            openFile(element);
-                        }
-                    }
+                    newFile(element);
                 }
             }));
         });
@@ -1388,7 +1390,6 @@
         newTitle = docName;
 
         document.title = newTitle;
-        updateTitleDirt(false);
         document.getElementById("wr-tab-selected").children[0].innerText = newTitle;
     };
 
@@ -1402,8 +1403,9 @@
     };
 
     updateTitleDirt = function (isDirty) {
-        var dirt, oldTitle, newTitle, oldDirt;
+        var dirt, oldTitle, newTitle, oldDirt, tabDirt;
         dirt = "\u2022 ";
+        tabDirt = " &mdash; Edited";
         oldTitle = document.title;
 
         // document title contains the dirt char
@@ -1422,16 +1424,15 @@
             } else {
                 newTitle = dirt + newTitle;
             }
-            document.getElementById("wr-tab-selected").children[1].innerHTML =
-                "&mdash; Edited";
         } else {
             if (!oldDirt) {
                 newTitle = oldTitle;
             }
-            document.getElementById("wr-tab-selected").children[1].innerHTML = "";
+            tabDirt = "";
         }
 
         document.title = newTitle;
+        document.getElementById("wr-tab-selected").children[1].innerHTML = tabDirt;
     };
 
     updateCounterDirt = function (isDirty) {
@@ -1443,6 +1444,13 @@
         }
 
         document.getElementById("wr-dirt").innerText = dirt;
+    };
+
+    updateTabs = function (file, data) {
+        tabs[file] = "";
+        if (data) {
+            tabs[file] = data;
+        }
     };
 
     makeUTF8 = function (data) {
@@ -1471,10 +1479,12 @@
                 filePath = saveButton.value;
                 if (callback) {
                     saveFile(filePath, function () {
+                        setPageTitle(filePath);
                         callback();
                     });
                 } else {
                     saveFile(filePath);
+                    setPageTitle(filePath);
                 }
             };
         }
@@ -1486,46 +1496,40 @@
         });
     };
 
-    newFile = function (file) {
-        /*var x = win.x + 15,
-            y = win.y + 15,
-            width   = 717,
-            height  = 419,
-            winNext = gui.Window.open("index.html", {
-                x: x,
-                y: y,
-                show: true,
-                width: width,
-                min_width: 400,
-                height: height,
-                min_height: 200,
-                toolbar: false
-            });
-
-        winNext.on("loaded", function () {
-            if (file) {
-                winNext.window.Wreathe.openFile(file);
-                winNext.window.madeNew = true;
-                win.window.madeNew = true;
-            }
-        });*/
+    newFile = function (file, callback) {
         var tabsbar = document.getElementById("wr-tabs"),
             currentTab = document.getElementById("wr-tab-selected"),
             newTab = document.createElement("li");
-        newTab.id = currentTab.id;
-        currentTab.removeAttribute("id");
+        if (currentTab) {
+            currentTab.removeAttribute("id");
+        }
+        newTab.id = "wr-tab-selected";
         newTab.innerHTML = "<span>Untitled</span><span></span>";
         tabsbar.appendChild(newTab);
         if (file) {
-            openFile(file);
+            openFile(file, callback); // updateTabs appears within this fn.
+        } else {
+            file = "untitled-" + Math.random();
+            updateTabs(file);
         }
+        newTab.dataset.file = file;
+        newTab.addEventListener("click", function () {
+            var file = this.dataset.file,
+                currentTab = document.getElementById("wr-tab-selected");
+            if (this !== currentTab) {
+                currentTab.removeAttribute("id");
+                tabs[currentTab.dataset.file] = tm.value;
+                this.id = "wr-tab-selected";
+                tm.value = tabs[file];
+            }
+        }, false);
     };
 
     openFileDialog = function () {
         var openButton = document.getElementById("open");
         openButton.click();
         openButton.onchange = function () {
-            openFile(openButton.value);
+            newFile(openButton.value);
         };
     };
 
@@ -1550,8 +1554,12 @@
             updateRecentFiles(path);
             // update document title
             setPageTitle(path);
+            // data
+            var dataUTF8 = makeUTF8(data.toString("utf8"));
+            // tabs
+            updateTabs(path, dataUTF8);
             // add data to textarea
-            tm.value = makeUTF8(data.toString("utf8"));
+            tm.value = dataUTF8;
             // clear the dirt
             setFileDirty(false);
             if (callback) {
@@ -1561,7 +1569,7 @@
     };
 
     closeWindow = function () {
-        if (filePath && !win.window.madeNew) {
+        if (filePath) {
             // save filePath for when the user reopens the app
             // (only 1 path can be saved since Cmd-Q skips this call and Cmd-W
             // will only close 1 file at a time)
@@ -1620,15 +1628,30 @@
 
     win.on("blur", function () {
         document.body.id = "blurred";
-        //tm.blur();
+        tm.blur();
         toggleAudio();
         blurWindowButtons();
     });
 
     // load file into the textarea
     gui.App.on("open", function (path) {
-        openFile(path);
+        newFile(path);
+        return false;
     });
+    document.addEventListener("dragover", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+    }, false);
+    document.addEventListener("drop", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var files = e.dataTransfer.files,
+            i;
+        for (i = 0; i < files.length; i++) {
+            newFile(files[i].path);
+        }
+    }, false);
 
     // Save some data on close.
     win.on("close", function () {
@@ -1664,6 +1687,9 @@
 
     completeInit = function (path) {
         var defaultTheme, themeSelector;
+        if (path === undefined) {
+            newFile();
+        }
         win.show();
         toggleAudio();
         setPageTitle(path);
@@ -1694,7 +1720,7 @@
                 fs.exists(file, function (exists) {
                     if (exists) {
                         if (index === 0) {
-                            openFile(file, function () {
+                            newFile(file, function () {
                                 gui.App.argv.splice(index, 1);
                             });
                         } else {
@@ -1717,9 +1743,10 @@
 
         if (localStorage.filePath) {
             lsfp = localStorage.filePath;
+            lsfp = "";
             fs.exists(lsfp, function (exists) {
                 if (exists) {
-                    openFile(lsfp, function () {
+                    newFile(lsfp, function () {
                         // clear localStorage to allow for new, blank documents
                         delete localStorage.filePath;
                         // show window
@@ -1740,6 +1767,8 @@
     global.TM = TM;
     global.win = win;
     global.menu = menu;
-    global.Wreathe = {openFile: openFile, newFile: newFile, saveFile: saveFile,
+    global.tabs = tabs;
+    global.filePath = filePath;
+    global.Wreathe = {newFile: newFile, saveFile: saveFile,
         openFileDialog: openFileDialog};
 }(this));
