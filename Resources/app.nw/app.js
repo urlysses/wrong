@@ -65,6 +65,8 @@
         $counter,
         playClicks;
 
+    global.filePath = filePath;
+
     theme = {};
     theme.body = [];
     theme.cm = [];
@@ -345,7 +347,7 @@
         if (this.controlOpened === true) {
             machine.doc.parentNode.removeChild(this.controlpack);
             machine.doc.classList.remove("tm-control-on");
-            machine.focus(); //TODO: back to previous position.
+            machine.focus(); //TODO: back to previous position in text.
             // clear input?
             this.controlOpened = false;
         }
@@ -415,7 +417,7 @@
             }
             // Cmd-S
             if (!alt && !shift && k === 83) {
-                saveFile(filePath);
+                saveFile(global.filePath);
             }
             // Shift-Cmd-S 
             if (!alt && shift && k === 83) {
@@ -1094,7 +1096,7 @@
     filemenu.append(new gui.MenuItem({
         label: "Save  (\u2318S)",
         click: function () {
-            saveFile(filePath);
+            saveFile(global.filePath);
         }
     }));
 
@@ -1476,22 +1478,22 @@
             saveButton.click();
 
             saveButton.onchange = function () {
-                filePath = saveButton.value;
+                global.filePath = saveButton.value;
                 if (callback) {
-                    saveFile(filePath, function () {
-                        setPageTitle(filePath);
+                    saveFile(global.filePath, function () {
+                        setPageTitle(global.filePath);
                         callback();
                     });
                 } else {
-                    saveFile(filePath);
-                    setPageTitle(filePath);
+                    saveFile(global.filePath);
+                    setPageTitle(global.filePath);
                 }
             };
         }
     };
 
     saveAndClose = function () {
-        saveFile(filePath, function () {
+        saveFile(global.filePath, function () {
             closeWindow();
         });
     };
@@ -1500,18 +1502,36 @@
         var tabsbar = document.getElementById("wr-tabs"),
             currentTab = document.getElementById("wr-tab-selected"),
             newTab = document.createElement("li");
-        if (currentTab) {
-            currentTab.removeAttribute("id");
-        }
+
         newTab.id = "wr-tab-selected";
         newTab.innerHTML = "<span>Untitled</span><span></span>";
-        tabsbar.appendChild(newTab);
+
         if (file) {
-            openFile(file, callback); // updateTabs appears within this fn.
+            if (tm.value.length > 0
+                    || currentTab.dataset.file.indexOf("untitled-") !== 0) {
+                // Current tab is either being used or already a saved file
+                currentTab.removeAttribute("id");
+                tabsbar.appendChild(newTab);
+                tabs[currentTab.dataset.file] = tm.value;
+            } else {
+                // Current tab untitled and unused. Open file within this tab.
+                delete tabs[currentTab.dataset.file];
+                currentTab.dataset.file = file;
+            }
+
+            openFile(file, callback); // updateTabs() appears within this fn.
         } else {
-            file = "untitled-" + Math.random();
+            file = "untitled-" + Math.floor(Math.random() * Math.pow(10, 17));
             updateTabs(file);
+            if (currentTab) {
+                currentTab.removeAttribute("id");
+                tabs[currentTab.dataset.file] = tm.value;
+            }
+            tabsbar.appendChild(newTab);
+            tm.value = "";
         }
+
+
         newTab.dataset.file = file;
         newTab.onclick = function () {
             var file = this.dataset.file,
@@ -1520,7 +1540,7 @@
                 currentTab.removeAttribute("id");
                 tabs[currentTab.dataset.file] = tm.value;
                 this.id = "wr-tab-selected";
-                localStorage.filePath = file;
+                global.filePath = file;
                 tm.value = tabs[file];
             }
         };
@@ -1550,7 +1570,7 @@
             }
 
             // set global filePath to this new path
-            filePath = path; // TODO: doesn't seem to work.
+            global.filePath = path;
             // update the recentFiles list for the "Open Recent >" submenu
             updateRecentFiles(path);
             // update document title
@@ -1570,11 +1590,11 @@
     };
 
     closeWindow = function () {
-        if (filePath) {
+        if (global.filePath) {
             // save filePath for when the user reopens the app
             // (only 1 path can be saved since Cmd-Q skips this call and Cmd-W
             // will only close 1 file at a time)
-            localStorage.filePath = filePath;
+            localStorage.filePath = global.filePath;
         }
 
         win.close(true);
@@ -1769,7 +1789,6 @@
     global.win = win;
     global.menu = menu;
     global.tabs = tabs;
-    global.filePath = filePath;
     global.Wreathe = {newFile: newFile, saveFile: saveFile,
         openFileDialog: openFileDialog};
 }(this));
