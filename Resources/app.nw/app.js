@@ -14,6 +14,7 @@
         parcel,
         updateParcel,
         tm,
+        initTM,
         titlebar,
         tabs,
         updateTabs,
@@ -24,6 +25,7 @@
         filePath,
         fileDirty,
         setFileDirty,
+        getFileDirty,
         newFile,
         openFileDialog,
         openFile,
@@ -372,25 +374,31 @@
     };
     TM.control = new CMD();
 
-    tm = new TM("");
-    tm.doc.addEventListener("input", function () {
-        setFileDirty(true);
-        displayWordCount();
-    });
-    tm.doc.addEventListener("keydown", function () {
-        toggleSuperfluous(true);
-    });
-    tm.doc.addEventListener("keypress", function () {
-        playClicks();
-    });
-    tm.doc.addEventListener("mouseup", function () {
-        displayWordCount();
-    });
-    tm.doc.onpaste = function (e) {
-        e.preventDefault();
-        var content = e.clipboardData.getData("text/plain");
-        document.execCommand("insertText", false, content);
+    initTM = function () {
+        var tm = new TM("");
+        tm.doc.addEventListener("input", function () {
+            setFileDirty(true);
+            displayWordCount();
+        });
+        tm.doc.addEventListener("keydown", function () {
+            toggleSuperfluous(true);
+        });
+        tm.doc.addEventListener("keypress", function () {
+            playClicks();
+        });
+        tm.doc.addEventListener("mouseup", function () {
+            displayWordCount();
+        });
+        tm.doc.onpaste = function (e) {
+            e.preventDefault();
+            var content = e.clipboardData.getData("text/plain");
+            document.execCommand("insertText", false, content);
+        };
+        return tm;
     };
+
+    tm = initTM();
+
     document.onmousemove = function () {
         displayWordCount();
     };
@@ -1381,6 +1389,19 @@
         updateCounterDirt(fileDirty);
     };
 
+    getFileDirty = function (tab) {
+        var dirty = false,
+            di = tab.children[1];
+
+        // if the tab's second span contains anything (e.g., "- Edited")
+        // then the tab is dirty.
+        if (di.innerText.length > 0) {
+            dirty = true;
+        }
+
+        setFileDirty(dirty);
+    };
+
     setPageTitle = function (path) {
         var docName, oldTitle, newTitle;
         if (path) {
@@ -1462,10 +1483,10 @@
     };
 
     saveFile = function (path, callback) {
-        if (path.indexOf("untitled-") === 0) {
+        if (path !== undefined && path.indexOf("untitled-") === 0) {
             // file path begins with "untitled-". We can assume that this
-            // is an undefined file since users probably wont save directly
-            // to root while also saving with the prefix "untitled-".
+            // is an undefined file since users wont be saving directly
+            // to the app's root while also saving with the prefix "untitled-".
             // If this becomes a problem later on, implement some check to see
             // whether the current tab is a file or a file-to-be.
             path = undefined;
@@ -1504,7 +1525,7 @@
 
     saveAndClose = function () {
         saveFile(global.filePath, function () {
-            closeWindow();
+            closeTab();
         });
     };
 
@@ -1544,12 +1565,16 @@
 
         newTab.dataset.file = file;
         newTab.onclick = function () {
+            // TODO: cursor position and undo are lost while tab switching
+            // because we're modifying tm directly. Should give each tab
+            // its own tm + TM + CMD or w/e.
             var file = this.dataset.file,
                 currentTab = document.getElementById("wr-tab-selected");
             if (this !== currentTab) {
                 currentTab.removeAttribute("id");
                 tabs[currentTab.dataset.file] = tm.value;
                 this.id = "wr-tab-selected";
+                getFileDirty(this);
                 global.filePath = file;
                 tm.value = tabs[file];
             }
@@ -1600,12 +1625,25 @@
     };
 
     closeTab = function () {
-        // TODO: keep track of which files are dirty and which aren't
-        // for tab switching.
-        // TODO: close tabs individually on cmd-w.
-        // TODO: close all docs on cmd-q
-        //       -> loop through tabs to check for unsaved changes & ask each?
-        //       -> save all tabs for next time app is relaunched?
+        var currentTab = document.getElementById("wr-tab-selected"),
+            tabsbar = currentTab.parentElement,
+            nextTab = $(currentTab).next()[0];
+
+        if (nextTab === undefined) {
+            nextTab = $(currentTab).prev()[0];
+        }
+
+        delete tabs[currentTab.dataset.file];
+        currentTab.removeAttribute("id");
+        tabsbar.removeChild(currentTab);
+        if (nextTab) {
+            nextTab.id = "wr-tab-selected";
+            getFileDirty(nextTab);
+            global.filePath = nextTab.dataset.file;
+            tm.value = tabs[nextTab.dataset.file];
+        } else {
+            closeWindow();
+        }
     };
 
     closeWindow = function () {
@@ -1694,7 +1732,16 @@
     }, false);
 
     // Save some data on close.
-    win.on("close", function () {
+    win.on("close", function (quit) {
+        if (quit) {
+            // Closing with cmd-q instead of cmd-w.
+            // Loop through all tabs and close them.
+            var i;
+            for (i = 0; i < Object.keys(tabs).length; i++) {
+                win.close();
+            }
+        }
+
         // if file has been dirtied & codemirror history is not already at 
         // oldest undo
         if (fileDirty) {
@@ -1715,13 +1762,13 @@
             }).addBtn({
                 text: "Don't Save",
                 onclick: function (e) {
-                    closeWindow();
+                    closeTab();
                 },
                 type: "btn-red"
             });
             P.show();
         } else {
-            closeWindow();
+            closeTab();
         }
     });
 
