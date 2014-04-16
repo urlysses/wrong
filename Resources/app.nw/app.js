@@ -36,6 +36,7 @@
         blurWindowButtons,
         closeWindow,
         closeTab,
+        closeAllTabs,
         saveAndClose,
         menubar,
         findmenu,
@@ -169,7 +170,11 @@
     // TODO:
     // add search
     function TM(val) {
-        this.doc = document.getElementById("TextMap");
+        this.doc = document.createElement("div");
+        this.doc.id = "TextMap";
+        this.doc.className += "tm-w-default";
+        this.doc.contentEditable = "true";
+        document.getElementById("TextMapHolder").appendChild(this.doc);
         this.value = val;
         this.selectionStart = 0;
         this.selectionEnd = 0;
@@ -208,15 +213,25 @@
             this._updateSelection();
         }
     };
+    TM.prototype.clone = function () {
+        return $.extend(true, {}, this);
+    };
+    TM.prototype.update = function (tm) {
+        var tmholder = document.getElementById("TextMapHolder");
+        while (tmholder.lastChild) {
+            tmholder.removeChild(tmholder.lastChild);
+        }
+        tmholder.appendChild(tm.doc);
+    };
     TM.prototype.blur = function () {
-        var start = this.selectionStart,
-            end = this.selectionEnd;
+        this._blurStart = this.selectionStart;
+        this._blurEnd = this.selectionEnd;
         this.doc.blur();
     };
     TM.prototype.focus = function () {
         this.doc.focus();
-        this.selectionStart = this._selectionStart;
-        this.selectionEnd = this._selectionEnd;
+        this.selectionStart = this._blurStart;
+        this.selectionEnd = this._blurEnd;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -1316,7 +1331,8 @@
         }
     });
     document.getElementById("wr-close-button").onclick = function () {
-        win.close();
+        //closeAllTabs();
+        win.close(true);
     };
     document.getElementById("wr-minimize-button").onclick = function () {
         win.minimize();
@@ -1380,6 +1396,10 @@
             if (document.queryCommandEnabled("undo") === true) {
                 // Not at oldest document change.
                 fd = true;
+                // TODO: undo is broken. document only undoes things
+                // within the selected tab (good) but still cycles
+                // through the undo list. End up losing the undos
+                // from other tabs.
             }
         }
 
@@ -1471,9 +1491,9 @@
     };
 
     updateTabs = function (file, data) {
-        tabs[file] = "";
+        tabs[file] = initTM();
         if (data) {
-            tabs[file] = data;
+            tabs[file].value = data;
         }
     };
 
@@ -1543,7 +1563,7 @@
                 // Current tab is either being used or already a saved file
                 currentTab.removeAttribute("id");
                 tabsbar.appendChild(newTab);
-                tabs[currentTab.dataset.file] = tm.value;
+                tabs[currentTab.dataset.file] = tm.clone();
             } else {
                 // Current tab untitled and unused. Open file within this tab.
                 delete tabs[currentTab.dataset.file];
@@ -1556,10 +1576,12 @@
             updateTabs(file);
             if (currentTab) {
                 currentTab.removeAttribute("id");
-                tabs[currentTab.dataset.file] = tm.value;
+                tabs[currentTab.dataset.file] = tm.clone();
             }
             tabsbar.appendChild(newTab);
-            tm.value = "";
+            tm.update(tabs[file]);
+            tm = tabs[file];
+            tm.focus();
         }
 
 
@@ -1572,11 +1594,13 @@
                 currentTab = document.getElementById("wr-tab-selected");
             if (this !== currentTab) {
                 currentTab.removeAttribute("id");
-                tabs[currentTab.dataset.file] = tm.value;
+                tabs[currentTab.dataset.file] = tm.clone();
                 this.id = "wr-tab-selected";
                 getFileDirty(this);
                 global.filePath = file;
-                tm.value = tabs[file];
+                tm.update(tabs[file]);
+                tm = tabs[file];
+                tm.focus();
             }
         };
     };
@@ -1615,7 +1639,9 @@
             // tabs
             updateTabs(path, dataUTF8);
             // add data to textarea
-            tm.value = dataUTF8;
+            tm.update(tabs[path]);
+            tm = tabs[path];
+            tm.focus();
             // clear the dirt
             setFileDirty(false);
             if (callback) {
@@ -1640,9 +1666,18 @@
             nextTab.id = "wr-tab-selected";
             getFileDirty(nextTab);
             global.filePath = nextTab.dataset.file;
-            tm.value = tabs[nextTab.dataset.file];
+            tm.update(tabs[nextTab.dataset.file]);
+            tm = tabs[nextTab.dataset.file];
+            tm.focus();
         } else {
             closeWindow();
+        }
+    };
+
+    closeAllTabs = function () {
+        var i;
+        for (i = 0; i < Object.keys(tabs).length; i++) {
+            win.close();
         }
     };
 
@@ -1736,10 +1771,7 @@
         if (quit) {
             // Closing with cmd-q instead of cmd-w.
             // Loop through all tabs and close them.
-            var i;
-            for (i = 0; i < Object.keys(tabs).length; i++) {
-                win.close();
-            }
+            closeAllTabs();
         }
 
         // if file has been dirtied & codemirror history is not already at 

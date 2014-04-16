@@ -14,8 +14,24 @@ body {
     flex-direction: column;
 }
 
-#TextMap {
+#TextMapHolder {
     height: 96%;
+    display: block;
+    background: none;
+    border: none;
+    width: 100%;
+    margin: 0;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    flex: 1 1 auto;
+}
+
+#TextMap {
+    height: 99%;
     display: block;
     background: none;
     border: none;
