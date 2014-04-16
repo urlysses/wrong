@@ -33,6 +33,7 @@
         focusWindowButtons,
         blurWindowButtons,
         closeWindow,
+        closeTab,
         saveAndClose,
         menubar,
         findmenu,
@@ -1596,6 +1597,15 @@
                 callback();
             }
         });
+    };
+
+    closeTab = function () {
+        // TODO: keep track of which files are dirty and which aren't
+        // for tab switching.
+        // TODO: close tabs individually on cmd-w.
+        // TODO: close all docs on cmd-q
+        //       -> loop through tabs to check for unsaved changes & ask each?
+        //       -> save all tabs for next time app is relaunched?
     };
 
     closeWindow = function () {
