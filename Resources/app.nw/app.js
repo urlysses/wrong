@@ -1461,6 +1461,15 @@
     };
 
     saveFile = function (path, callback) {
+        if (path.indexOf("untitled-") === 0) {
+            // file path begins with "untitled-". We can assume that this
+            // is an undefined file since users probably wont save directly
+            // to root while also saving with the prefix "untitled-".
+            // If this becomes a problem later on, implement some check to see
+            // whether the current tab is a file or a file-to-be.
+            path = undefined;
+        }
+
         if (path !== undefined && typeof path !== "function") {
             var data = makeUTF8(tm.value);
             fs.writeFile(path, data, function (err) {
