@@ -528,21 +528,24 @@ li#wr-audio-stop span:last-child {
 #tm-wr-control {
     position: fixed;
     z-index: 100;
-    background-image: -webkit-linear-gradient(left, white 40%, transparent 90%);
-    width: 98%;
+    background: white;
+    width: 100%;
     padding: 5px;
+    -webkit-box-sizing: border-box;
+    flex: 1 1 auto;
 }
 #tm-control {
-    width: 97%;
+    width: 100%;
     margin: 0;
     padding: 4px;
-    background: transparent;
-    background-image: -webkit-linear-gradient(left, rgb(231, 231, 231), transparent);
+    background: rgb(231, 231, 231);
     border: none;
     display: block;
     outline: none;
     font-size: 1.2em;
     -webkit-font-smoothing: antialiased;
+    -webkit-box-sizing: border-box;
+    flex: 1 1 auto;
 }
 .tm-control-on {
     padding-top: 45px !important;

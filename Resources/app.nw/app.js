@@ -337,7 +337,7 @@
     TM.prototype.scrollToSelection = function () {
         var range = window.getSelection().getRangeAt(0),
             t = range.getBoundingClientRect().top;
-        this.doc.scrollTop += t;
+        this.doc.scrollTop += t - window.innerHeight / 2;
     };
     function CMD() {
         // Control & Control Pack
@@ -387,7 +387,23 @@
         this.control.value = "define ";
         // yeah idk how i'm going to do this.
     };
+    CMD.prototype.parse = function (query) {
+        var commands = ["find", "define", "replace"],
+            i;
+        for (i = 0; i < commands.length; i++) {
+            if (query.indexOf(commands[i]) === 0) {
+                var q = query.slice(commands[i].length + 1);
+                tm[commands[i]](q);
+                break;
+            }
+        }
+    };
     TM.control = new CMD();
+    TM.control.control.addEventListener("keypress", function (e) {
+        if (e.keyCode === 13) {
+            TM.control.parse(this.value);
+        }
+    });
 
     initTM = function () {
         var tm = new TM("");
@@ -454,6 +470,10 @@
             // Shift-Cmd-F
             if ((!alt && shift && k === 70) || (cmd && !alt && !shift && k === 13)) {
                 toggleFullscreen();
+            }
+            // Cmd-F
+            if (!alt && !shift && k === 70) {
+                TM.control.find(tm);
             }
         }
         // Esc
