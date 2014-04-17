@@ -1754,14 +1754,14 @@
     // deal with the audio player on blur and focus
     win.on("focus", function () {
         document.body.id = "";
-        tm.focus();
+        //tm.focus();
         toggleAudio();
         focusWindowButtons();
     });
 
     win.on("blur", function () {
         document.body.id = "blurred";
-        tm.blur();
+        //tm.blur();
         toggleAudio();
         blurWindowButtons();
     });

@@ -391,7 +391,7 @@ li#wr-audio-stop span:last-child {
     padding: 4px;
     padding-bottom: 0px;
     display: flex;
-    background: rgba(0, 0, 0, 0.04); /* transparent; */ /* #f4f4f4; */
+    background: white; /* rgba(0, 0, 0, 0.04); */ /* #f4f4f4; */
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     flex: 1 1 auto;
@@ -490,7 +490,7 @@ li#wr-audio-stop span:last-child {
 }
 #wr-tabs {
     height: 14px;
-    border: solid 1px #000;
+    border: solid 1px #007aff;
     width: 80%;
     margin: 0 auto;
     border-radius: 2px;
@@ -501,24 +501,30 @@ li#wr-audio-stop span:last-child {
     flex-direction: row;
 }
 #wr-tabs li {
-    color: rgba(0, 0, 0, 0.21);
+    color: #007aff;
     text-align: center;
+    background: white;
     width: 100%;
     flex: 1 1 auto;
     text-overflow: ellipsis;
     overflow: hidden;
+    border-right: 1px solid #007aff;
 }
-#wr-tabs li:hover {
-    background: rgba(0, 0, 0, 0.09);
+#wr-tabs li:last-child {
+    border-right: none;
+}
+#wr-tabs li:active {
+    background: rgba(0, 122, 255, 0.15);
 }
 #wr-tabs li#wr-tab-selected {
-    color: #000;
+    color: white;
+    background: #007aff;
 }
-#wr-tabs li#wr-tab-selected:hover {
-    background: transparent;
+#wr-tabs li#wr-tab-selected:active {
+    color: rgba(223, 238, 255, 1);
 }
 #wr-tabs li#wr-tab-selected span:last-child {
-    color: rgba(0, 0, 0, 0.47);
+    color: rgba(255, 255, 255, 0.63);
 }
 #wr-window-fullscreen {
     width: 16px;
