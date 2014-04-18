@@ -23,3 +23,4 @@
 + create in-app menu where you can execute commands by text
   ("find jdjd", "define sdmsd", etc)
 + IMPORTANT: iCloud & file nav implementation (see that lua HN post or w/e).
++ add a favicon for app completeness (and so nothing unexpected happens).
