@@ -66,6 +66,7 @@
         submenuLoadTheme,
         updateCounterDirt,
         toggleSuperfluous,
+        bindEditorShortcuts,
         $counter,
         playClicks;
 
@@ -360,6 +361,18 @@
             cssFile.rel = "stylesheet";
             this.controlpack.contentDocument.head.appendChild(cssFile);
             this.controlpack.contentDocument.body.appendChild(this.control);
+            var cmd = this;
+            this.control.addEventListener("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    cmd.parse(this.value);
+                }
+            });
+            this.control.addEventListener("blur", function (e) {
+                cmd.hide(tm);
+            });
+            // bind general editor shortcuts here too so no functionality is 
+            // lost.
+            bindEditorShortcuts(this.control);
             this.control.focus();
             this.controlOpened = true;
         }
@@ -404,11 +417,6 @@
         }
     };
     TM.control = new CMD();
-    TM.control.control.addEventListener("keypress", function (e) {
-        if (e.keyCode === 13) {
-            TM.control.parse(this.value);
-        }
-    });
 
     initTM = function () {
         var tm = new TM("");
@@ -439,55 +447,58 @@
         displayWordCount();
     };
     // Keyboard Shortcuts
-    document.addEventListener("keydown", function (e) {
-        var k = e.keyCode,
-            cmd = e.metaKey,
-            alt = e.altKey,
-            shift = e.shiftKey;
-        if (cmd === true) {
-            // All shortcuts here include "cmd" so no need to check for it.
-            /* Dev shortcuts */
-            // Cmd-Alt-J
-            if (alt && !shift && k === 74) {
-                win.showDevTools();
+    bindEditorShortcuts = function (el) {
+        el.addEventListener("keydown", function (e) {
+            var k = e.keyCode,
+                cmd = e.metaKey,
+                alt = e.altKey,
+                shift = e.shiftKey;
+            if (cmd === true) {
+                // All shortcuts here include "cmd" so no need to check for it.
+                /* Dev shortcuts */
+                // Cmd-Alt-J
+                if (alt && !shift && k === 74) {
+                    win.showDevTools();
+                }
+                /* Editor shortcuts */
+                // Cmd-,
+                if (!alt && !shift && k === 188) {
+                    openSettings();
+                }
+                // Cmd-O
+                if (!alt && !shift && k === 79) {
+                    openFileDialog();
+                }
+                // Cmd-S
+                if (!alt && !shift && k === 83) {
+                    saveFile(global.filePath);
+                }
+                // Shift-Cmd-S 
+                if (!alt && shift && k === 83) {
+                    saveFile();
+                }
+                // Cmd-N
+                if (!alt && !shift && k === 78) {
+                    newFile();
+                }
+                // Shift-Cmd-F
+                if ((!alt && shift && k === 70) || (cmd && !alt && !shift && k === 13)) {
+                    toggleFullscreen();
+                }
+                // Cmd-F
+                if (!alt && !shift && k === 70) {
+                    TM.control.find(tm);
+                }
             }
-            /* Editor shortcuts */
-            // Cmd-,
-            if (!alt && !shift && k === 188) {
-                openSettings();
+            // Esc
+            if (!cmd && !alt && !shift && k === 27) {
+                if (win.isFullscreen === true) {
+                    toggleFullscreen();
+                }
             }
-            // Cmd-O
-            if (!alt && !shift && k === 79) {
-                openFileDialog();
-            }
-            // Cmd-S
-            if (!alt && !shift && k === 83) {
-                saveFile(global.filePath);
-            }
-            // Shift-Cmd-S 
-            if (!alt && shift && k === 83) {
-                saveFile();
-            }
-            // Cmd-N
-            if (!alt && !shift && k === 78) {
-                newFile();
-            }
-            // Shift-Cmd-F
-            if ((!alt && shift && k === 70) || (cmd && !alt && !shift && k === 13)) {
-                toggleFullscreen();
-            }
-            // Cmd-F
-            if (!alt && !shift && k === 70) {
-                TM.control.find(tm);
-            }
-        }
-        // Esc
-        if (!cmd && !alt && !shift && k === 27) {
-            if (win.isFullscreen === true) {
-                toggleFullscreen();
-            }
-        }
-    });
+        });
+    };
+    bindEditorShortcuts(document);
 
     window.onmousemove = function () {
         toggleSuperfluous(false);
