@@ -539,6 +539,8 @@ li#wr-audio-stop span:last-child {
     padding: 5px;
     -webkit-box-sizing: border-box;
     flex: 1 1 auto;
+    border: none;
+    height: 40px;
 }
 #tm-control {
     width: 100%;
@@ -598,10 +600,10 @@ li#wr-audio-stop span:last-child {
 
 @media (max-width: 800px) {
     body { 
-        border-top: 1px solid #8B8B8B;
+        /*border-top: 1px solid #8B8B8B;*/
     }
     #blurred {
-        border-top-color: #aaa;
+        /*border-top-color: #aaa;*/
     }
     html.is-frameless {
         border-radius: 4px;

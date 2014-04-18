@@ -167,8 +167,6 @@
         document.getElementById("wr-theme-" + themeName).selected = true;
     };
 
-    // TODO:
-    // add search
     function TM(val) {
         this.doc = document.createElement("div");
         this.doc.id = "TextMap";
@@ -341,12 +339,11 @@
     };
     function CMD() {
         // Control & Control Pack
-        this.controlpack = document.createElement("div");
+        this.controlpack = document.createElement("iframe");
         this.controlpack.id = "tm-wr-control";
         this.control = document.createElement("input");
         this.control.type = "text";
         this.control.id = "tm-control";
-        this.controlpack.appendChild(this.control);
         this.controlOpened = false;
         // Query Misc
         this.findquery = "";
@@ -357,6 +354,12 @@
         if (this.controlOpened === false) {
             machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
             machine.doc.classList.add("tm-control-on");
+            var cssFile = document.createElement("link");
+            cssFile.href = "public/css/app.css";
+            cssFile.type = "text/css";
+            cssFile.rel = "stylesheet";
+            this.controlpack.contentDocument.head.appendChild(cssFile);
+            this.controlpack.contentDocument.body.appendChild(this.control);
             this.control.focus();
             this.controlOpened = true;
         }
@@ -372,7 +375,7 @@
     };
     CMD.prototype.find = function (machine) {
         this.show(machine);
-        this.control.value = "find ";
+        this.control.value = "find " + this.findquery;
     };
     CMD.prototype.findNext = function (machine) {
     };
@@ -391,9 +394,11 @@
         var commands = ["find", "define", "replace"],
             i;
         for (i = 0; i < commands.length; i++) {
-            if (query.indexOf(commands[i]) === 0) {
-                var q = query.slice(commands[i].length + 1);
-                tm[commands[i]](q);
+            var command = commands[i];
+            if (query.indexOf(command) === 0) {
+                var q = query.slice(command.length + 1);
+                this[command + "query"] = q;
+                tm[command](q);
                 break;
             }
         }
