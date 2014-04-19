@@ -403,9 +403,13 @@
             this.control.addEventListener("keypress", function (e) {
                 if (e.keyCode === 13) {
                     cmd.parse(machine, this.value);
+                } else if (e.keyCode === 32) {
+                    if (this.value.toLowerCase().indexOf("replace") === 0) {
+                        cmd.modifyForReplace(machine);
+                    }
                 }
             });
-            this.control.addEventListener("blur", function (e) {
+            this.controlpack.addEventListener("blur", function (e) {
                 cmd.hide(machine);
             });
             // bind general editor shortcuts here too so no functionality is 
@@ -441,13 +445,53 @@
     CMD.prototype.findPrev = function (machine) {
         machine.find(this.findquery, true);
     };
+    CMD.prototype.modifyForReplace = function (machine, forAll) {
+        this.replControl = document.createElement("div");
+        this.replValue = document.createElement("input");
+        this.replReplacement = document.createElement("input");
+        this.replAll = document.createElement("button");
+
+        this.replValue.id = "tm-control-replace-value";
+        this.replValue.type = "text";
+        this.replReplacement.id = "tm-control-replace-replacement";
+        this.replReplacement.type = "text";
+
+        this.replAll.id = "tm-control-replace-all";
+        this.replAll.innerHTML = "all <strong>?</strong>";
+        if (forAll === true) {
+            this.replAll.classList.add("tm-control-replace-all-on");
+        }
+        this.replAll.addEventListener("click", function () {
+            console.log("click");
+            if (this.classList.length === 1) {
+                this.classList.remove("tm-control-replace-all-on");
+                this.innerHTML = "all <strong>?</strong>";
+            } else {
+                this.classList.add("tm-control-replace-all-on");
+                this.innerHTML = "all &#10004;";
+            }
+        }, false);
+
+        this.replControl.id = "tm-control";
+        this.replControl.innerHTML = "replace ";
+        this.replControl.appendChild(this.replAll);
+        this.replControl.appendChild(this.replValue);
+        this.replControl.innerHTML += " with ";
+        this.replControl.appendChild(this.replReplacement);
+
+        this.controlpack.contentDocument.body.removeChild(this.control);
+        this.controlpack.contentDocument.body.appendChild(this.replControl);
+        this.replValue.focus();
+    };
     CMD.prototype.replace = function (machine) {
         this.show(machine);
         this.control.value = "replace " + this.replacequery;
+        this.modifyForReplace(machine);
     };
     CMD.prototype.replaceAll = function (machine) {
         this.show(machine);
         this.control.value = "replace all" + this.replaceAllquery;
+        this.modifyForReplace(machine, true);
     };
     CMD.prototype.define = function (machine) {
         this.show(machine);
@@ -457,7 +501,7 @@
         //       (shortcut Cmd-L ?)
     };
     CMD.prototype.parse = function (machine, query) {
-        var commands = ["find", "define", "replace"],
+        var commands = ["find", "define"],
             lowerquery = query.toLowerCase(),
             i;
 
@@ -474,35 +518,8 @@
                 var q = query.slice(command.length + 1);
                 // Store the query for later reuse.
                 this[command + "query"] = q;
-
-                // If command is "replace all" rewrite to "replaceAll".
-                if (command === "replace" && q.indexOf("all ") === 0) {
-                    command = "replaceAll";
-                    q = q.slice(4);
-                }
-
-                // If command is a replace command, parse query for "with".
-                if (command.indexOf("replace") === 0) {
-                    var withs = q.split(" with ");
-                    if (withs.length === 2) {
-                        // Lucky. This is simple query. "replace val with rep"
-                        this.findquery = withs[0]; // store the value for finds as well.
-                        machine[command](withs[0], withs[1]);
-                    } else if (withs.length === 1) {
-                        // User trying to replace without with. um.
-                        console.log(withs);
-                    } else {
-                        // User trying to replace with with something or
-                        // something with with, which can become confusing.
-                        // TODO: Maybe break Control in two for replace queries?
-                        // would be a lot simpler lol.
-                        console.log(withs);
-                    }
-                } else {
-                    // Not a replace command.
-                    // Execute query via tm[command](query) (tm.find("word"))
-                    machine[command](q);
-                }
+                // Execute query via tm[command](query) (e.g., tm.find("word"))
+                machine[command](q);
                 // Stop looping.
                 break;
             }
