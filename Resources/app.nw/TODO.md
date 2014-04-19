@@ -18,9 +18,6 @@
   this app is about focus and writing, it's not about creating themes
   (can put more advanced theme creator on website). 
   Get out of your own way when designing things: it's not about you.
-+ Rewrite all external libs on your own (codemirror, spectrum or w/e).
 + Speech-based writing and editing (using modes?)?
-+ create in-app menu where you can execute commands by text
-  ("find jdjd", "define sdmsd", etc)
 + IMPORTANT: iCloud & file nav implementation (see that lua HN post or w/e).
 + add a favicon for app completeness (and so nothing unexpected happens).
