@@ -189,8 +189,8 @@
             this._value = value;
         },
         get text() {
-            // TODO: this.text and this.value are now essentially
-            // the same thing since we're working in <pre> rather than <div>.
+            // this.text and this.value are now essentially
+            // the same thing since we've switched from <div> to <pre>.
             return this.doc.textContent;
         },
         set text(value) {
@@ -216,7 +216,6 @@
     TM.prototype.clone = function () {
         var ntm = initTM();
         ntm.value = this.value;
-        // ntm.text = this.text;
         ntm.selectionStart = this.selectionStart;
         ntm.selectionEnd = this.selectionEnd;
         return ntm;
