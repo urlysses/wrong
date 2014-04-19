@@ -241,17 +241,6 @@
         this.selectionStart = this._blurStart;
         this.selectionEnd = this._blurEnd;
     };
-    TM.prototype.textValueOffset = function () {
-        var offset = 0,
-            textLength = this.text.length,
-            valueLength = this.value.length;
-        if (textLength > valueLength) {
-            offset = textLength - valueLength;
-        } else if (textLength < valueLength) {
-            offset = valueLength - textLength;
-        }
-        return offset;
-    };
     TM.prototype._selection = function () {
         // range fix.
         window.getSelection().addRange(document.createRange());
