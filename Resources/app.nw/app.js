@@ -447,6 +447,13 @@
         var commands = ["find", "define", "replace"],
             lowerquery = query.toLowerCase(),
             i;
+
+        if (query.length === 0) {
+            // Pressed enter in empty control. Probably looking to close it.
+            this.hide(machine);
+            return true;
+        }
+
         for (i = 0; i < commands.length; i++) {
             var command = commands[i];
             if (lowerquery.indexOf(command) === 0) {
