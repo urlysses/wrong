@@ -219,7 +219,6 @@
         ntm.selectionStart = this.selectionStart;
         ntm.selectionEnd = this.selectionEnd;
         return ntm;
-        //return $.extend(true, initTM(), this);
     };
     TM.prototype.update = function () {
         global.tm = this;
