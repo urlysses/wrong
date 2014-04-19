@@ -351,6 +351,8 @@
     TM.prototype.replaceAll = function (value, replacement) {
         if (value !== "") {
             // TODO: replaceAll still a little wonky.
+            // Won't need to use document.execCommand once our undo manager
+            // gets implemented.
             this.select();
             document.execCommand("insertText", false, this.value.split(value).join(replacement));
         }
@@ -507,6 +509,9 @@
             e.preventDefault();
             var content = e.clipboardData.getData("text/plain");
             document.execCommand("insertText", false, content);
+            // TODO: Get rid of document.execCommand (lags like heck)
+            // once we get the undo manager going.
+            // tm.value = content;
         };
         return tm;
     };
