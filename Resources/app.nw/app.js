@@ -509,11 +509,9 @@
             toggleSuperfluous(true);
         });
         tm.doc.addEventListener("keypress", function () {
-            tm.update();
             playClicks();
         });
         tm.doc.addEventListener("mouseup", function () {
-            tm.update();
             displayWordCount();
         });
         tm.doc.onpaste = function (e) {
