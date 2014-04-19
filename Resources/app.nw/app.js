@@ -218,6 +218,10 @@
         ntm.value = this.value;
         ntm.selectionStart = this.selectionStart;
         ntm.selectionEnd = this.selectionEnd;
+        this.blur();
+        ntm.blurSelectionStart = this.blurSelectionStart;
+        ntm.blurSelectionEnd = this.blurSelectionEnd;
+        ntm.blurScrollTop = this.blurScrollTop;
         return ntm;
     };
     TM.prototype.update = function () {
@@ -231,14 +235,24 @@
         tmholder.appendChild(tm.doc);
     };
     TM.prototype.blur = function () {
-        this._blurStart = this.selectionStart;
-        this._blurEnd = this.selectionEnd;
+        this.handleBlur();
         this.doc.blur();
+    };
+    TM.prototype.handleBlur = function () {
+        this.blurSelectionStart = this.selectionStart;
+        this.blurSelectionEnd = this.selectionEnd;
+        this.blurScrollTop = this.doc.scrollTop;
     };
     TM.prototype.focus = function () {
         this.doc.focus();
-        this.selectionStart = this._blurStart;
-        this.selectionEnd = this._blurEnd;
+        this.handleFocus();
+    };
+    TM.prototype.handleFocus = function () {
+        this.doc.scrollTop = this.blurScrollTop;
+        this.selectionStart = this.blurSelectionStart;
+        this.selectionEnd = this.blurSelectionEnd;
+        // TODO: info is stored on blur, but setting selection doesn't work
+        // on focus.
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -405,7 +419,7 @@
         if (this.controlOpened === true) {
             machine.doc.parentNode.removeChild(this.controlpack);
             machine.doc.classList.remove("tm-control-on");
-            machine.focus(); //TODO: back to previous position in text.
+            machine.focus();
             this.control.value = ""; // clear input
             this.controlOpened = false;
         }
@@ -1468,7 +1482,9 @@
         }
     });
     document.getElementById("wr-close-button").onclick = function () {
-        //closeAllTabs();
+        // TODO:
+        // loop through tabs & ask before closing. currently breaks after first ask.
+        // closeAllTabs(); 
         win.close(true);
     };
     document.getElementById("wr-minimize-button").onclick = function () {
@@ -1873,14 +1889,14 @@
     // deal with the audio player on blur and focus
     win.on("focus", function () {
         document.body.id = "";
-        //tm.focus();
+        // tm.focus();
         toggleAudio();
         focusWindowButtons();
     });
 
     win.on("blur", function () {
         document.body.id = "blurred";
-        //tm.blur();
+        // tm.blur();
         toggleAudio();
         blurWindowButtons();
     });
