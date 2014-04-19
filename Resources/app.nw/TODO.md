@@ -1,5 +1,6 @@
 + make changes to node-webkit allowing for 
   [this](https://github.com/rogerwang/node-webkit/issues/367)?
+  [lighttable's nw implements this](https://github.com/LightTable/node-webkit).
 + make app's own filetype (.wreath?) => 
   make special no-delete modes? only crosses out or obfuscates text when 
   "delete" is pressed. Also allow for inline comments (/* */ style?)
