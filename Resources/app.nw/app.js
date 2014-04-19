@@ -169,7 +169,7 @@
     };
 
     function TM(val) {
-        this.doc = document.createElement("div");
+        this.doc = document.createElement("pre");
         this.doc.id = "TextMap";
         this.doc.className += "tm-w-default";
         this.doc.contentEditable = "true";
@@ -181,16 +181,17 @@
     }
     TM.prototype = {
         get value() {
-            this._value = this.doc.innerText;
+            this._value = this.doc.textContent;
             return this._value;
         },
         set value(value) {
-            this.doc.innerText = value;
+            this.doc.textContent = value;
             this._value = value;
         },
         get text() {
-            // return this.doc.innerHTML.replace(/(<([^>]+)>)/ig, "");
-            return this.doc.textContent; // same as above.
+            // TODO: this.text and this.value are now essentially
+            // the same thing since we're working in <pre> rather than <div>.
+            return this.doc.textContent;
         },
         set text(value) {
             this.value = value;
@@ -600,7 +601,8 @@
 
     getWordCount = function () {
         var doc = tm.value.match(/\S+/g),
-            selection = tm.text.substring(tm.selectionStart, tm.selectionEnd).match(/\S+/g),
+            subdoc = tm.value.substring(tm.selectionStart, tm.selectionEnd),
+            selection = subdoc.match(/\S+/g),
             docCount,
             selectCount;
         if (selection) {
