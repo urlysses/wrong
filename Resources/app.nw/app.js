@@ -296,7 +296,8 @@
         var pos;
         if (backward) { // findPrev
             var cal;
-            if (this.searchPos === 0) { // at top, search from bottom
+            if (this.searchPos === 0 || this.searchPos === value.length) {
+                // at top, search from bottom
                 cal = this.text.length;
             } else { // search above position.
                 cal = this.searchPos - (value.length + 1);
@@ -326,7 +327,7 @@
         }
 
         // Looped and still nothing found.
-        console.log("'" + value + "' not found");
+        alert("'" + value + "' not found"); // TODO: PROMPT instead of alert?
         return false;
     };
     TM.prototype.replace = function (value, replacement, backward) {
@@ -355,6 +356,7 @@
         // Query Misc
         this.findquery = "";
         this.replacequery = "";
+        this.replaceAllquery = "";
         this.definequery = "";
     }
     CMD.prototype.show = function (machine) {
@@ -370,11 +372,11 @@
             var cmd = this;
             this.control.addEventListener("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    cmd.parse(this.value);
+                    cmd.parse(machine, this.value);
                 }
             });
             this.control.addEventListener("blur", function (e) {
-                cmd.hide(tm);
+                cmd.hide(machine);
             });
             // bind general editor shortcuts here too so no functionality is 
             // lost.
@@ -392,32 +394,56 @@
             this.controlOpened = false;
         }
     };
+    CMD.prototype.toggle = function (machine) {
+        if (this.controlOpened === true) {
+            this.hide(machine);
+        } else {
+            this.show(machine);
+        }
+    };
     CMD.prototype.find = function (machine) {
         this.show(machine);
         this.control.value = "find " + this.findquery;
     };
     CMD.prototype.findNext = function (machine) {
+        machine.find(this.findquery);
     };
     CMD.prototype.findPrev = function (machine) {
+        machine.find(this.findquery, true);
     };
     CMD.prototype.replace = function (machine) {
+        this.show(machine);
+        this.control.value = "replace " + this.replacequery;
     };
     CMD.prototype.replaceAll = function (machine) {
+        this.show(machine);
+        this.control.value = "replace all" + this.replaceAllquery;
     };
     CMD.prototype.define = function (machine) {
         this.show(machine);
         this.control.value = "define ";
         // yeah idk how i'm going to do this.
+        // TODO: support equivalent keyword "lookup" or "look up"
+        //       (shortcut Cmd-L ?)
     };
-    CMD.prototype.parse = function (query) {
-        var commands = ["find", "define", "replace"],
+    CMD.prototype.parse = function (machine, query) {
+        var commands = ["find", "define", "replace", "replace all"],
+            lowerquery = query.toLowerCase(),
             i;
         for (i = 0; i < commands.length; i++) {
             var command = commands[i];
-            if (query.indexOf(command) === 0) {
+            if (lowerquery.indexOf(command) === 0) {
+                // Get query after command.
                 var q = query.slice(command.length + 1);
+                // If command is "replace all" rewrite to "replaceAll".
+                if (command === "replace all") {
+                    command = "replaceAll";
+                }
+                // Store the query for later reuse.
                 this[command + "query"] = q;
-                tm[command](q);
+                // Execute query via tm[command](query) (e.g., tm.find("word"))
+                machine[command](q);
+                // Stop looping.
                 break;
             }
         }
@@ -494,6 +520,30 @@
                 // Cmd-F
                 if (!alt && !shift && k === 70) {
                     TM.control.find(tm);
+                }
+                // Cmd-G
+                if (!alt && !shift && k === 71) {
+                    TM.control.findNext(tm);
+                }
+                // Cmd-Shift-G
+                if (!alt && shift && k === 71) {
+                    TM.control.findPrev(tm);
+                }
+                // Cmd-Alt-F
+                if (alt && !shift && k === 70) {
+                    TM.control.replace(tm);
+                }
+                // Cmd-Alt-Shift-F
+                if (alt && shift && k === 70) {
+                    TM.control.replaceAll(tm);
+                }
+                // Cmd-D
+                if (!alt && !shift && k === 68) {
+                    TM.control.define(tm);
+                }
+                // Cmd-/
+                if (!alt && !shift && k === 191) {
+                    TM.control.toggle(tm);
                 }
             }
             // Esc
@@ -1219,40 +1269,35 @@
     findmenu.append(new gui.MenuItem({
         label: "Find  (\u2318F)",
         click: function () {
-            // CodeMirror.commands.find(cm);
-            // TODO.
+            TM.control.find(tm);
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Find Next  (\u2318G)",
         click: function () {
-            // CodeMirror.commands.findNext(cm);
-            // TODO.
+            TM.control.findNext(tm);
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Find Previous  (\u21E7\u2318G)",
         click: function () {
-            // CodeMirror.commands.findPrev(cm);
-            // TODO.
+            TM.control.findPrev(tm);
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Find & Replace  (\u2325\u2318F)",
         click: function () {
-            // CodeMirror.commands.replace(cm);
-            // TODO.
+            TM.control.replace(tm);
         }
     }));
 
     findmenu.append(new gui.MenuItem({
         label: "Replace All  (\u21E7\u2325\u2318F)",
         click: function () {
-            // CodeMirror.commands.replaceAll(cm);
-            // TODO.
+            TM.control.replaceAll(tm);
         }
     }));
 
@@ -1630,9 +1675,6 @@
 
         newTab.dataset.file = file;
         newTab.onclick = function () {
-            // TODO: cursor position and undo are lost while tab switching
-            // because we're modifying tm directly. Should give each tab
-            // its own tm + TM + CMD or w/e.
             var file = this.dataset.file,
                 currentTab = document.getElementById("wr-tab-selected");
             if (this !== currentTab) {
