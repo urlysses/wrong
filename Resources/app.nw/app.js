@@ -221,7 +221,10 @@
         return ntm;
         //return $.extend(true, initTM(), this);
     };
-    TM.prototype.update = function (tm) {
+    TM.prototype.update = function () {
+        global.tm = this;
+    };
+    TM.prototype.upgrade = function (tm) {
         var tmholder = document.getElementById("TextMapHolder");
         while (tmholder.lastChild) {
             tmholder.removeChild(tmholder.lastChild);
@@ -237,6 +240,17 @@
         this.doc.focus();
         this.selectionStart = this._blurStart;
         this.selectionEnd = this._blurEnd;
+    };
+    TM.prototype.textValueOffset = function () {
+        var offset = 0,
+            textLength = this.text.length,
+            valueLength = this.value.length;
+        if (textLength > valueLength) {
+            offset = textLength - valueLength;
+        } else if (textLength < valueLength) {
+            offset = valueLength - textLength;
+        }
+        return offset;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -495,9 +509,11 @@
             toggleSuperfluous(true);
         });
         tm.doc.addEventListener("keypress", function () {
+            tm.update();
             playClicks();
         });
         tm.doc.addEventListener("mouseup", function () {
+            tm.update();
             displayWordCount();
         });
         tm.doc.onpaste = function (e) {
@@ -597,7 +613,7 @@
 
     getWordCount = function () {
         var doc = tm.value.match(/\S+/g),
-            selection = tm.value.substring(tm.selectionStart, tm.selectionEnd).match(/\S+/g),
+            selection = tm.text.substring(tm.selectionStart, tm.selectionEnd).match(/\S+/g),
             docCount,
             selectCount;
         if (selection) {
@@ -1702,8 +1718,9 @@
                 tabs[currentTab.dataset.file] = tm.clone();
             }
             tabsbar.appendChild(newTab);
-            tm.update(tabs[file]);
+            tm.upgrade(tabs[file]);
             tm = tabs[file];
+            tm.update();
             tm.focus();
         }
 
@@ -1717,8 +1734,9 @@
                 tabs[currentTab.dataset.file] = tm.clone();
                 this.id = "wr-tab-selected";
                 global.filePath = file;
-                tm.update(tabs[file]);
+                tm.upgrade(tabs[file]);
                 tm = tabs[file];
+                tm.update();
                 tm.focus();
                 getFileDirty(this);
             }
@@ -1759,8 +1777,9 @@
             // tabs
             updateTabs(path, dataUTF8);
             // add data to textarea
-            tm.update(tabs[path]);
+            tm.upgrade(tabs[path]);
             tm = tabs[path];
+            tm.update();
             tm.focus();
             // clear the dirt
             setFileDirty(false);
@@ -1785,8 +1804,9 @@
         if (nextTab) {
             nextTab.id = "wr-tab-selected";
             global.filePath = nextTab.dataset.file;
-            tm.update(tabs[nextTab.dataset.file]);
+            tm.upgrade(tabs[nextTab.dataset.file]);
             tm = tabs[nextTab.dataset.file];
+            tm.update();
             tm.focus();
             getFileDirty(nextTab);
         } else {
