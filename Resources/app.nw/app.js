@@ -213,7 +213,13 @@
         }
     };
     TM.prototype.clone = function () {
-        return $.extend(true, {}, this);
+        var ntm = initTM();
+        ntm.value = this.value;
+        // ntm.text = this.text;
+        ntm.selectionStart = this.selectionStart;
+        ntm.selectionEnd = this.selectionEnd;
+        return ntm;
+        //return $.extend(true, initTM(), this);
     };
     TM.prototype.update = function (tm) {
         var tmholder = document.getElementById("TextMapHolder");
@@ -1429,14 +1435,15 @@
         var fd = false;
         if (isDirty === true) {
             // file edited
-            if (document.queryCommandEnabled("undo") === true) {
+            /*if (document.queryCommandEnabled("undo") === true) {
                 // Not at oldest document change.
                 fd = true;
                 // TODO: undo is broken. document only undoes things
                 // within the selected tab (good) but still cycles
                 // through the undo list. End up losing the undos
                 // from other tabs.
-            }
+            }*/
+            fd = isDirty;
         }
 
         fileDirty = fd;
@@ -1632,11 +1639,11 @@
                 currentTab.removeAttribute("id");
                 tabs[currentTab.dataset.file] = tm.clone();
                 this.id = "wr-tab-selected";
-                getFileDirty(this);
                 global.filePath = file;
                 tm.update(tabs[file]);
                 tm = tabs[file];
                 tm.focus();
+                getFileDirty(this);
             }
         };
     };
@@ -1700,11 +1707,11 @@
         tabsbar.removeChild(currentTab);
         if (nextTab) {
             nextTab.id = "wr-tab-selected";
-            getFileDirty(nextTab);
             global.filePath = nextTab.dataset.file;
             tm.update(tabs[nextTab.dataset.file]);
             tm = tabs[nextTab.dataset.file];
             tm.focus();
+            getFileDirty(nextTab);
         } else {
             closeWindow();
         }
