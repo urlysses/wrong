@@ -321,24 +321,36 @@
         // Query not anywhere found after current position. Loop back to start
         // once.
         this.searchPos = 0;
-        if (!looping) {
+        if (looping === undefined) {
             // loop once to go back to start of document if at bottom.
             return this.find(value, backward, true);
         }
 
         // Looped and still nothing found.
-        alert("'" + value + "' not found"); // TODO: PROMPT instead of alert?
+        // alert("'" + value + "' not found"); // TODO: PROMPT instead of alert?
         return false;
     };
+    TM.prototype.findAll = function (value) {
+        return this.text.split(value).length - 1;
+    };
     TM.prototype.replace = function (value, replacement, backward) {
-        var found = this.find(value, backward); // find and select thing
-        if (found) {
-            // replace selected text through insertText
-            document.execCommand("insertText", false, replacement);
-            return true;
+        if (value !== "") {
+            var found = this.find(value, backward); // find and select thing
+            if (found) {
+                // replace selected text through insertText
+                document.execCommand("insertText", false, replacement);
+                return true;
+            }
         }
 
         return false;
+    };
+    TM.prototype.replaceAll = function (value, replacement) {
+        if (value !== "") {
+            // TODO: replaceAll still a little wonky.
+            this.select();
+            document.execCommand("insertText", false, this.value.split(value).join(replacement));
+        }
     };
     TM.prototype.scrollToSelection = function () {
         var range = window.getSelection().getRangeAt(0),
@@ -390,7 +402,7 @@
             machine.doc.parentNode.removeChild(this.controlpack);
             machine.doc.classList.remove("tm-control-on");
             machine.focus(); //TODO: back to previous position in text.
-            // clear input?
+            this.control.value = ""; // clear input
             this.controlOpened = false;
         }
     };
@@ -427,7 +439,7 @@
         //       (shortcut Cmd-L ?)
     };
     CMD.prototype.parse = function (machine, query) {
-        var commands = ["find", "define", "replace", "replace all"],
+        var commands = ["find", "define", "replace"],
             lowerquery = query.toLowerCase(),
             i;
         for (i = 0; i < commands.length; i++) {
@@ -435,14 +447,37 @@
             if (lowerquery.indexOf(command) === 0) {
                 // Get query after command.
                 var q = query.slice(command.length + 1);
-                // If command is "replace all" rewrite to "replaceAll".
-                if (command === "replace all") {
-                    command = "replaceAll";
-                }
                 // Store the query for later reuse.
                 this[command + "query"] = q;
-                // Execute query via tm[command](query) (e.g., tm.find("word"))
-                machine[command](q);
+
+                // If command is "replace all" rewrite to "replaceAll".
+                if (command === "replace" && q.indexOf("all ") === 0) {
+                    command = "replaceAll";
+                    q = q.slice(4);
+                }
+
+                // If command is a replace command, parse query for "with".
+                if (command.indexOf("replace") === 0) {
+                    var withs = q.split(" with ");
+                    if (withs.length === 2) {
+                        // Lucky. This is simple query. "replace val with rep"
+                        this.findquery = withs[0]; // store the value for finds as well.
+                        machine[command](withs[0], withs[1]);
+                    } else if (withs.length === 1) {
+                        // User trying to replace without with. um.
+                        console.log(withs);
+                    } else {
+                        // User trying to replace with with something or
+                        // something with with, which can become confusing.
+                        // TODO: Maybe break Control in two for replace queries?
+                        // would be a lot simpler lol.
+                        console.log(withs);
+                    }
+                } else {
+                    // Not a replace command.
+                    // Execute query via tm[command](query) (tm.find("word"))
+                    machine[command](q);
+                }
                 // Stop looping.
                 break;
             }
