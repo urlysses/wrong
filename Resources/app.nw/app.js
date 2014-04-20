@@ -385,8 +385,8 @@
         this.controlOpened = false;
         // Query Misc
         this.findquery = "";
-        this.replacequery = "";
-        this.replaceAllquery = "";
+        this.replacequeryfrom = "";
+        this.replacequeryto = "";
         this.definequery = "";
     }
     CMD.prototype.show = function (machine) {
@@ -402,19 +402,23 @@
             var cmd = this;
             this.control.addEventListener("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    cmd.parse(machine, this.value);
+                    if (this.value.toLowerCase().indexOf("replace") === 0) {
+                        cmd.modifyForReplace(machine);
+                    } else {
+                        cmd.parse(machine, this.value);
+                    }
                 } else if (e.keyCode === 32) {
                     if (this.value.toLowerCase().indexOf("replace") === 0) {
                         cmd.modifyForReplace(machine);
                     }
                 }
             });
-            this.controlpack.addEventListener("blur", function (e) {
+            this.controlpack.contentWindow.addEventListener("blur", function (e) {
                 cmd.hide(machine);
             });
             // bind general editor shortcuts here too so no functionality is 
             // lost.
-            bindEditorShortcuts(this.control);
+            bindEditorShortcuts(this.controlpack.contentDocument);
             this.control.focus();
             this.controlOpened = true;
         }
@@ -424,7 +428,9 @@
             machine.doc.parentNode.removeChild(this.controlpack);
             machine.doc.classList.remove("tm-control-on");
             machine.focus();
+            this.control = this.control.cloneNode(true); // remove eventlistener
             this.control.value = ""; // clear input
+            this.controlpack = this.controlpack.cloneNode(true);
             this.controlOpened = false;
         }
     };
@@ -458,19 +464,6 @@
 
         this.replAll.id = "tm-control-replace-all";
         this.replAll.innerHTML = "all <strong>?</strong>";
-        if (forAll === true) {
-            this.replAll.classList.add("tm-control-replace-all-on");
-        }
-        this.replAll.addEventListener("click", function () {
-            console.log("click");
-            if (this.classList.length === 1) {
-                this.classList.remove("tm-control-replace-all-on");
-                this.innerHTML = "all <strong>?</strong>";
-            } else {
-                this.classList.add("tm-control-replace-all-on");
-                this.innerHTML = "all &#10004;";
-            }
-        }, false);
 
         this.replControl.id = "tm-control";
         this.replControl.innerHTML = "replace ";
@@ -481,16 +474,58 @@
 
         this.controlpack.contentDocument.body.removeChild(this.control);
         this.controlpack.contentDocument.body.appendChild(this.replControl);
-        this.replValue.focus();
+        var cDocument = this.controlpack.contentDocument;
+        var replValue = cDocument.getElementById("tm-control-replace-value"),
+            replReplacement = cDocument.getElementById("tm-control-replace-replacement"),
+            replAll = cDocument.getElementById("tm-control-replace-all"),
+            cmd = this;
+        if (forAll === true) {
+            replAll.classList.add("tm-control-replace-all-on");
+            replAll.innerHTML = "all &#10004;";
+            replAll.dataset.replaceAll = true;
+        }
+        replAll.addEventListener("click", function () {
+            if (this.classList.length === 1) {
+                this.classList.remove("tm-control-replace-all-on");
+                this.innerHTML = "all <strong>?</strong>";
+                delete this.dataset.replaceAll;
+            } else {
+                this.classList.add("tm-control-replace-all-on");
+                this.innerHTML = "all &#10004;";
+                this.dataset.replaceAll = true;
+            }
+        }, false);
+
+        replValue.focus();
+        replValue.value = this.replacequeryfrom;
+        replValue.addEventListener("keypress", function (e) {
+            if (e.keyCode === 13 || e.keyCode === 9) {
+                replReplacement.focus();
+            }
+        });
+
+        replReplacement.value = this.replacequeryto;
+        replReplacement.addEventListener("keypress", function (e) {
+            if (e.keyCode === 13) {
+                cmd.replacequeryfrom = replValue.value;
+                cmd.findquery = cmd.replacequeryfrom;
+                cmd.replacequeryto = replReplacement.value;
+                if (replAll.dataset.replaceAll === "true") {
+                    machine.replaceAll(replValue.value, replReplacement.value);
+                } else {
+                    machine.replace(replValue.value, replReplacement.value);
+                }
+            }
+        });
     };
     CMD.prototype.replace = function (machine) {
         this.show(machine);
-        this.control.value = "replace " + this.replacequery;
+        this.control.value = "replace ";
         this.modifyForReplace(machine);
     };
     CMD.prototype.replaceAll = function (machine) {
         this.show(machine);
-        this.control.value = "replace all" + this.replaceAllquery;
+        this.control.value = "replace all";
         this.modifyForReplace(machine, true);
     };
     CMD.prototype.define = function (machine) {
@@ -518,6 +553,9 @@
                 var q = query.slice(command.length + 1);
                 // Store the query for later reuse.
                 this[command + "query"] = q;
+                if (command === "find") {
+                    this.replacequeryfrom = this.findquery;
+                }
                 // Execute query via tm[command](query) (e.g., tm.find("word"))
                 machine[command](q);
                 // Stop looping.
