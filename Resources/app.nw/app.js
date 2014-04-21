@@ -70,6 +70,8 @@
         $counter,
         playClicks;
 
+    var History = require("./history.js");
+
     global.filePath = filePath;
 
     theme = {};
@@ -175,6 +177,7 @@
         this.doc.contentEditable = "true";
         document.getElementById("TextMapHolder").appendChild(this.doc);
         this.value = val;
+        this.store = val;
         this.selectionStart = 0;
         this.selectionEnd = 0;
         this.searchPos = 0;
@@ -213,6 +216,13 @@
             this._updateSelection();
         }
     };
+    TM.prototype.insertText = function (text) {
+        var val = this.value,
+            start = this.selectionStart,
+            end = this.selectionEnd;
+        this.value = [val.slice(0, start), text, val.slice(end)].join("");
+    };
+    TM.prototype.history = new History.History();
     TM.prototype.clone = function () {
         var ntm = initTM();
         ntm.value = this.value;
@@ -253,6 +263,9 @@
         this.selectionEnd = this.blurSelectionEnd;
         // TODO: info is stored on blur, but setting selection doesn't work
         // on focus.
+    };
+    TM.prototype.isFocused = function () {
+        return document.activeElement === this.doc;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -354,7 +367,13 @@
             var found = this.find(value, backward); // find and select thing
             if (found) {
                 // replace selected text through insertText
-                document.execCommand("insertText", false, replacement);
+                var oldContent = this.value,
+                    tm = this;
+                this.history.happen("tm", function () {
+                    tm.insertText(replacement);
+                }, function () {
+                    tm.value = oldContent;
+                });
                 return true;
             }
         }
@@ -363,11 +382,13 @@
     };
     TM.prototype.replaceAll = function (value, replacement) {
         if (value !== "") {
-            // TODO: replaceAll still a little wonky.
-            // Won't need to use document.execCommand once our undo manager
-            // gets implemented.
-            this.select();
-            document.execCommand("insertText", false, this.value.split(value).join(replacement));
+            var oldContent = this.value,
+                tm = this;
+            this.history.happen("tm", function () {
+                tm.value = oldContent.split(value).join(replacement);
+            }, function () {
+                tm.value = oldContent;
+            });
         }
     };
     TM.prototype.scrollToSelection = function () {
@@ -567,9 +588,17 @@
 
     initTM = function () {
         var tm = new TM("");
-        tm.doc.addEventListener("input", function () {
+        tm.doc.addEventListener("input", function (e) {
+            var store = tm.store,
+                value = tm.value;
+            tm.history.happen("tm", function () {
+                tm.value = value;
+            }, function () {
+                tm.value = store;
+            });
             setFileDirty(true);
             displayWordCount();
+            tm.store = tm.value;
         });
         tm.doc.addEventListener("keydown", function () {
             toggleSuperfluous(true);
@@ -583,10 +612,12 @@
         tm.doc.onpaste = function (e) {
             e.preventDefault();
             var content = e.clipboardData.getData("text/plain");
-            document.execCommand("insertText", false, content);
-            // TODO: Get rid of document.execCommand (lags like heck)
-            // once we get the undo manager going.
-            // tm.value = content;
+            var oldContent = tm.value;
+            tm.history.happen("tm", function () {
+                tm.insertText(content);
+            }, function () {
+                tm.value = oldContent;
+            });
         };
         return tm;
     };
@@ -662,6 +693,20 @@
                 // Cmd-/
                 if (!alt && !shift && k === 191) {
                     TM.control.toggle(tm);
+                }
+                // Cmd-Z
+                if (!alt && !shift && k === 90) {
+                    if (tm.isFocused()) {
+                        e.preventDefault();
+                        tm.history.undo();
+                    }
+                }
+                // Cmd-Shift-Z
+                if (!alt && shift && k === 90) {
+                    if (tm.isFocused()) {
+                        e.preventDefault();
+                        tm.history.redo();
+                    }
                 }
             }
             // Esc
@@ -1601,15 +1646,9 @@
         var fd = false;
         if (isDirty === true) {
             // file edited
-            /*if (document.queryCommandEnabled("undo") === true) {
-                // Not at oldest document change.
+            if (tm.history.hasHistory() === true) {
                 fd = true;
-                // TODO: undo is broken. document only undoes things
-                // within the selected tab (good) but still cycles
-                // through the undo list. End up losing the undos
-                // from other tabs.
-            }*/
-            fd = isDirty;
+            }
         }
 
         fileDirty = fd;
