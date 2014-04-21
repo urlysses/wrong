@@ -180,6 +180,8 @@
         this.store = val;
         this.selectionStart = 0;
         this.selectionEnd = 0;
+        this.storedSelectionStart = 0;
+        this.storedSelectionEnd = 0;
         this.searchPos = 0;
     }
     TM.prototype = {
@@ -188,8 +190,10 @@
             return this._value;
         },
         set value(value) {
+            this.storeSelection();
             this.doc.textContent = value;
             this._value = value;
+            this.restoreSelection();
         },
         get text() {
             // this.text and this.value are now essentially
@@ -266,6 +270,20 @@
     };
     TM.prototype.isFocused = function () {
         return document.activeElement === this.doc;
+    };
+    TM.prototype.storeSelection = function () {
+        this.storedSelectionStart = this.selectionStart;
+        this.storedSelectionEnd = this.selectionEnd;
+    };
+    TM.prototype.restoreSelection = function () {
+        var vallen = this.value.length;
+        if (this.storedSelectionStart - 1 === vallen
+                && this.storedSelectionEnd - 1 === vallen) {
+            this.storedSelectionStart -= 1;
+            this.storedSelectionEnd -= 1;
+        }
+        this.selectionStart = this.storedSelectionStart;
+        this.selectionEnd = this.storedSelectionEnd;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -699,6 +717,9 @@
                     if (tm.isFocused()) {
                         e.preventDefault();
                         tm.history.undo();
+                        if (tm.history.hasHistory() === false) {
+                            setFileDirty(false);
+                        }
                     }
                 }
                 // Cmd-Shift-Z
@@ -1890,6 +1911,7 @@
             tm = tabs[path];
             tm.update();
             tm.focus();
+            tm.store = tm.value;
             // clear the dirt
             setFileDirty(false);
             if (callback) {
