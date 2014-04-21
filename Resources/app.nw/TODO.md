@@ -22,3 +22,12 @@
 + Speech-based writing and editing (using modes?)?
 + IMPORTANT: iCloud & file nav implementation (see that lua HN post or w/e).
 + add a favicon for app completeness (and so nothing unexpected happens).
++ "X" button for Control.
++ Elements in the theme editor should be clearly labeled. The mystery meat
+  design may be slick, but it's mostly inconvenient. User doesn't want or
+  need to play around with values just to find a specific thing.
++ Show tabs in fullscreen (as superfluous). Tab+border+text color should match
+  that of tm text color.
++ Default selection (hightlight) color doesn't really fit with default tab color
++ "X" buttons for tabs.
++ "+" button at end of tab bar to add a tab.
