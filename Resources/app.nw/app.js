@@ -174,7 +174,7 @@
         this.doc = document.createElement("pre");
         this.doc.id = "TextMap";
         this.doc.className += "tm-w-default";
-        this.doc.contentEditable = "true";
+        this.doc.contentEditable = "plaintext-only";
         document.getElementById("TextMapHolder").appendChild(this.doc);
         this.value = val;
         this.store = val;
@@ -192,15 +192,10 @@
             return this._value;
         },
         set value(value) {
-            var undo = false;
-            if (typeof value === "object") {
-                undo = value.undo;
-                value = value.data;
-            }
             this.storeSelection();
             this.doc.textContent = value;
             this._value = value;
-            this.restoreSelection(undo);
+            this.restoreSelection();
         },
         get text() {
             // this.text and this.value are now essentially
@@ -287,11 +282,7 @@
         this.storedSelectionStart = this.selectionStart;
         this.storedSelectionEnd = this.selectionEnd;
     };
-    TM.prototype.restoreSelection = function (undo) {
-        if (undo) {
-            this.storedSelectionStart -= 1;
-            this.storedSelectionEnd -= 1;
-        }
+    TM.prototype.restoreSelection = function () {
         this.selectionStart = this.storedSelectionStart;
         this.selectionEnd = this.storedSelectionEnd;
     };
@@ -618,13 +609,12 @@
         var tm = new TM("");
         tm.doc.addEventListener("input", function (e) {
             var store = global.tm.store,
-                value = global.tm.innerText;
+                value = global.tm.value;
             global.tm.history.happen("tm", function () {
-                //TODO: linebreaks are ignored/broken here.
-                //will be fixed by debugging store+restoreSelection.
-                //global.tm.value = value;
+                global.tm.value = value;
             }, function () {
-                global.tm.value = {data: store, undo: true};
+                // TODO: cursor position gets lost on undos.
+                global.tm.value = store;
             });
             setFileDirty(true);
             displayWordCount();
