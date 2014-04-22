@@ -180,9 +180,11 @@
         this.store = val;
         this.selectionStart = 0;
         this.selectionEnd = 0;
+        this.searchPos = 0;
         this.storedSelectionStart = 0;
         this.storedSelectionEnd = 0;
-        this.searchPos = 0;
+        this.storedScrollTop = 0;
+        this.history = new History.History();
     }
     TM.prototype = {
         get value() {
@@ -190,10 +192,15 @@
             return this._value;
         },
         set value(value) {
+            var undo = false;
+            if (typeof value === "object") {
+                undo = value.undo;
+                value = value.data;
+            }
             this.storeSelection();
             this.doc.textContent = value;
             this._value = value;
-            this.restoreSelection();
+            this.restoreSelection(undo);
         },
         get text() {
             // this.text and this.value are now essentially
@@ -202,6 +209,12 @@
         },
         set text(value) {
             this.value = value;
+        },
+        get innerText() {
+            return this.doc.innerText;
+        },
+        set innerText(value) {
+            this.doc.innerText = value;
         },
         get selectionStart() {
             this._selection();
@@ -226,16 +239,17 @@
             end = this.selectionEnd;
         this.value = [val.slice(0, start), text, val.slice(end)].join("");
     };
-    TM.prototype.history = new History.History();
     TM.prototype.clone = function () {
         var ntm = initTM();
         ntm.value = this.value;
+        ntm.store = this.store;
         ntm.selectionStart = this.selectionStart;
         ntm.selectionEnd = this.selectionEnd;
+        ntm.history = this.history;
         this.blur();
-        ntm.blurSelectionStart = this.blurSelectionStart;
-        ntm.blurSelectionEnd = this.blurSelectionEnd;
-        ntm.blurScrollTop = this.blurScrollTop;
+        ntm.storedSelectionStart = this.storedSelectionStart;
+        ntm.storedSelectionEnd = this.storedSelectionEnd;
+        ntm.storedScrollTop = this.storedScrollTop;
         return ntm;
     };
     TM.prototype.update = function () {
@@ -253,18 +267,16 @@
         this.doc.blur();
     };
     TM.prototype.handleBlur = function () {
-        this.blurSelectionStart = this.selectionStart;
-        this.blurSelectionEnd = this.selectionEnd;
-        this.blurScrollTop = this.doc.scrollTop;
+        this.storeSelection();
+        this.storedScrollTop = this.doc.scrollTop;
     };
     TM.prototype.focus = function () {
         this.doc.focus();
         this.handleFocus();
     };
     TM.prototype.handleFocus = function () {
-        this.doc.scrollTop = this.blurScrollTop;
-        this.selectionStart = this.blurSelectionStart;
-        this.selectionEnd = this.blurSelectionEnd;
+        this.doc.scrollTop = this.storedScrollTop;
+        this.restoreSelection();
         // TODO: info is stored on blur, but setting selection doesn't work
         // on focus.
     };
@@ -275,10 +287,8 @@
         this.storedSelectionStart = this.selectionStart;
         this.storedSelectionEnd = this.selectionEnd;
     };
-    TM.prototype.restoreSelection = function () {
-        var vallen = this.value.length;
-        if (this.storedSelectionStart - 1 === vallen
-                && this.storedSelectionEnd - 1 === vallen) {
+    TM.prototype.restoreSelection = function (undo) {
+        if (undo) {
             this.storedSelectionStart -= 1;
             this.storedSelectionEnd -= 1;
         }
@@ -607,16 +617,18 @@
     initTM = function () {
         var tm = new TM("");
         tm.doc.addEventListener("input", function (e) {
-            var store = tm.store,
-                value = tm.value;
-            tm.history.happen("tm", function () {
-                tm.value = value;
+            var store = global.tm.store,
+                value = global.tm.innerText;
+            global.tm.history.happen("tm", function () {
+                //TODO: linebreaks are ignored/broken here.
+                //will be fixed by debugging store+restoreSelection.
+                //global.tm.value = value;
             }, function () {
-                tm.value = store;
+                global.tm.value = {data: store, undo: true};
             });
             setFileDirty(true);
             displayWordCount();
-            tm.store = tm.value;
+            global.tm.store = global.tm.value;
         });
         tm.doc.addEventListener("keydown", function () {
             toggleSuperfluous(true);
@@ -630,11 +642,11 @@
         tm.doc.onpaste = function (e) {
             e.preventDefault();
             var content = e.clipboardData.getData("text/plain");
-            var oldContent = tm.value;
+            var oldContent = global.tm.value;
             tm.history.happen("tm", function () {
-                tm.insertText(content);
+                global.tm.insertText(content);
             }, function () {
-                tm.value = oldContent;
+                global.tm.value = oldContent;
             });
         };
         return tm;
