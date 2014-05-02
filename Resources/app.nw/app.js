@@ -192,10 +192,8 @@
             return this._value;
         },
         set value(value) {
-            this.storeSelection();
             this.doc.textContent = value;
             this._value = value;
-            this.restoreSelection();
         },
         get text() {
             // this.text and this.value are now essentially
@@ -278,13 +276,20 @@
     TM.prototype.isFocused = function () {
         return document.activeElement === this.doc;
     };
+    TM.prototype.getSelection = function () {
+        return {selectionStart: this.selectionStart, selectionEnd: this.selectionEnd};
+    };
     TM.prototype.storeSelection = function () {
         this.storedSelectionStart = this.selectionStart;
         this.storedSelectionEnd = this.selectionEnd;
     };
-    TM.prototype.restoreSelection = function () {
-        this.selectionStart = this.storedSelectionStart;
-        this.selectionEnd = this.storedSelectionEnd;
+    TM.prototype.restoreSelection = function (undoing) {
+        var dist = 0;
+        if (undoing) {
+            dist = 1;
+        }
+        this.selectionStart = this.storedSelectionStart - dist;
+        this.selectionEnd = this.storedSelectionEnd - dist;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -386,13 +391,13 @@
             var found = this.find(value, backward); // find and select thing
             if (found) {
                 // replace selected text through insertText
-                var oldContent = this.value,
-                    tm = this;
-                this.history.happen("tm", function () {
-                    tm.insertText(replacement);
-                }, function () {
-                    tm.value = oldContent;
-                });
+                var oldContent = this.value;
+                this.insertText(replacement);
+                this.history.change(
+                    this,
+                    {from: oldContent, to: this.value},
+                    this.getSelection()
+                );
                 return true;
             }
         }
@@ -401,13 +406,13 @@
     };
     TM.prototype.replaceAll = function (value, replacement) {
         if (value !== "") {
-            var oldContent = this.value,
-                tm = this;
-            this.history.happen("tm", function () {
-                tm.value = oldContent.split(value).join(replacement);
-            }, function () {
-                tm.value = oldContent;
-            });
+            var oldContent = this.value;
+            this.value = oldContent.split(value).join(replacement);
+            this.history.change(
+                this,
+                {from: oldContent, to: this.value},
+                this.getSelection()
+            );
         }
     };
     TM.prototype.scrollToSelection = function () {
@@ -610,12 +615,11 @@
         tm.doc.addEventListener("input", function (e) {
             var store = global.tm.store,
                 value = global.tm.value;
-            global.tm.history.happen("tm", function () {
-                global.tm.value = value;
-            }, function () {
-                // TODO: cursor position gets lost on undos.
-                global.tm.value = store;
-            });
+            global.tm.history.change(
+                global.tm,
+                {from: store, to: value},
+                global.tm.getSelection()
+            );
             setFileDirty(true);
             displayWordCount();
             global.tm.store = global.tm.value;
@@ -633,11 +637,12 @@
             e.preventDefault();
             var content = e.clipboardData.getData("text/plain");
             var oldContent = global.tm.value;
-            tm.history.happen("tm", function () {
-                global.tm.insertText(content);
-            }, function () {
-                global.tm.value = oldContent;
-            });
+            global.tm.insertText(content);
+            global.tm.history.change(
+                global.tm,
+                {from: oldContent, to: global.tm.value},
+                global.tm.getSelection()
+            );
         };
         return tm;
     };
@@ -718,8 +723,8 @@
                 if (!alt && !shift && k === 90) {
                     if (tm.isFocused()) {
                         e.preventDefault();
-                        tm.history.undo();
-                        if (tm.history.hasHistory() === false) {
+                        tm.history.undo(tm);
+                        if (tm.history.canUndo() === false) {
                             setFileDirty(false);
                         }
                     }
@@ -728,7 +733,7 @@
                 if (!alt && shift && k === 90) {
                     if (tm.isFocused()) {
                         e.preventDefault();
-                        tm.history.redo();
+                        tm.history.redo(tm);
                     }
                 }
             }
@@ -1669,7 +1674,7 @@
         var fd = false;
         if (isDirty === true) {
             // file edited
-            if (tm.history.hasHistory() === true) {
+            if (tm.history.canUndo() === true) {
                 fd = true;
             }
         }
