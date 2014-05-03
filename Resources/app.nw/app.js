@@ -739,6 +739,8 @@
                     if (tm.isFocused()) {
                         e.preventDefault();
                         tm.history.redo(tm);
+                        // TODO: set file dirty when necessary on redo.
+                        // but also need to implement save checkpoint.
                     }
                 }
             }

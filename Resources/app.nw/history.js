@@ -24,8 +24,11 @@ var History = (function() {
             hist.done.shift();
         }
 
-        // TODO: register event on specific input--space?, period?, new line, etc.
-        if (hist.lastChangeTime === 0 || hist.lastChangeTime < currTime - hist.historyChangeDelay) {
+        // TODO: register event on specific inputs:
+        //       space?, punctuation?, new line, delete, etc.
+        //       (all merge with prev if multiple occurances of same char).
+        if (hist.lastChangeTime === 0
+                || hist.lastChangeTime < currTime - hist.historyChangeDelay) {
             console.log(hist.lastChangeTime);
             hist.done.push({change: change, selection: selection});
         }
