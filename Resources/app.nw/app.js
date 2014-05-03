@@ -729,7 +729,7 @@
                     if (tm.isFocused()) {
                         e.preventDefault();
                         tm.history.undo(tm);
-                        if (tm.history.canUndo() === false) {
+                        if (tm.history.canUndo(tm) === false) {
                             setFileDirty(false);
                         }
                     }
@@ -1679,7 +1679,7 @@
         var fd = false;
         if (isDirty === true) {
             // file edited
-            if (tm.history.canUndo() === true) {
+            if (tm.history.canUndo(tm) === true) {
                 fd = true;
             }
         }

@@ -1,26 +1,55 @@
 var History = (function() {
-    function History () {
+    function History (depth, histDelay) {
+        if (depth === undefined) {
+            depth = Infinity;
+        }
+
+        if (histDelay === undefined) {
+            histDelay = 1250;
+        }
+
         this.undone = [];
         this.done = [];
-        this.undoDepth = Infinity;
+        this.undoDepth = depth;
+        this.historyChangeDelay = histDelay;
+        this.lastChangeTime = 0;
     }
 
     History.prototype.change = function (tm, change, selection) {
-        this.clearRedos();
-        this.done.push({change: change, selection: selection});
+        var hist = tm.history,
+            currTime = +new Date(); // syntactic sugar to get seconds
+        hist.clearRedos(tm);
+
+        if (hist.done.length === hist.undoDepth) {
+            hist.done.shift();
+        }
+
+        if (hist.lastChangeTime === 0 || hist.lastChangeTime < currTime - hist.historyChangeDelay) {
+            console.log(hist.lastChangeTime);
+            hist.done.push({change: change, selection: selection});
+        }
+
+        hist.lastChangeTime = currTime;
     };
 
     History.prototype.redo = function (tm, selection) {
-        var last = this.undone.pop();
+        var last = tm.history.undone.pop();
         if (last) {
             tm.value = last.change.to;
-            tm.selectionStart = last.selection.selectionStart;
-            tm.selectionEnd = last.selection.selectionEnd;
-            this.done.push(last);
+            if (last.selection.selectionStart <= last.change.to.length) {
+                tm.selectionStart = last.selection.selectionStart;
+                tm.selectionEnd = last.selection.selectionEnd;
+            } else {
+                tm.selectionStart = last.change.to.length;
+                tm.selectionEnd = last.change.to.length;
+            }
+            tm.history.done.push(last);
         }
     };
     History.prototype.undo = function (tm, selection) {
-        var last = this.done.pop();
+        var last = tm.history.done.pop(),
+            undoLast = last;
+        undoLast.change.to = tm.value;
         if (last) {
             var prev = this.done[this.done.length - 1];
             if (prev) {
@@ -29,26 +58,33 @@ var History = (function() {
                 tm.store = "";
             }
             tm.value = last.change.from;
-            tm.selectionStart = last.selection.selectionStart;
-            tm.selectionEnd = last.selection.selectionEnd;
-            this.undone.push(last);
+
+            if (last.selection.selectionStart <= last.change.from.length) {
+                tm.selectionStart = last.selection.selectionStart;
+                tm.selectionEnd = last.selection.selectionEnd;
+            } else {
+                tm.selectionStart = last.change.from.length;
+                tm.selectionEnd = last.change.from.length;
+            }
+
+            tm.history.undone.push(undoLast);
         }
     };
 
-    History.prototype.canUndo = function () {
-        return this.done.length > 0;
+    History.prototype.canUndo = function (tm) {
+        return tm.history.done.length > 0;
     };
 
-    History.prototype.canRedo = function () {
-        return this.undone.length > 0;
+    History.prototype.canRedo = function (tm) {
+        return tm.history.undone.length > 0;
     };
 
-    History.prototype.clear = function () {
-        this.done = [];
+    History.prototype.clear = function (tm) {
+        tm.history.done = [];
     };
 
-    History.prototype.clearRedos = function () {
-        this.undone = [];
+    History.prototype.clearRedos = function (tm) {
+        tm.history.undone = [];
     };
     return History;
 }());
