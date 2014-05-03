@@ -22,6 +22,12 @@ var History = (function() {
     History.prototype.undo = function (tm, selection) {
         var last = this.done.pop();
         if (last) {
+            var prev = this.done[this.done.length - 1];
+            if (prev) {
+                tm.store = prev.change.to;
+            } else {
+                tm.store = "";
+            }
             tm.value = last.change.from;
             tm.selectionStart = last.selection.selectionStart;
             tm.selectionEnd = last.selection.selectionEnd;

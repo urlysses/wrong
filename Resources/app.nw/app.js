@@ -454,6 +454,7 @@
                     }
                 } else if (e.keyCode === 32) {
                     if (this.value.toLowerCase().indexOf("replace") === 0) {
+                        e.preventDefault();
                         cmd.modifyForReplace(machine);
                     }
                 }
@@ -540,9 +541,13 @@
                 this.dataset.replaceAll = true;
             }
         }, false);
-
         replValue.focus();
-        replValue.value = this.replacequeryfrom;
+        var repquery = this.replacequeryfrom;
+        if (repquery !== undefined && repquery !== " ") {
+            replValue.value = repquery;
+        } else {
+            replValue.value = "";
+        }
         replValue.addEventListener("keypress", function (e) {
             if (e.keyCode === 13 || e.keyCode === 9) {
                 replReplacement.focus();
