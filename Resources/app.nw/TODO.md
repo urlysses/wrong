@@ -28,6 +28,5 @@
   need to play around with values just to find a specific thing.
 + Show tabs in fullscreen (as superfluous). Tab+border+text color should match
   that of tm text color.
-+ Default selection (hightlight) color doesn't really fit with default tab color
 + "X" buttons for tabs.
 + "+" button at end of tab bar to add a tab.
