@@ -24,6 +24,7 @@ var History = (function() {
             hist.done.shift();
         }
 
+        // TODO: register event on specific input--space?, period?, new line, etc.
         if (hist.lastChangeTime === 0 || hist.lastChangeTime < currTime - hist.historyChangeDelay) {
             console.log(hist.lastChangeTime);
             hist.done.push({change: change, selection: selection});
