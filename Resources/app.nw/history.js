@@ -1,3 +1,4 @@
+// Undo Manager for TM.
 var History = (function() {
     function History (depth, histDelay) {
         if (depth === undefined) {
@@ -17,7 +18,7 @@ var History = (function() {
 
     History.prototype.change = function (tm, change, selection) {
         var hist = tm.history,
-            currTime = +new Date(); // syntactic sugar to get seconds
+            currTime = +new Date(); // syntactic sugar for seconds
         hist.clearRedos(tm);
 
         if (hist.done.length === hist.undoDepth) {
@@ -27,6 +28,9 @@ var History = (function() {
         // TODO: register event on specific inputs:
         //       space?, punctuation?, new line, delete, etc.
         //       (all merge with prev if multiple occurances of same char).
+        //       Also be sure to ignore '[punctuation][space]' but break at
+        //       '[punctuation][new line]' and '[punctuation][delete]' but
+        //       join '[delete][delete]' etc.
         if (hist.lastChangeTime === 0
                 || hist.lastChangeTime < currTime - hist.historyChangeDelay) {
             console.log(hist.lastChangeTime);
