@@ -2043,33 +2043,39 @@
     closeAllTabs = function () {
         var i,
             allFilesClean = true,
-            tabsbar = document.getElementById("wr-tabs");
-        for (i = 0; i < tabsbar.children.length; i++) {
-            var tab = tabsbar.children[i];
-            if (tab && tab.children[1].innerText !== "") {
-                allFilesClean = false;
+            tabsbar = document.getElementById("wr-tabs"),
+            tabslen = tabsbar.children.length;
+        if (tabslen > 1) {
+            for (i = 0; i < tabslen; i++) {
+                var tab = tabsbar.children[i];
+                if (tab && tab.children[1].innerText !== "") {
+                    allFilesClean = false;
+                }
             }
-        }
 
-        if (allFilesClean === false) {
-            var P = new PROMPT.init("Notice",
-                    "Some files contain unsaved changes.\n\nClose all without saving?");
-            P.addBtn({
-                text: "Cancel",
-                onclick: function () {
-                    tm.focus();
-                    return false;
-                },
-            }).addBtn({
-                text: "Don't Save",
-                onclick: function () {
-                    win.close(true);
-                },
-                type: "btn-red"
-            });
-            P.show();
+            if (allFilesClean === false) {
+                var P = new PROMPT.init("Notice",
+                        "Some files contain unsaved changes.\n\nClose all without saving?");
+                P.addBtn({
+                    text: "Cancel",
+                    onclick: function () {
+                        tm.focus();
+                        return false;
+                    },
+                }).addBtn({
+                    text: "Don't Save",
+                    onclick: function () {
+                        win.close(true);
+                    },
+                    type: "btn-red"
+                });
+                P.show();
+            } else {
+                win.close(true);
+            }
         } else {
-            win.close(true);
+            // Only one tab open. Just close regularly.
+            win.close();
         }
     };
 
