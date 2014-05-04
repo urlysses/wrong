@@ -184,6 +184,7 @@
         this.storedSelectionStart = 0;
         this.storedSelectionEnd = 0;
         this.storedScrollTop = 0;
+        this.lastInput = null;
         this.history = new History.History();
     }
     TM.prototype = {
@@ -617,7 +618,7 @@
 
     initTM = function () {
         var tm = new TM("");
-        tm.doc.addEventListener("input", function (e) {
+        tm.doc.addEventListener("input", function () {
             var store = global.tm.store,
                 value = global.tm.value;
             global.tm.history.change(
@@ -629,8 +630,11 @@
             displayWordCount();
             global.tm.store = global.tm.value;
         });
-        tm.doc.addEventListener("keydown", function () {
+        tm.doc.addEventListener("keydown", function (e) {
             toggleSuperfluous(true);
+            if (!e.metaKey && !e.altKey && e.keyIdentifier !== "Shift") {
+                tm.lastInput = e.which;
+            }
         });
         tm.doc.addEventListener("keypress", function () {
             playClicks();

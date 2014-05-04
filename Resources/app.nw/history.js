@@ -14,6 +14,7 @@ var History = (function() {
         this.undoDepth = depth;
         this.historyChangeDelay = histDelay;
         this.lastChangeTime = 0;
+        this.lastInput = null;
     }
 
     History.prototype.change = function (tm, change, selection) {
@@ -25,6 +26,11 @@ var History = (function() {
             hist.done.shift();
         }
 
+        // delete: 8
+        // enter: 13
+        // tab: 9
+        // space: 32
+        console.log(tm.lastInput);
         // TODO: register event on specific inputs:
         //       space?, punctuation?, new line, delete, etc.
         //       (all merge with prev if multiple occurances of same char).
@@ -33,7 +39,6 @@ var History = (function() {
         //       join '[delete][delete]' etc.
         if (hist.lastChangeTime === 0
                 || hist.lastChangeTime < currTime - hist.historyChangeDelay) {
-            console.log(hist.lastChangeTime);
             hist.done.push({change: change, selection: selection});
         }
 
