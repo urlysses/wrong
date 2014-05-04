@@ -1664,10 +1664,7 @@
         }
     });
     document.getElementById("wr-close-button").onclick = function () {
-        // TODO:
-        // loop through tabs & ask before closing. currently breaks after first ask.
-        // closeAllTabs(); 
-        win.close(true);
+        closeAllTabs();
     };
     document.getElementById("wr-minimize-button").onclick = function () {
         win.minimize();
@@ -2039,12 +2036,40 @@
         } else {
             closeWindow();
         }
+
+        return true;
     };
 
     closeAllTabs = function () {
-        var i;
-        for (i = 0; i < Object.keys(tabs).length; i++) {
-            win.close();
+        var i,
+            allFilesClean = true,
+            tabsbar = document.getElementById("wr-tabs");
+        for (i = 0; i < tabsbar.children.length; i++) {
+            var tab = tabsbar.children[i];
+            if (tab && tab.children[1].innerText !== "") {
+                allFilesClean = false;
+            }
+        }
+
+        if (allFilesClean === false) {
+            var P = new PROMPT.init("Notice",
+                    "Some files contain unsaved changes.\n\nClose all without saving?");
+            P.addBtn({
+                text: "Cancel",
+                onclick: function () {
+                    tm.focus();
+                    return false;
+                },
+            }).addBtn({
+                text: "Don't Save",
+                onclick: function () {
+                    win.close(true);
+                },
+                type: "btn-red"
+            });
+            P.show();
+        } else {
+            win.close(true);
         }
     };
 
@@ -2141,8 +2166,6 @@
             closeAllTabs();
         }
 
-        // if file has been dirtied & codemirror history is not already at 
-        // oldest undo
         if (fileDirty) {
             var P = new PROMPT.init("Notice", "Close file without saving?");
             P.addBtn({
