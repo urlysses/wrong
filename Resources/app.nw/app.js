@@ -187,10 +187,9 @@
         this.selectionStart = 0;
         this.selectionEnd = 0;
         this.searchPos = 0;
-        this.storedSelectionStart = 0;
-        this.storedSelectionEnd = 0;
         this.storedScrollTop = 0;
         this.lastInput = null;
+        this.lastCursor = {selectionStart: 0, selectionEnd: 0};
         this.history = new History.History();
         this.hasSaved = false;
         this.checkpoint = null;
@@ -247,16 +246,17 @@
         this.doc.dispatchEvent(e);
     };
     TM.prototype.clone = function () {
+        console.log(this.lastCursor);
         var ntm = initTM(this.value);
-        ntm.selectionEnd = this.selectionEnd;
-        ntm.selectionStart = this.selectionStart;
+        var sel = this.getSelection();
+        ntm.selectionEnd = sel.selectionEnd;
+        ntm.selectionStart = sel.selectionStart;
         ntm.history = this.history;
         ntm.checkpoint = this.checkpoint;
         ntm.hasSaved = this.hasSaved;
-        ntm.lastInput = this.lastInput = null;
+        ntm.lastInput = this.lastInput;
+        ntm.lastCursor = this.lastCursor;
         this.blur();
-        ntm.storedSelectionEnd = this.storedSelectionEnd;
-        ntm.storedSelectionStart = this.storedSelectionStart;
         ntm.storedScrollTop = this.storedScrollTop;
         return ntm;
     };
@@ -275,7 +275,6 @@
         this.doc.blur();
     };
     TM.prototype.handleBlur = function () {
-        this.storeSelection();
         this.storedScrollTop = this.doc.scrollTop;
     };
     TM.prototype.focus = function () {
@@ -285,26 +284,18 @@
     TM.prototype.handleFocus = function () {
         this.doc.scrollTop = this.storedScrollTop;
         this.restoreSelection();
-        // TODO: info is stored on blur, but setting selection doesn't work
-        // on focus.
     };
     TM.prototype.isFocused = function () {
         return document.activeElement === this.doc;
     };
     TM.prototype.getSelection = function () {
-        return {selectionStart: this.selectionStart, selectionEnd: this.selectionEnd};
+        var selStart = this.selectionStart,
+            selEnd = this.selectionEnd;
+        return {selectionStart: selStart, selectionEnd: selEnd};
     };
-    TM.prototype.storeSelection = function () {
-        this.storedSelectionStart = this.selectionStart;
-        this.storedSelectionEnd = this.selectionEnd;
-    };
-    TM.prototype.restoreSelection = function (undoing) {
-        var dist = 0;
-        if (undoing) {
-            dist = 1;
-        }
-        this.selectionEnd = this.storedSelectionEnd - dist;
-        this.selectionStart = this.storedSelectionStart - dist;
+    TM.prototype.restoreSelection = function () {
+        this.selectionEnd = this.lastCursor.selectionEnd;
+        this.selectionStart = this.lastCursor.selectionStart;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -650,12 +641,18 @@
                 tm.insertText("\t");
                 e.preventDefault();
             }
+
+            // store the cursor position/selection.
+            tm.lastCursor = tm.getSelection();
         });
         tm.doc.addEventListener("keypress", function () {
             playClicks();
         });
         tm.doc.addEventListener("mouseup", function () {
             displayWordCount();
+
+            // store the cursor position/selection.
+            tm.lastCursor = tm.getSelection();
         });
         tm.doc.onpaste = function (e) {
             e.preventDefault();
@@ -1912,6 +1909,7 @@
             tm = tabs[file];
             tm.update();
             tm.focus();
+            setFileDirty(false);
         }
 
 
