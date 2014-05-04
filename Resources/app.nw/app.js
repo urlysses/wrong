@@ -360,7 +360,6 @@
         this.selectionEnd = this.text.length;
     };
     TM.prototype.find = function (value, backward, looping) {
-        // TODO: check typeof value for regex? (value instanceof RegExp)
         var pos;
         if (backward) { // findPrev
             var cal;
@@ -395,7 +394,7 @@
         }
 
         // Looped and still nothing found.
-        alert("'" + value + "' not found"); // TODO: PROMPT instead of alert?
+        alert("'" + value + "' not found");
         return false;
     };
     TM.prototype.findAll = function (value) {
