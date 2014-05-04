@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global CodeMirror, PROMPT, $, Audio*/
+/*global CodeMirror, PROMPT, $, Audio, Event*/
 (function (global) {
     "use strict";
 
@@ -232,17 +232,22 @@
             start = this.selectionStart,
             end = this.selectionEnd;
         this.value = [val.slice(0, start), text, val.slice(end)].join("");
+        this.selectionEnd = end + text.length;
+        this.selectionStart = start + text.length;
+        // Dispatch input event to update history.
+        var e = new Event("input");
+        this.doc.dispatchEvent(e);
     };
     TM.prototype.clone = function () {
         var ntm = initTM();
         ntm.value = this.value;
         ntm.store = this.store;
-        ntm.selectionStart = this.selectionStart;
         ntm.selectionEnd = this.selectionEnd;
+        ntm.selectionStart = this.selectionStart;
         ntm.history = this.history;
         this.blur();
-        ntm.storedSelectionStart = this.storedSelectionStart;
         ntm.storedSelectionEnd = this.storedSelectionEnd;
+        ntm.storedSelectionStart = this.storedSelectionStart;
         ntm.storedScrollTop = this.storedScrollTop;
         return ntm;
     };
@@ -289,8 +294,8 @@
         if (undoing) {
             dist = 1;
         }
-        this.selectionStart = this.storedSelectionStart - dist;
         this.selectionEnd = this.storedSelectionEnd - dist;
+        this.selectionStart = this.storedSelectionStart - dist;
     };
     TM.prototype._selection = function () {
         // range fix.
@@ -394,11 +399,6 @@
                 // replace selected text through insertText
                 var oldContent = this.value;
                 this.insertText(replacement);
-                this.history.change(
-                    this,
-                    {from: oldContent, to: this.value},
-                    this.getSelection()
-                );
                 return true;
             }
         }
@@ -632,8 +632,14 @@
         });
         tm.doc.addEventListener("keydown", function (e) {
             toggleSuperfluous(true);
+
             if (!e.metaKey && !e.altKey && e.keyIdentifier !== "Shift") {
                 tm.lastInput = e.which;
+            }
+
+            // Insert tab.
+            if (tm.isFocused() && e.which === 9) {
+                tm.insertText("\t");
             }
         });
         tm.doc.addEventListener("keypress", function () {
@@ -647,11 +653,6 @@
             var content = e.clipboardData.getData("text/plain");
             var oldContent = global.tm.value;
             global.tm.insertText(content);
-            global.tm.history.change(
-                global.tm,
-                {from: oldContent, to: global.tm.value},
-                global.tm.getSelection()
-            );
         };
         return tm;
     };
