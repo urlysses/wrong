@@ -38,6 +38,8 @@
         closeTab,
         closeAllTabs,
         saveAndClose,
+        goToNextTab,
+        goToPrevTab,
         menubar,
         findmenu,
         filemenu,
@@ -701,12 +703,12 @@
                 if (!alt && shift && k === 83) {
                     saveFile();
                 }
-                // Cmd-N
-                if (!alt && !shift && k === 78) {
+                // Cmd-N OR Cmd-T
+                if ((!alt && !shift && k === 78) || (!alt && !shift && k === 84)) {
                     newFile();
                 }
-                // Shift-Cmd-F
-                if ((!alt && shift && k === 70) || (cmd && !alt && !shift && k === 13)) {
+                // Shift-Cmd-F OR Cmd-[Enter]
+                if ((!alt && shift && k === 70) || (!alt && !shift && k === 13)) {
                     toggleFullscreen();
                 }
                 // Cmd-F
@@ -717,7 +719,7 @@
                 if (!alt && !shift && k === 71) {
                     TM.control.findNext(tm);
                 }
-                // Cmd-Shift-G
+                // Shift-Cmd-G
                 if (!alt && shift && k === 71) {
                     TM.control.findPrev(tm);
                 }
@@ -725,7 +727,7 @@
                 if (alt && !shift && k === 70) {
                     TM.control.replace(tm);
                 }
-                // Cmd-Alt-Shift-F
+                // Shift-Cmd-Alt-F
                 if (alt && shift && k === 70) {
                     TM.control.replaceAll(tm);
                 }
@@ -750,7 +752,7 @@
                         }
                     }
                 }
-                // Cmd-Shift-Z
+                // Shift-Cmd-Z
                 if (!alt && shift && k === 90) {
                     if (tm.isFocused()) {
                         e.preventDefault();
@@ -761,6 +763,14 @@
                             setFileDirty(true);
                         }
                     }
+                }
+                // Cmd-Alt-[Left Arrow]
+                if (alt && !shift && k === 37) {
+                    goToPrevTab();
+                }
+                // Cmd-Alt-[Right Arrow]
+                if (alt && !shift && k === 39) {
+                    goToNextTab();
                 }
             }
             // Esc
@@ -1592,6 +1602,24 @@
         }
     }));
 
+    viewmenu.append(new gui.MenuItem({
+        type: "separator"
+    }));
+
+    viewmenu.append(new gui.MenuItem({
+        label: "Go to Next Tab (\u2325\u2318\u2192)",
+        click: function () {
+            goToNextTab();
+        }
+    }));
+
+    viewmenu.append(new gui.MenuItem({
+        label: "Go to Previous Tab (\u2325\u2318\u2190)",
+        click: function () {
+            goToNextTab();
+        }
+    }));
+
     // Insert these submenus into the app menu.
     // Should give:
     // App | File | Edit | Find | View | Window
@@ -1954,6 +1982,38 @@
                 callback();
             }
         });
+    };
+
+    goToNextTab = function () {
+        if (Object.keys(tabs).length > 1) {
+            var tabsbar = document.getElementById("wr-tabs"),
+                currentTab = document.getElementById("wr-tab-selected"),
+                e = new Event("click"),
+                nextTab = $(currentTab).next()[0];
+
+            if (nextTab === undefined) {
+                // Current tab is last child. Loop back to start.
+                nextTab = tabsbar.children[0];
+            }
+
+            nextTab.dispatchEvent(e);
+        }
+    };
+
+    goToPrevTab = function () {
+        if (Object.keys(tabs).length > 1) {
+            var tabsbar = document.getElementById("wr-tabs"),
+                currentTab = document.getElementById("wr-tab-selected"),
+                e = new Event("click"),
+                prevTab = $(currentTab).prev()[0];
+
+            if (prevTab === undefined) {
+                // Current tab is first child. Loop back to end.
+                prevTab = tabsbar.children[tabsbar.children.length - 1];
+            }
+
+            prevTab.dispatchEvent(e);
+        }
     };
 
     closeTab = function () {

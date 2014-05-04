@@ -31,3 +31,4 @@
 + "X" buttons for tabs.
 + "+" button at end of tab bar to add a tab.
 + Images in document?
++ Add "Select Next/Prev Tab" option to Window menu, not View menu.
