@@ -640,6 +640,7 @@
             // Insert tab.
             if (tm.isFocused() && e.which === 9) {
                 tm.insertText("\t");
+                e.preventDefault();
             }
         });
         tm.doc.addEventListener("keypress", function () {
