@@ -61,9 +61,10 @@ var History = (function() {
     };
     History.prototype.undo = function (tm, selection) {
         var last = tm.history.done.pop(),
-            undoLast = last;
-        undoLast.change.to = tm.value;
+            undoLast;
         if (last) {
+            undoLast = last;
+            undoLast.change.to = tm.value;
             var prev = this.done[this.done.length - 1];
             if (prev) {
                 tm.store = prev.change.to;
