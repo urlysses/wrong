@@ -582,8 +582,6 @@
         this.show(machine);
         this.control.value = "define ";
         // yeah idk how i'm going to do this.
-        // TODO: support equivalent keyword "lookup" or "look up"
-        //       (shortcut Cmd-L ?)
     };
     CMD.prototype.parse = function (machine, query) {
         var commands = ["find", "define"],
