@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global CodeMirror, PROMPT, $, Audio, Event*/
+/*global PROMPT, $, Audio, Event*/
 (function (global) {
     "use strict";
 
