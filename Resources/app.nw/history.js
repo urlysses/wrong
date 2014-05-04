@@ -146,11 +146,11 @@ var History = (function() {
         if (last) {
             tm.value = last.change.to;
             if (last.selection.selectionStart <= last.change.to.length) {
-                tm.selectionStart = last.selection.selectionStart;
                 tm.selectionEnd = last.selection.selectionEnd;
+                tm.selectionStart = last.selection.selectionStart;
             } else {
-                tm.selectionStart = last.change.to.length;
                 tm.selectionEnd = last.change.to.length;
+                tm.selectionStart = last.change.to.length;
             }
             tm.history.done.push(last);
         }
@@ -170,11 +170,11 @@ var History = (function() {
             tm.value = last.change.from;
 
             if (last.selection.selectionStart <= last.change.from.length) {
-                tm.selectionStart = last.selection.selectionStart;
                 tm.selectionEnd = last.selection.selectionEnd;
+                tm.selectionStart = last.selection.selectionStart;
             } else {
-                tm.selectionStart = last.change.from.length;
                 tm.selectionEnd = last.change.from.length;
+                tm.selectionStart = last.change.from.length;
             }
 
             tm.history.undone.push(undoLast);
