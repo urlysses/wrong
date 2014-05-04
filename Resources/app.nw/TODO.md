@@ -33,3 +33,4 @@
 + Images in document?
 + Add "Select Next/Prev Tab" option to Window menu, not View menu.
 + Allow literals (" literally ") and regexp (/\s+/g) in Find & Replace?
++ Add some kind of satisfying visual echo on Save.
