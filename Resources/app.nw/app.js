@@ -186,6 +186,8 @@
         this.storedScrollTop = 0;
         this.lastInput = null;
         this.history = new History.History();
+        this.hasSaved = false;
+        this.checkpoint = null;
     }
     TM.prototype = {
         get value() {
@@ -386,7 +388,7 @@
         }
 
         // Looped and still nothing found.
-        // alert("'" + value + "' not found"); // TODO: PROMPT instead of alert?
+        alert("'" + value + "' not found"); // TODO: PROMPT instead of alert?
         return false;
     };
     TM.prototype.findAll = function (value) {
@@ -735,8 +737,11 @@
                     if (tm.isFocused()) {
                         e.preventDefault();
                         tm.history.undo(tm);
-                        if (tm.history.canUndo(tm) === false) {
+                        if ((!tm.hasSaved && !tm.history.canUndo(tm))
+                                || (tm.hasSaved && tm.checkpoint === tm.value)) {
                             setFileDirty(false);
+                        } else {
+                            setFileDirty(true);
                         }
                     }
                 }
@@ -745,8 +750,11 @@
                     if (tm.isFocused()) {
                         e.preventDefault();
                         tm.history.redo(tm);
-                        // TODO: set file dirty when necessary on redo.
-                        // but also need to implement save checkpoint.
+                        if (tm.hasSaved && tm.checkpoint === tm.value) {
+                            setFileDirty(false);
+                        } else {
+                            setFileDirty(true);
+                        }
                     }
                 }
             }
@@ -1687,7 +1695,8 @@
         var fd = false;
         if (isDirty === true) {
             // file edited
-            if (tm.history.canUndo(tm) === true) {
+            if ((!tm.hasSaved && tm.history.canUndo(tm) === true)
+                    || (tm.hasSaved && tm.checkpoint !== tm.value)) {
                 fd = true;
             }
         }
@@ -1809,6 +1818,8 @@
                 }
 
                 setFileDirty(false);
+                global.tm.hasSaved = true;
+                global.tm.checkpoint = global.tm.value;
                 if (callback) {
                     callback();
                 }
