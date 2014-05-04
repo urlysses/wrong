@@ -62,7 +62,7 @@ var History = (function() {
         // enter: 13
         // insert: 45
         // tab: 9
-        // space: 32 (removed, happens too often).
+        // space: 32 (removed, happens too often)
         // punctuation: 186-222
         var special = false;
         if (isPunctuation(keyCode) || isWhitespace(keyCode)
@@ -99,7 +99,6 @@ var History = (function() {
         if (hist.done.length === hist.undoDepth) {
             hist.done.shift();
         }
-
 
         // register event on specific inputs:
         // whitespace?, punctuation, new line, delete, etc.
@@ -165,13 +164,13 @@ var History = (function() {
             if (prev) {
                 tm.store = prev.change.to;
             } else {
-                tm.store = "";
+                tm.store = last.change.from;
             }
             tm.value = last.change.from;
 
             if (last.selection.selectionStart <= last.change.from.length) {
-                tm.selectionEnd = last.selection.selectionEnd;
-                tm.selectionStart = last.selection.selectionStart;
+                tm.selectionEnd = last.selection.selectionEnd - 1;
+                tm.selectionStart = last.selection.selectionStart - 1;
             } else {
                 tm.selectionEnd = last.change.from.length;
                 tm.selectionStart = last.change.from.length;
