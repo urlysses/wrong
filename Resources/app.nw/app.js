@@ -171,6 +171,10 @@
     };
 
     function TM(val) {
+        if (val === undefined) {
+            val = "";
+        }
+
         this.doc = document.createElement("pre");
         this.doc.id = "TextMap";
         this.doc.className += "tm-w-default";
@@ -241,12 +245,13 @@
         this.doc.dispatchEvent(e);
     };
     TM.prototype.clone = function () {
-        var ntm = initTM();
-        ntm.value = this.value;
-        ntm.store = this.store;
+        var ntm = initTM(this.value);
         ntm.selectionEnd = this.selectionEnd;
         ntm.selectionStart = this.selectionStart;
         ntm.history = this.history;
+        ntm.checkpoint = this.checkpoint;
+        ntm.hasSaved = this.hasSaved;
+        ntm.lastInput = this.lastInput = null;
         this.blur();
         ntm.storedSelectionEnd = this.storedSelectionEnd;
         ntm.storedSelectionStart = this.storedSelectionStart;
@@ -618,8 +623,8 @@
     };
     TM.control = new CMD();
 
-    initTM = function () {
-        var tm = new TM("");
+    initTM = function (val) {
+        var tm = new TM(val);
         tm.doc.addEventListener("input", function () {
             var store = global.tm.store,
                 value = global.tm.value;
