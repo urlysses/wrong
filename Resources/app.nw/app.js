@@ -1955,7 +1955,9 @@
         var openButton = document.getElementById("open");
         openButton.click();
         openButton.onchange = function () {
-            newFile(openButton.value);
+            if (openButton.value !== "") {
+                newFile(openButton.value);
+            }
         };
     };
 
