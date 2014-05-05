@@ -547,6 +547,7 @@ li#wr-audio-stop span:last-child {
     outline: none;
     float: right;
     margin-left: -13px;
+    cursor: pointer;
 }
 .wr-tab-close-button:hover {
     background: rgba(0, 0, 0, 0.24);
