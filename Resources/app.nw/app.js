@@ -852,7 +852,7 @@
                 $counter.fadeOut(duration);
                 $titlebar.fadeOut(duration);
             } else {
-                $(tm.doc).css("overflow-y", "overlay");
+                $(tm.doc).css("overflow-y", "scroll");
                 if (win.isFullscreen) {
                     $counter.fadeIn(duration);
                     $titlebar.fadeIn(duration);
@@ -1945,6 +1945,7 @@
         }
 
 
+        toggleSuperfluous(false);
         newTab.style.flexShrink = "1";
         newTab.dataset.file = file;
         newTab.onclick = function () {
@@ -2065,6 +2066,7 @@
             tm.update();
             tm.focus();
             getFileDirty(nextTab);
+            toggleSuperfluous(false);
         } else {
             closeWindow();
         }
