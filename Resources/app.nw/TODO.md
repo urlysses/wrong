@@ -21,3 +21,4 @@
   ("can be done easily" through css with border-color: inherit).
 + Add "Select Next/Prev Tab" option to Window menu, not View menu.
 + Add some kind of satisfying visual echo on Save.
++ Drag to rearrange tabs?
