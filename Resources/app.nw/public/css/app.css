@@ -529,9 +529,9 @@ li#wr-audio-stop span:last-child {
 #wr-tabs li#wr-tab-selected span:last-child {
     color: rgba(255, 255, 255, 0.63);
 }
-#wr-tabs li:only-child .wr-tab-close-button {
+/*#wr-tabs li:only-child .wr-tab-close-button {
     display: none;
-}
+}*/
 .wr-tab-close-button {
     margin: 0;
     padding: 0;
