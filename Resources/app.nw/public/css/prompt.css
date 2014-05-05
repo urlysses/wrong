@@ -16,11 +16,12 @@
     height: 149px;
     border-radius: 2px;
     margin: auto;
-    position: absolute;
-    top: -25%; 
+    position: relative;
     left: 0; 
     bottom: 0; 
     right: 0;
+    top: 48%;
+    -webkit-transform: translateY(-50%);
 }
 
 #prompt-title {
