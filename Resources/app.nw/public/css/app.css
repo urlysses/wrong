@@ -606,13 +606,17 @@ body#tm-control-body {
     height: 44px;
 }
 .wr-tm-fullscreen #tm-wr-control {
-    padding: 0;
-    width: 91.2%;
+    width: 90%;
     top: 32px;
     left: 50%;
     right: 0;
     bottom: 0;
-    -webkit-transform: translateX(-49.4%);
+    -webkit-transform: translateX(-50%);
+}
+body.wr-tm-control-fullscreen {
+    background: transparent;
+}
+.wr-tm-control-fullscreen #tm-control-close-button {
     background: transparent;
 }
 #tm-control {

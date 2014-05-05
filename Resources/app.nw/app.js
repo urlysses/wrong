@@ -419,6 +419,7 @@
         // Control & Control Pack
         this.controlpack = document.createElement("iframe");
         this.controlpack.id = "tm-wr-control";
+        this.controlpack.src = "control.html";
         this.control = document.createElement("input");
         this.control.type = "text";
         this.control.id = "tm-control";
@@ -436,15 +437,32 @@
         if (this.controlOpened === false) {
             machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
             machine.doc.classList.add("tm-control-on");
-            var cssFile = document.createElement("link");
-            cssFile.href = "public/css/app.css";
-            cssFile.type = "text/css";
-            cssFile.rel = "stylesheet";
-            this.controlpack.contentDocument.head.appendChild(cssFile);
-            this.controlpack.contentDocument.body.id = "tm-control-body";
-            this.controlpack.contentDocument.body.appendChild(this.control);
-            this.controlpack.contentDocument.body.appendChild(this.controlCloseButton);
+            var runtimeCss = document.getElementById("wr-runtime-style").cloneNode(true).childNodes[0],
+                extraThemeCss = document.getElementById("wr-link-extra-theme").href;
             var cmd = this;
+            this.controlpack.onload = function () {
+                // css
+                var runtime = cmd.controlpack.contentDocument.getElementById("wr-runtime-style-frame"),
+                    extra = cmd.controlpack.contentDocument.getElementById("wr-link-extra-theme-frame");
+                if (runtimeCss) {
+                    runtime.appendChild(runtimeCss);
+                }
+                extra.href = extraThemeCss;
+
+                // body
+                cmd.controlpack.contentDocument.body.id = "tm-control-body";
+                cmd.controlpack.contentDocument.body.appendChild(cmd.control);
+                cmd.controlpack.contentDocument.body.appendChild(cmd.controlCloseButton);
+                if (win.isFullscreen) {
+                    cmd.controlpack.contentDocument.body.classList.add("wr-tm-control-fullscreen");
+                }
+
+                // bind general editor shortcuts here too so no functionality is 
+                // lost.
+                bindEditorShortcuts(cmd.controlpack.contentDocument);
+                cmd.control.focus();
+                cmd.controlOpened = true;
+            };
             this.control.addEventListener("keypress", function (e) {
                 if (e.keyCode === 13) {
                     if (this.value.toLowerCase().indexOf("replace") === 0) {
@@ -465,11 +483,7 @@
             this.controlpack.contentWindow.addEventListener("blur", function (e) {
                 cmd.hide(machine);
             });
-            // bind general editor shortcuts here too so no functionality is 
-            // lost.
-            bindEditorShortcuts(this.controlpack.contentDocument);
-            this.control.focus();
-            this.controlOpened = true;
+
         }
     };
     CMD.prototype.hide = function (machine) {
@@ -490,6 +504,19 @@
             this.hide(machine);
         } else {
             this.show(machine);
+        }
+    };
+    CMD.prototype.updateFullscreenStyle = function (isOn) {
+        var copack = this.controlpack.contentDocument;
+        if (isOn) {
+            var runtimeCss = document.getElementById("wr-runtime-style").cloneNode(true).childNodes[0],
+                runtime = copack.getElementById("wr-runtime-style-frame");
+            if (runtimeCss) {
+                runtime.appendChild(runtimeCss);
+            }
+            copack.body.classList.add("wr-tm-control-fullscreen");
+        } else {
+            copack.body.classList.remove("wr-tm-control-fullscreen");
         }
     };
     CMD.prototype.find = function (machine) {
@@ -1701,6 +1728,7 @@
     compileRuntimeCss = function (color, rgb, yiq) {
         var minorColor, mainColor, halfColor, r, g, b,
             sName = "#titlebar.wr-titlebar-fullscreen.wr-runtime-fullscreen-css",
+            controlName = "body.wr-tm-control-fullscreen",
             styl = document.getElementById("wr-runtime-style"),
             endstyle = "";
 
@@ -1739,9 +1767,9 @@
             // main is dark. use light for text.
             minorColor = "rgba(255, 255, 255, 0.9)";
         }
-
         halfColor = "rgba(" + r + ", " + g + ", " + b + ", 0.2)";
 
+        // for tabs bar
         endstyle += sName + " {";
         endstyle += "color: " + minorColor + ";";
         endstyle += "border-color: " + mainColor + ";";
@@ -1765,6 +1793,20 @@
         endstyle += "background-color: " + mainColor + ";";
         endstyle += "color: inherit;";
         endstyle += "border-color: " + mainColor + ";";
+        endstyle += "}";
+        // for Control
+        endstyle += ".wr-tm-fullscreen #tm-wr-control {";
+        endstyle += "background-color: " + halfColor + ";";
+        endstyle += "}";
+        endstyle += controlName + " #tm-control {";
+        endstyle += "color: " + minorColor + ";";
+        endstyle += "background-color: " + mainColor + ";";
+        endstyle += "}";
+        endstyle += controlName + " #tm-control-close-button {";
+        endstyle += "color: " + mainColor + ";";
+        endstyle += "}";
+        endstyle += controlName + " #tm-control-close-button:active {";
+        endstyle += "color: " + minorColor + ";";
         endstyle += "}";
         while (styl.firstChild) {
             styl.removeChild(styl.firstChild);
@@ -2219,9 +2261,15 @@
                 titlebar.classList.add("wr-runtime-fullscreen-css");
                 compileRuntimeCss();
             }
+            if (TM.control.controlOpened) {
+                TM.control.updateFullscreenStyle(true);
+            }
         } else {
             tm.doc.parentNode.classList.remove("wr-tm-fullscreen");
             titlebar.classList.remove("wr-titlebar-fullscreen");
+            if (TM.control.controlOpened) {
+                TM.control.updateFullscreenStyle(false);
+            }
         }
     };
 
