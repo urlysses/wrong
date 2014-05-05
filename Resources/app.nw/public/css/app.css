@@ -512,6 +512,8 @@ li#wr-audio-stop span:last-child {
     text-overflow: ellipsis;
     overflow: hidden;
     border-right: 1px solid #007aff;
+    flex-shrink: 6;
+    transition: flex 0.09s;
 }
 #wr-tabs li:last-child {
     border-right: none;

@@ -1933,6 +1933,7 @@
         }
 
 
+        newTab.style.flexShrink = "1";
         newTab.dataset.file = file;
         newTab.onclick = function () {
             var file = this.dataset.file,
