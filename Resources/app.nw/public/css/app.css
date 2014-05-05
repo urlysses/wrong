@@ -118,6 +118,18 @@ body {
     padding: 0;
     font-size: 15px;
 }
+#wr-customizer h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+}
+#wr-customizer p {
+    margin: 0;
+    padding: 0;
+    margin-top: 11px;
+    font-size: 12px;
+    -webkit-font-smoothing: antialiased;
+}
 #wr-customizer .wr-tabbed {
     margin-left: 2em;
 }
@@ -127,11 +139,6 @@ body {
     padding-top: 0;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-#wr-customizer .btn {
-    font-size: 18px;
-    -webkit-font-smoothing: antialiased;
-    font-weight: bold;
 }
 #wr-customizer #wr-hider {
     position: absolute;
@@ -166,7 +173,7 @@ body {
     list-style: none;
     display: table;
 }
-#wr-themes li, #wr-bg-color, #wr-bg-img, #wr-bg-text,
+#wr-themes li, #wr-bg-color, #wr-bg-img, 
 #wr-text-color, #wr-text-font li, #wr-text-sizes li, #wr-text-weight li,
 #wr-text-style li, #wr-fullscreen-audio li, #wr-fullscreen-clicks li,
 #wr-tabbed li {
@@ -182,7 +189,7 @@ body {
 li.wr-noclick {
     cursor: default !important;
 }
-#wr-bg-color, #wr-bg-img, #wr-bg-text,
+#wr-bg-color, #wr-bg-img, 
 #wr-text-color, #wr-text-font li, #wr-text-sizes li, #wr-text-weight li,
 #wr-text-style li, #wr-fullscreen-audio li, #wr-fullscreen-clicks li,
 #wr-tabbed li {
@@ -203,7 +210,7 @@ li.wr-noclick {
     vertical-align: middle;
 }
 
-#wr-bg-color, #wr-bg-img, #wr-bg-text, #wr-text-color {
+#wr-bg-color, #wr-bg-img, #wr-text-color {
     border: 3px solid transparent;
     max-width: 27px;
     max-height: 27px;
@@ -215,19 +222,12 @@ li.wr-noclick {
 }
 
 #wr-bg-img:before {
-    /*content: '?';
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.5);
+    content: 'img';
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.26);
     position: relative;
     top: 4px;
-    left: 10px;*/
-    content: '\20eb\20eb\20eb\20eb';
-    font-size: 30px;
-    color: rgba(255, 255, 255, 0.04);
-    position: relative;
-    top: -13px;
     left: 2px;
-    font-style: italic;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -238,26 +238,8 @@ li.wr-noclick {
     background-repeat: no-repeat;
 }
 
-#wr-bg-img::-webkit-file-upload-button, #wr-bg-text::-webkit-file-upload-button {
+#wr-bg-img::-webkit-file-upload-button {
     visibility: hidden;
-}
-
-#wr-bg-text:before {
-    content: "???????\A?????????\A????????";
-    color: rgba(255, 255, 255, 0.52);
-    font-size: 10px;
-    overflow: hidden;
-    position: relative;
-    top: -7px;
-    left: -1px;
-    font-weight: 100;
-    -webkit-font-smoothing: antialiased;
-}
-
-#wr-bg-text {
-    background: rgba(0, 0, 0, 0.08);
-    cursor: text;
-    -webkit-user-select: none;
 }
 
 #wr-text-color {
