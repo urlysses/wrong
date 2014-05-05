@@ -41,6 +41,7 @@
         saveAndClose,
         goToNextTab,
         goToPrevTab,
+        compileRuntimeCss,
         menubar,
         findmenu,
         filemenu,
@@ -127,17 +128,13 @@
     };
 
     loadTheme = function (themeName, custom) {
-        var themeLink, themePath;
+        var themePath;
         if (custom) {
             themePath = gui.App.dataPath + "/Themes/" + themeName + "/" + themeName + ".css";
         } else {
             themePath = "Themes/" + themeName + "/" + themeName + ".css";
         }
-        themeLink = document.createElement("link");
-        themeLink.rel = "stylesheet";
-        themeLink.type = "text/css";
-        themeLink.href = themePath;
-        document.getElementsByTagName("head")[0].appendChild(themeLink);
+        document.getElementById("wr-link-extra-theme").href = themePath;
     };
 
     loadDefaultTheme = function () {
@@ -152,10 +149,8 @@
 
     unloadDefaultTheme = function () {
         if (localStorage.defaultTheme && theme.loaded === true) {
-            // there's a defaultTheme. css link will always be HEAD's lastchild
-            // (we don't add to HEAD except during global.onload or in calling 
-            // loadDefaultTheme();)
-            document.getElementsByTagName("head")[0].lastChild.remove();
+            // there's a defaultTheme. remove it.
+            document.getElementById("wr-link-extra-theme").href = "";
             theme.loaded = false;
         }
     };
@@ -1035,8 +1030,14 @@
             }
             styleDiv.innerHTML = "";
             unloadDefaultTheme();
+            link.onload = function () {
+                compileRuntimeCss();
+            };
             if (css !== "Light") {
                 styleDiv.appendChild(link);
+            } else {
+                // Compile for Light theme.
+                compileRuntimeCss();
             }
         });
         colorSpectrum = function (type, where, cssName, color) {
@@ -1055,12 +1056,15 @@
                     b = parseInt(col.substr(4, 2), 16),
                     yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
                 if (yiq >= 128) {
+                    // light color so use dark.
                     textcolor.style.backgroundColor = "rgba(0,0,0,0.7)";
                     textcolor.style.borderColor = "transparent";
                 } else {
+                    // dark color so use light.
                     textcolor.style.backgroundColor = "rgba(255,255,255,0.9)";
                     textcolor.style.borderColor = "black";
                 }
+                compileRuntimeCss(color, {r: r, g: g, b: b}, yiq);
             }
 
             if (cssName === "background-color") {
@@ -1074,6 +1078,7 @@
             clickoutFiresChange: true,
             showInput: true,
             move: function (color) {
+                console.log(color);
                 colorSpectrum("body", theme.body, "background-color", color);
             },
             hide: function (color) {
@@ -1692,6 +1697,80 @@
         win.maximize();
     };
 
+    compileRuntimeCss = function (color, rgb, yiq) {
+        var minorColor, mainColor, halfColor, r, g, b,
+            sName = "#titlebar.wr-titlebar-fullscreen.wr-runtime-fullscreen-css",
+            styl = document.getElementById("wr-runtime-style"),
+            endstyle = "";
+
+        if (color === undefined && rgb === undefined && yiq === undefined) {
+            mainColor = window.getComputedStyle(tm.doc).color;
+            var col;
+            if (mainColor.indexOf("rgb") === 0) {
+                col = mainColor.match(/\d+/g);
+                r = col[0];
+                g = col[1];
+                b = col[2];
+            } else if (mainColor.indexOf("#") === 0 && mainColor.length > 4) {
+                col = mainColor.substring(1);
+                r = parseInt(col.substr(0, 2), 16);
+                g = parseInt(col.substr(2, 2), 16);
+                b = parseInt(col.substr(4, 2), 16);
+            }
+
+            if (r && g && b) {
+                yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            } else {
+                // Using some other color format. Welp, too bad I guess.
+                yiq = 128;
+            }
+        } else {
+            mainColor = color;
+            r = rgb.r;
+            g = rgb.g;
+            b = rgb.b;
+        }
+
+        if (yiq >= 128) {
+            // main is light. use dark for text.
+            minorColor = "rgba(0, 0, 0, 0.9)";
+        } else {
+            // main is dark. use light for text.
+            minorColor = "rgba(255, 255, 255, 0.9)";
+        }
+
+        halfColor = "rgba(" + r + ", " + g + ", " + b + ", 0.2)";
+
+        endstyle += sName + " {";
+        endstyle += "color: " + minorColor + ";";
+        endstyle += "border-color: " + mainColor + ";";
+        endstyle += "}";
+        endstyle += sName + " #wr-tabs {";
+        endstyle += "border-color: " + mainColor + ";";
+        endstyle += "}";
+        endstyle += sName + " #wr-tabs li {";
+        endstyle += "background-color: transparent;";
+        endstyle += "color: inherit;";
+        endstyle += "border-right-color: inherit;";
+        endstyle += "}";
+        endstyle += sName + " #wr-tabs li:active {";
+        endstyle += "background-color: " + halfColor + ";";
+        endstyle += "}";
+        endstyle += sName + " li#wr-tab-selected, " + sName + " li#wr-tab-selected:active {";
+        endstyle += "background-color: " + mainColor + ";";
+        endstyle += "color: " + minorColor + ";";
+        endstyle += "}";
+        endstyle += sName + " #wr-add-tab-button {";
+        endstyle += "background-color: " + mainColor + ";";
+        endstyle += "color: inherit;";
+        endstyle += "border-color: " + mainColor + ";";
+        endstyle += "}";
+        while (styl.firstChild) {
+            styl.removeChild(styl.firstChild);
+        }
+        styl.appendChild(document.createTextNode(endstyle));
+    };
+
     /* MISC FULLSCREEN & WINDOW FUNCTIONS */
     toggleAudio = function (playAudio) {
         if (playAudio === undefined) {
@@ -2132,6 +2211,10 @@
     toggleTitlebar = function () {
         if (titlebar.classList.contains("wr-titlebar-fullscreen") === false) {
             titlebar.classList.add("wr-titlebar-fullscreen");
+            if (titlebar.classList.contains("wr-runtime-fullscreen-css") === false) {
+                titlebar.classList.add("wr-runtime-fullscreen-css");
+                compileRuntimeCss();
+            }
         } else {
             titlebar.classList.remove("wr-titlebar-fullscreen");
         }
@@ -2154,7 +2237,7 @@
     };
 
     win.on("enter-fullscreen", function () {
-        toggleTitlebar();
+        window.setTimeout(toggleTitlebar, 1000);
         toggleAudio();
     });
 

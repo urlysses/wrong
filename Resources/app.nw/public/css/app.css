@@ -595,12 +595,12 @@ li#wr-audio-stop span:last-child {
 }
 #wr-add-tab-button:hover {
     background: #449EFF;
-    box-shadow: inset 1px 1px 0px #ABCEF3;
-    text-shadow: 0px 1px 0px #0066D5;
+    box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.64);
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.37);
 }
 #wr-add-tab-button:active {
     background: #56A7FF;
-    box-shadow: inset 0px 0px 8px #0062CC;
+    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.31);
     text-shadow: none;
 }
 
