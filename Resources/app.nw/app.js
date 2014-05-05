@@ -455,7 +455,7 @@
                     if (this.value.toLowerCase().indexOf("replace") === 0) {
                         cmd.modifyForReplace(machine);
                     } else {
-                        cmd.parse(machine, this.value);
+                        cmd.parse(machine, this.value, e);
                     }
                 } else if (e.keyCode === 32) {
                     if (this.value.toLowerCase().indexOf("replace") === 0) {
@@ -527,7 +527,7 @@
         this.replControl.appendChild(this.replReplacement);
 
         this.controlpack.contentDocument.body.removeChild(this.control);
-        this.controlpack.contentDocument.body.appendChild(this.replControl);
+        this.controlpack.contentDocument.body.insertBefore(this.replControl, this.controlCloseButton);
         var cDocument = this.controlpack.contentDocument;
         var replValue = cDocument.getElementById("tm-control-replace-value"),
             replReplacement = cDocument.getElementById("tm-control-replace-replacement"),
@@ -591,16 +591,19 @@
         this.control.value = "define ";
         // yeah idk how i'm going to do this.
     };
-    CMD.prototype.parse = function (machine, query) {
+    CMD.prototype.parse = function (machine, query, keyEvent) {
         var commands = ["find", "define"],
             lowerquery = query.toLowerCase(),
-            i;
+            i,
+            backwards = false;
 
         if (query.length === 0) {
             // Pressed enter in empty control. Probably looking to close it.
             this.hide(machine);
             return true;
         }
+
+
 
         for (i = 0; i < commands.length; i++) {
             var command = commands[i];
@@ -611,9 +614,16 @@
                 this[command + "query"] = q;
                 if (command === "find") {
                     this.replacequeryfrom = this.findquery;
+                    if (keyEvent !== undefined) {
+                        if (keyEvent.which === 13 && keyEvent.shiftKey === true) {
+                            // User has pressed shift-enter while searching, so 
+                            // go reverse.
+                            backwards = true;
+                        }
+                    }
                 }
                 // Execute query via tm[command](query) (e.g., tm.find("word"))
-                machine[command](q);
+                machine[command](q, backwards);
                 // Stop looping.
                 break;
             }
