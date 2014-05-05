@@ -10,3 +10,4 @@
 + Speech-based writing and editing (using modes?)?
 + Images in document?
 + Allow literals (" literally ") and regexp (/\s+/g) in Find & Replace?
++ Inline comments (just color styling)? Like i tend to do with [(comments)].
