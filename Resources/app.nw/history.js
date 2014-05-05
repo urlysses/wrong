@@ -90,6 +90,10 @@ var History = (function() {
         hist.done[len - 1].selection = selection;
     };
 
+    History.prototype.pushNewChange = function (tm, change, selection) {
+        tm.history.done.push({change: change, selection: selection});
+    };
+
     History.prototype.change = function (tm, change, selection) {
         var hist = tm.history,
             currTime = +new Date(),
@@ -115,23 +119,23 @@ var History = (function() {
                 // OR
                 // lastInput was special, but current input returns to normal
                 // (e.g., [punctuation][space]).
-                hist.done.push({change: change, selection: selection});
+                hist.pushNewChange(tm, change, tm.lastCursor);
             } else {
                 // special input.
                 if (currInput === hist.lastInput) {
                     // Same char as last time. Merge.
-                    hist.mergeWithLastChange(tm, change, selection);
+                    hist.mergeWithLastChange(tm, change, tm.lastCursor);
 
                     // check for timing? if exceeds time, don't merge?
                 } else if (areSameType(currInput, hist.lastInput)) {
                     // Same char types (delete, punctuation, etc.). Merge.
-                    hist.mergeWithLastChange(tm, change, selection);
+                    hist.mergeWithLastChange(tm, change, tm.lastCursor);
                 } else if (isPunctuation(hist.lastInput) && isWhitespace(currInput)) {
                     // [punctuation][space]. Merge since happens often.
-                    hist.mergeWithLastChange(tm, change, selection);
+                    hist.mergeWithLastChange(tm, change, tm.lastCursor);
                 } else {
                     // Don't merge, push.
-                    hist.done.push({change: change, selection: selection});
+                    hist.pushNewChange(tm, change, tm.lastCursor);
                 }
             }
         }
@@ -144,13 +148,16 @@ var History = (function() {
         var last = tm.history.undone.pop();
         if (last) {
             tm.value = last.change.to;
-            if (last.selection.selectionStart <= last.change.to.length) {
+
+            var next = tm.history.undone[tm.history.undone.length - 1];
+            if (next) {
+                tm.selectionEnd = next.selection.selectionEnd;
+                tm.selectionStart = next.selection.selectionStart;
+            } else {
                 tm.selectionEnd = last.selection.selectionEnd;
                 tm.selectionStart = last.selection.selectionStart;
-            } else {
-                tm.selectionEnd = last.change.to.length;
-                tm.selectionStart = last.change.to.length;
             }
+
             tm.history.done.push(last);
         }
     };
@@ -160,7 +167,8 @@ var History = (function() {
         if (last) {
             undoLast = last;
             undoLast.change.to = tm.value;
-            var prev = this.done[this.done.length - 1];
+
+            var prev = tm.history.done[tm.history.done.length - 1];
             if (prev) {
                 tm.store = prev.change.to;
             } else {
@@ -168,13 +176,8 @@ var History = (function() {
             }
             tm.value = last.change.from;
 
-            if (last.selection.selectionStart <= last.change.from.length) {
-                tm.selectionEnd = last.selection.selectionEnd - 1;
-                tm.selectionStart = last.selection.selectionStart - 1;
-            } else {
-                tm.selectionEnd = last.change.from.length;
-                tm.selectionStart = last.change.from.length;
-            }
+            tm.selectionEnd = last.selection.selectionEnd;
+            tm.selectionStart = last.selection.selectionStart;
 
             tm.history.undone.push(undoLast);
         }

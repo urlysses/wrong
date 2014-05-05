@@ -246,7 +246,6 @@
         this.doc.dispatchEvent(e);
     };
     TM.prototype.clone = function () {
-        console.log(this.lastCursor);
         var ntm = initTM(this.value);
         var sel = this.getSelection();
         ntm.selectionEnd = sel.selectionEnd;
