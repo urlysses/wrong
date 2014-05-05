@@ -20,6 +20,7 @@
         updateTabs,
         fullscreenbutton,
         windowbuttons,
+        addtabsbutton,
         makeUTF8,
         saveFile,
         filePath,
@@ -1641,6 +1642,7 @@
     titlebar = document.getElementById("titlebar");
     fullscreenbutton = document.getElementById("wr-fullscreen-button");
     windowbuttons = document.getElementById("wr-window-buttons");
+    addtabsbutton = document.getElementById("wr-add-tab");
     fullscreenbutton.onclick = function () {
         toggleFullscreen();
     };
@@ -1656,6 +1658,9 @@
             windowbuttons.children[i].classList.remove("wr-window-button-hover");
         }
     });
+    addtabsbutton.onclick = function () {
+        newFile();
+    };
     document.getElementById("wr-close-button").onclick = function () {
         closeAllTabs();
     };
