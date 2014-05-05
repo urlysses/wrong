@@ -1078,7 +1078,6 @@
             clickoutFiresChange: true,
             showInput: true,
             move: function (color) {
-                console.log(color);
                 colorSpectrum("body", theme.body, "background-color", color);
             },
             hide: function (color) {
