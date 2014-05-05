@@ -1,7 +1,7 @@
 {
   "name": "Wreathe",
   "description": "writing app",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "window": {
     "min_width": 400,
     "min_height": 200,

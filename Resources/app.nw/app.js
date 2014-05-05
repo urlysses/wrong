@@ -1642,7 +1642,7 @@
     titlebar = document.getElementById("titlebar");
     fullscreenbutton = document.getElementById("wr-fullscreen-button");
     windowbuttons = document.getElementById("wr-window-buttons");
-    addtabsbutton = document.getElementById("wr-add-tab");
+    addtabsbutton = document.getElementById("wr-add-tab-button");
     fullscreenbutton.onclick = function () {
         toggleFullscreen();
     };
@@ -1880,10 +1880,20 @@
     newFile = function (file, callback) {
         var tabsbar = document.getElementById("wr-tabs"),
             currentTab = document.getElementById("wr-tab-selected"),
-            newTab = document.createElement("li");
+            newTab = document.createElement("li"),
+            newTabCloseButton = document.createElement("button");
 
         newTab.id = "wr-tab-selected";
         newTab.innerHTML = "<span>Untitled</span><span></span>";
+
+        newTabCloseButton.classList.add("wr-tab-close-button");
+        newTabCloseButton.innerText = "x";
+        newTab.appendChild(newTabCloseButton);
+        newTabCloseButton.onclick = function () {
+            // The tab closes automatically since click falls within
+            // click listener initiated below.
+            win.close();
+        };
 
         if (file) {
             if (tm.value.length > 0
