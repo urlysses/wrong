@@ -13,7 +13,6 @@
 + iCloud & file nav implementation (see that lua HN post or w/e)
   (if want into App Store).
 + add a favicon for app completeness (and so nothing unexpected happens).
-+ "X" button for Control.
 + Elements in the theme editor should be clearly labeled. The mystery meat
   design may be slick, but it's mostly inconvenient. User doesn't want or
   need to play around with values just to find a specific thing.

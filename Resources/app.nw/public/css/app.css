@@ -592,6 +592,10 @@ li#wr-audio-stop span:last-child {
 }
 
 /*** CONTROL ***/
+body#tm-control-body {
+    display: flex;
+    flex-direction: row;
+}
 #tm-wr-control {
     position: fixed;
     z-index: 100;
@@ -616,6 +620,29 @@ li#wr-audio-stop span:last-child {
     -webkit-font-smoothing: antialiased;
     -webkit-box-sizing: border-box;
     flex: 1 1 auto;
+}
+#tm-control-close-button {
+    display: block;
+    margin: 0;
+    font-family: "Helvetica";
+    font-size: 18px;
+    padding-top: 0px;
+    padding-bottom: 4px;
+    height: inherit;
+    background: white;
+    padding-right: 4px;
+    padding-left: 4px;
+    color: rgb(231, 231, 231);
+    border: none;
+    flex: 1 1 auto;
+    outline: none;
+    cursor: pointer;
+}
+#tm-control-close-button:hover {
+    color: rgb(155, 155, 155);
+}
+#tm-control-close-button:active {
+    color: rgb(233, 233, 233);
 }
 #tm-control-replace-value, #tm-control-replace-replacement {
     border: 1px solid rgba(128, 128, 128, 0.57);

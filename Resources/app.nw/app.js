@@ -427,6 +427,9 @@
         this.control = document.createElement("input");
         this.control.type = "text";
         this.control.id = "tm-control";
+        this.controlCloseButton = document.createElement("button");
+        this.controlCloseButton.id = "tm-control-close-button";
+        this.controlCloseButton.innerText = "x";
         this.controlOpened = false;
         // Query Misc
         this.findquery = "";
@@ -443,7 +446,9 @@
             cssFile.type = "text/css";
             cssFile.rel = "stylesheet";
             this.controlpack.contentDocument.head.appendChild(cssFile);
+            this.controlpack.contentDocument.body.id = "tm-control-body";
             this.controlpack.contentDocument.body.appendChild(this.control);
+            this.controlpack.contentDocument.body.appendChild(this.controlCloseButton);
             var cmd = this;
             this.control.addEventListener("keypress", function (e) {
                 if (e.keyCode === 13) {
@@ -459,6 +464,9 @@
                     }
                 }
             });
+            this.controlCloseButton.onclick = function () {
+                cmd.hide(machine);
+            };
             this.controlpack.contentWindow.addEventListener("blur", function (e) {
                 cmd.hide(machine);
             });
