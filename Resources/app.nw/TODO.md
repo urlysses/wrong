@@ -18,7 +18,8 @@
   design may be slick, but it's mostly inconvenient. User doesn't want or
   need to play around with values just to find a specific thing.
 + Show tabs in fullscreen (as superfluous). Tab+border+text color should match
-  that of tm text color.
+  that of tm text color
+  ("can be done easily" through css with border-color: inherit).
 + "X" buttons for tabs.
 + Add "Select Next/Prev Tab" option to Window menu, not View menu.
 + Add some kind of satisfying visual echo on Save.
