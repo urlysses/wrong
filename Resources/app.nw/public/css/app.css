@@ -378,8 +378,8 @@ li#wr-audio-stop span:last-child {
     position: fixed;
     width: 100%;
 }
-.wr-titlebar-fullscreen #wr-add-tab-button {
-    margin-right: 4%;
+.wr-titlebar-fullscreen.wr-runtime-fullscreen-css #wr-tabs {
+    margin-left: 0;
 }
 #titlebar {
     cursor: default;
@@ -605,6 +605,16 @@ body#tm-control-body {
     border: none;
     height: 44px;
 }
+.wr-tm-fullscreen #tm-wr-control {
+    padding: 0;
+    width: 91.2%;
+    top: 32px;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    -webkit-transform: translateX(-49.4%);
+    background: transparent;
+}
 #tm-control {
     width: 100%;
     margin: 0;
@@ -671,9 +681,6 @@ body#tm-control-body {
     border: 1px solid rgba(0, 122, 255, 1);
     color: rgba(0, 122, 255, 1);
 }
-.tm-control-on {
-    padding-top: 49px !important;
-}
 
 /*** IDK. OLD CODEMIRROR STUFF? ***/
 .sp-replacer {
@@ -732,6 +739,9 @@ body#tm-control-body {
 
     #TextMap {
         padding: 5px;
+    }
+    .tm-control-on {
+        padding-top: 49px !important;
     }
     #counter {
         display: none;

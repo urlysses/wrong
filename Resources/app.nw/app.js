@@ -474,7 +474,9 @@
     };
     CMD.prototype.hide = function (machine) {
         if (this.controlOpened === true) {
-            machine.doc.parentNode.removeChild(this.controlpack);
+            if (this.controlpack.parentNode === machine.doc.parentNode) {
+                machine.doc.parentNode.removeChild(this.controlpack);
+            }
             machine.doc.classList.remove("tm-control-on");
             machine.focus();
             this.control = this.control.cloneNode(true); // remove eventlistener
@@ -2105,6 +2107,7 @@
                 nextTab = tabsbar.children[0];
             }
 
+            toggleSuperfluous(false);
             nextTab.dispatchEvent(e);
         }
     };
@@ -2121,6 +2124,7 @@
                 prevTab = tabsbar.children[tabsbar.children.length - 1];
             }
 
+            toggleSuperfluous(false);
             prevTab.dispatchEvent(e);
         }
     };
@@ -2210,11 +2214,13 @@
     toggleTitlebar = function () {
         if (titlebar.classList.contains("wr-titlebar-fullscreen") === false) {
             titlebar.classList.add("wr-titlebar-fullscreen");
+            tm.doc.parentNode.classList.add("wr-tm-fullscreen");
             if (titlebar.classList.contains("wr-runtime-fullscreen-css") === false) {
                 titlebar.classList.add("wr-runtime-fullscreen-css");
                 compileRuntimeCss();
             }
         } else {
+            tm.doc.parentNode.classList.remove("wr-tm-fullscreen");
             titlebar.classList.remove("wr-titlebar-fullscreen");
         }
     };
