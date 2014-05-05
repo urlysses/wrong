@@ -528,9 +528,6 @@ li#wr-audio-stop span:last-child {
 #wr-tabs li#wr-tab-selected span:last-child {
     color: rgba(255, 255, 255, 0.63);
 }
-/*#wr-tabs li:only-child .wr-tab-close-button {
-    display: none;
-}*/
 .wr-tab-close-button {
     margin: 0;
     padding: 0;
@@ -550,6 +547,7 @@ li#wr-audio-stop span:last-child {
 }
 .wr-tab-close-button:hover {
     background: rgba(0, 0, 0, 0.24);
+    box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.34);
 }
 
 #wr-add-tab-button {
