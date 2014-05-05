@@ -860,6 +860,7 @@
 
                 if (override) {
                     $counter.fadeOut(duration);
+                    $titlebar.fadeIn(0);
                 }
             }
         }
