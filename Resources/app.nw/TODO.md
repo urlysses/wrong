@@ -17,3 +17,4 @@
 + Add some kind of satisfying visual echo on Save.
 + Drag to rearrange tabs?
 + Buttons in customizer don't turn blue on select anymore.
++ Apply style to Control while in fullscreen
