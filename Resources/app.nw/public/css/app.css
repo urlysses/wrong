@@ -15,7 +15,7 @@ body {
 }
 
 #TextMapHolder {
-    height: 96%;
+    height: 100%;
     display: block;
     background: none;
     border: none;
@@ -31,7 +31,7 @@ body {
 }
 
 #TextMap {
-    height: 99%;
+    height: 100%;
     display: block;
     background: none;
     border: none;
@@ -45,7 +45,7 @@ body {
     padding-top: 6.5%;
     padding-left: 25%;
     padding-right: 25%;
-    overflow-y: overlay;
+    overflow-y: scroll;
     overflow-x: hidden;
     flex: 1 1 auto;
     word-break: normal;
@@ -752,7 +752,6 @@ body#tm-control-body {
 
     #TextMap {
         padding: 5px;
-        padding-right: 14px;
     }
     #counter {
         display: none;
