@@ -48,6 +48,9 @@ body {
     overflow-y: overlay;
     overflow-x: hidden;
     flex: 1 1 auto;
+    word-break: normal;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 #open, #save, #user-css, #wr-bod-style, 
@@ -384,6 +387,18 @@ li#wr-audio-stop span:last-child {
 }
 
 /*** TITLEBAR ***/
+.wr-titlebar-fullscreen #wr-window-buttons, .wr-titlebar-fullscreen .wr-window-fullscreen {
+    visibility: hidden;
+}
+.wr-titlebar-fullscreen#titlebar {
+    background: transparent;
+    padding-top: 10px;
+    position: fixed;
+    width: 100%;
+}
+.wr-titlebar-fullscreen #wr-add-tab-button {
+    margin-right: 4%;
+}
 #titlebar {
     cursor: default;
     -webkit-user-select: none;

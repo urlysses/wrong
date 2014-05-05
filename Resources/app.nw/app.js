@@ -842,18 +842,20 @@
     toggleSuperfluous = function (hide, override) {
         // "override" is for special case when app leaves fullscreen and needs
         // to unhide all superfluous.
-        var duration, scrollCss, counterCss;
-        duration = 0;
+        var duration, scrollCss, counterCss, $titlebar = $(titlebar);
+        duration = 100;
         if (win.isFullscreen || override === true) {
             scrollCss = $(tm.doc).css("overflow-y");
             counterCss = $counter.css("display");
             if (hide) {
                 $(tm.doc).css("overflow-y", "hidden");
                 $counter.fadeOut(duration);
+                $titlebar.fadeOut(duration);
             } else {
                 $(tm.doc).css("overflow-y", "overlay");
                 if (win.isFullscreen) {
                     $counter.fadeIn(duration);
+                    $titlebar.fadeIn(duration);
                 }
 
                 if (override) {
@@ -2125,10 +2127,10 @@
     };
 
     toggleTitlebar = function () {
-        if (titlebar.style.display !== "none") {
-            titlebar.style.display = "none";
+        if (titlebar.classList.contains("wr-titlebar-fullscreen") === false) {
+            titlebar.classList.add("wr-titlebar-fullscreen");
         } else {
-            titlebar.style.display = "flex";
+            titlebar.classList.remove("wr-titlebar-fullscreen");
         }
     };
 
