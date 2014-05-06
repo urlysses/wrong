@@ -84,12 +84,29 @@ body {
     padding-right: 16px;
     background: rgba(0, 0, 0, 0.73);
 }
-.wr-c-element-bottom {
-    height: 50%;
+#wr-customizer .wr-c-element-bottom h2 {
+    margin-top: -2px;
+}
+#wr-customizer-buttons {
+    display: none;
+    height: 6%;
+    width: 280px;
+    overflow: none;
+    margin: 0;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.73);
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1000;
+}
+#wr-customizer-buttons button {
+    margin-left: 5px;
+    margin-top: 10px;
 }
 #wr-customizer {
     display: none;
-    height: 100%;
+    height: 94%;
     width: 280px;
     padding: 0;
     position: fixed;
@@ -117,11 +134,19 @@ body {
     margin: 0;
     padding: 0;
     font-size: 15px;
+    color: white;
+}
+#wr-customizer h1:last-of-type {
+    margin-top: 20px;
 }
 #wr-customizer h2 {
     margin: 0;
     padding: 0;
     font-size: 13px;
+    margin-top: 2px;
+    margin-bottom: -9px;
+    color: rgba(116, 216, 255, 1);
+    font-weight: 400;
 }
 #wr-customizer p {
     margin: 0;
@@ -129,6 +154,7 @@ body {
     margin-top: 11px;
     font-size: 12px;
     -webkit-font-smoothing: antialiased;
+    color: rgba(255, 255, 255, 0.71);
 }
 #wr-customizer .wr-tabbed {
     margin-left: 2em;
@@ -346,6 +372,7 @@ li#wr-text-sizer {
     background: white;
     border-radius: 4px;
     width: 48%;
+    margin-top: 4px;
 }
 #wr-scrolltrack-color {
     cursor: pointer;
@@ -759,7 +786,7 @@ body.wr-tm-control-fullscreen {
     #counter {
         display: none;
     }
-    #wr-customizer, .sp-container {
+    #wr-customizer, #wr-customizer-buttons, .sp-container {
         display: none !important;
     }
 }

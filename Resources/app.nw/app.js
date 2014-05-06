@@ -942,7 +942,7 @@
     };
 
     openSettings = function () {
-        var customizer, closer, hider, colorSpectrum,
+        var customizer, closer, customizerButtons, hider, colorSpectrum,
             themes, saveTheme, updateTheme, updateElement,
             styleDiv, bgimg, bgimgy, bgimgx, bgimgcover, bgcolor,
             textfont, textsize, textsizes, textsizer, textsizeunit,
@@ -1042,6 +1042,8 @@
 
         customizer = document.getElementById("wr-customizer");
         customizer.style.display = "block";
+        customizerButtons = document.getElementById("wr-customizer-buttons");
+        customizerButtons.style.display = "block";
         themes = document.getElementById("wr-themes");
         $(themes.children).click(function (ev) {
             var theme = this,
@@ -1398,19 +1400,21 @@
         closer = document.getElementById("wr-close");
         closer.onclick = function () {
             customizer.style.display = "none";
+            customizerButtons.style.display = "none";
             loadDefaultTheme();
             tm.focus();
         };
         hider = document.getElementById("wr-hider");
         hider.onclick = function () {
-            // customizer.style.display = "none";
             if (hider.className.indexOf("wr-close-closed") === -1) {
                 customizer.style.left = "-254px";
+                customizerButtons.style.left = "-254px";
                 hider.children[0].innerText = "show settings";
                 hider.className = "wr-close-closed";
                 tm.focus();
             } else {
                 customizer.style.left = "0";
+                customizerButtons.style.left = "0";
                 hider.children[0].innerText = "hide settings";
                 hider.className = "";
                 customizer.focus();
