@@ -14,7 +14,6 @@
 + !! allow the app to check for updates on startup.
 + OWN SOUNDS
 + add a favicon for app completeness (and so nothing unexpected happens).
-+ Add some kind of satisfying visual echo on Save?
 + Drag to rearrange tabs?
 + Settings save automatically unless "Reset" is PRESSED AND CONFIRMED.
   this app is about focus and writing, it's not about creating themes
