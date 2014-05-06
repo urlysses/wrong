@@ -17,3 +17,6 @@
 + Add some kind of satisfying visual echo on Save.
 + Drag to rearrange tabs?
 + Modify Edit to use our Undo & Redo functions.
++ Load default values into customizer (blues already selected).
++ Redesign Prompt buttons such that they don't move & disrupt clicks as current.
++ OWN SOUNDS
