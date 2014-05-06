@@ -696,10 +696,21 @@
         });
         tm.doc.onpaste = function (e) {
             e.preventDefault();
-            var content = e.clipboardData.getData("text/plain");
+            var content;
+            if (e.clipboardData) {
+                // cmd-paste
+                content = e.clipboardData.getData("text/plain");
+            } else {
+                // Right-click > paste
+                content = clip.get();
+            }
             var oldContent = global.tm.value;
             global.tm.insertText(content);
         };
+        tm.doc.addEventListener("contextmenu", function (e) {
+            // Insert editmenu on right-click.
+            editmenu.popup(e.x, e.y);
+        });
         return tm;
     };
 
@@ -1515,34 +1526,71 @@
     // (Right-click menus) Edit >
     editmenu = new gui.Menu();
     editmenu.append(new gui.MenuItem({
+        label: "Undo",
+        click: function () {
+            global.tm.history.undo(global.tm);
+            if ((!global.tm.hasSaved && !global.tm.history.canUndo(global.tm))
+                    || (global.tm.hasSaved
+                        && global.tm.checkpoint === global.tm.value)) {
+                setFileDirty(false);
+            } else {
+                setFileDirty(true);
+            }
+        }
+    }));
+    editmenu.append(new gui.MenuItem({
+        label: "Redo",
+        click: function () {
+            global.tm.history.redo(global.tm);
+            if (global.tm.hasSaved
+                    && global.tm.checkpoint === global.tm.value) {
+                setFileDirty(false);
+            } else {
+                setFileDirty(true);
+            }
+        }
+    }));
+    editmenu.append(new gui.MenuItem({
+        type: "separator"
+    }));
+    editmenu.append(new gui.MenuItem({
         label: "Cut",
         click: function () {
-            var selection = tm.value.substring(tm.selectionStart, tm.selectionEnd);
+            var T = global.tm;
+            var selection = T.value.substring(T.selectionStart, T.selectionEnd);
             clip.set(selection);
             // replace selection with ""
-            tm.value = tm.value.slice(0, tm.selectionStart) +
-                tm.value.slice(tm.selectionEnd, tm.value.length - 1);
+            T.insertText("");
         }
     }));
     editmenu.append(new gui.MenuItem({
         label: "Copy",
         click: function () {
-            clip.set(tm.value.substring(tm.selectionStart, tm.selectionEnd));
+            var T = global.tm;
+            clip.set(T.value.substring(T.selectionStart, T.selectionEnd));
         }
     }));
     editmenu.append(new gui.MenuItem({
         label: "Paste",
         click: function () {
-            var selection = tm.value.substring(tm.selectionStart, tm.selectionEnd);
-            // replace selection with clipboard content.
-            tm.value = tm.value.slice(0, tm.selectionStart) + clip.get() +
-                tm.value.slice(tm.selectionEnd, tm.value.length - 1);
+            var T = global.tm;
+            var e = new Event("paste");
+            T.doc.dispatchEvent(e);
         }
+    }));
+    editmenu.append(new gui.MenuItem({
+        label: "Delete",
+        click: function () {
+            global.tm.insertText("");
+        }
+    }));
+    editmenu.append(new gui.MenuItem({
+        type: "separator"
     }));
     editmenu.append(new gui.MenuItem({
         label: "Select All",
         click: function () {
-            tm.select();
+            global.tm.select();
         }
     }));
 
@@ -1690,12 +1738,6 @@
         submenu: findmenu
     }), 3);
 
-    // Insert editmenu on right-click.
-    tm.doc.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        editmenu.popup(e.x, e.y);
-        return false;
-    });
     /* END MENUS */
 
     /* TITLEBAR */
