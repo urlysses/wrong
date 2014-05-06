@@ -1057,7 +1057,9 @@
             } else {
                 link.href = "Themes/" + css + "/" + css + ".css";
             }
-            styleDiv.innerHTML = "";
+            while (styleDiv.firstChild) {
+                styleDiv.removeChild(styleDiv.firstChild);
+            }
             unloadDefaultTheme();
             link.onload = function () {
                 compileRuntimeCss();
@@ -1403,13 +1405,13 @@
         hider.onclick = function () {
             // customizer.style.display = "none";
             if (hider.className.indexOf("wr-close-closed") === -1) {
-                customizer.style.left = "-260px";
-                hider.innerHTML = "&gt;";
+                customizer.style.left = "-254px";
+                hider.children[0].innerText = "show settings";
                 hider.className = "wr-close-closed";
                 tm.focus();
             } else {
                 customizer.style.left = "0";
-                hider.innerHTML = "&lt;";
+                hider.children[0].innerText = "hide settings";
                 hider.className = "";
                 customizer.focus();
             }
