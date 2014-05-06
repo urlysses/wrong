@@ -15,7 +15,6 @@
 + OWN SOUNDS
 + add a favicon for app completeness (and so nothing unexpected happens).
 + Redesign Prompt buttons such that they don't move & disrupt clicks as current.
-+ Load default values into customizer (blues already selected).
 + Add some kind of satisfying visual echo on Save?
 + Drag to rearrange tabs?
 + Settings save automatically unless "Reset" is PRESSED AND CONFIRMED.
