@@ -61,11 +61,11 @@
     text-shadow: 1px 1px 1px rgb(247, 247, 247);
     color: #383838;
     padding: 4px;
-    border-bottom-width: 3px;
     padding-left: 12px;
     padding-right: 12px;
     font-size: 10px;
     margin-right: 6px;
+    margin-bottom: 3px;
 }
 
 .btn:hover {
@@ -79,10 +79,7 @@
 }
 
 .btn:active {
-    border-bottom-width: 1px;
-    padding-top: 6px;
-    position: relative;
-    top: 2px;
+    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
 
 .btn-blue {
