@@ -16,7 +16,8 @@ body {
 
 #TextMapHolder {
     height: 100%;
-    display: block;
+    display: flex;
+    flex-direction: column;
     background: none;
     border: none;
     width: 100%;
@@ -637,8 +638,6 @@ body#tm-control-body {
     flex-direction: row;
 }
 #tm-wr-control {
-    position: fixed;
-    z-index: 100;
     background: white;
     width: 100%;
     padding: 5px;
@@ -649,6 +648,7 @@ body#tm-control-body {
 }
 .wr-tm-fullscreen #tm-wr-control {
     width: 90%;
+    position: fixed;
     top: 32px;
     left: 50%;
     right: 0;
@@ -785,9 +785,6 @@ body.wr-tm-control-fullscreen {
 
     #TextMap {
         padding: 5px;
-    }
-    .tm-control-on {
-        padding-top: 49px !important;
     }
     #counter {
         display: none;
