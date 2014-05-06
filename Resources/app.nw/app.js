@@ -959,10 +959,20 @@
             textfont, textsize, textsizes, textsizer, textsizeunit,
             textweight, textstyle, textcolor, texthighlight,
             textsizetoggle,
+            swapChecked,
             scrollcolor, scrolltrackcolor, allowaudio,
             allowclicks, audioselect, clickselect, reset, oldCss;
 
         styleDiv = document.getElementById("user-css");
+
+        swapChecked = function (clicked) {
+            var clickedParent = clicked.parentNode,
+                currSelect = clickedParent.querySelector('[data-checked~="true"]');
+            if (currSelect && currSelect !== clicked) {
+                delete currSelect.dataset.checked;
+            }
+            clicked.dataset.checked = true;
+        };
 
         updateElement = function (cat, array, name, value, selector) {
             var exists;
@@ -1236,6 +1246,7 @@
             this.style.fontFamily = font;
         }).click(function () {
             var font = this;
+            swapChecked(this);
             if (font.dataset.value !== "...") {
                 updateElement("text", theme.cm, "font-family", "'" +
                     font.dataset.value + "'");
@@ -1249,6 +1260,7 @@
         $(textsizes.children).click(function () {
             var size = this.dataset.value;
             textsizetoggle = this;
+            swapChecked(this);
             if (size !== "...") {
                 textsize.value = size;
                 $(textsize).change();
@@ -1275,12 +1287,14 @@
         $(textweight.children).each(function () {
             this.style.fontWeight = this.dataset.value;
         }).click(function () {
+            swapChecked(this);
             updateElement("text", theme.cm, "font-weight", this.dataset.value);
             updateTheme();
         });
         textstyle = document.getElementById("wr-text-style");
         $(textstyle.children).click(function () {
             var styl = this.dataset.value;
+            swapChecked(this);
             updateElement("text", theme.cm, "font-style", styl);
             updateTheme();
         });
@@ -1374,16 +1388,15 @@
         }
         audioselect = document.getElementById("wr-fullscreen-audio");
         $(audioselect.children).click(function () {
-            if (this.className.indexOf("wr-noclick") === -1) {
-                var audio = this.dataset.value;
-                if (audio !== "off") {
-                    updateParcel("playaudio", true);
-                    toggleAudio(true);
-                    // play song choice
-                } else {
-                    toggleAudio(false);
-                    updateParcel("playaudio", false);
-                }
+            swapChecked(this);
+            var audio = this.dataset.value;
+            if (audio !== "off") {
+                updateParcel("playaudio", true);
+                toggleAudio(true);
+                // play song choice
+            } else {
+                toggleAudio(false);
+                updateParcel("playaudio", false);
             }
         });
         allowclicks = document.getElementById("wr-clicks-stop");
@@ -1392,13 +1405,12 @@
         }
         clickselect = document.getElementById("wr-fullscreen-clicks");
         $(clickselect.children).click(function () {
-            if (this.className.indexOf("wr-noclick") === -1) {
-                var clicks = this.dataset.value;
-                if (clicks !== "off") {
-                    updateParcel("playclicks", true);
-                } else {
-                    updateParcel("playclicks", false);
-                }
+            swapChecked(this);
+            var clicks = this.dataset.value;
+            if (clicks !== "off") {
+                updateParcel("playclicks", true);
+            } else {
+                updateParcel("playclicks", false);
             }
         });
 

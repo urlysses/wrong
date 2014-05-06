@@ -16,5 +16,4 @@
 + Add "Select Next/Prev Tab" option to Window menu, not View menu.
 + Add some kind of satisfying visual echo on Save.
 + Drag to rearrange tabs?
-+ Buttons in customizer don't turn blue on select anymore.
 + Modify Edit to use our Undo & Redo functions.
