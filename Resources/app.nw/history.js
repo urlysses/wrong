@@ -124,7 +124,13 @@ var History = (function() {
                 // special input.
                 if (currInput === hist.lastInput) {
                     // Same char as last time. Merge.
-                    hist.mergeWithLastChange(tm, change, tm.lastCursor);
+                    if (hist.canUndo(tm)) {
+                        hist.mergeWithLastChange(tm, change, tm.lastCursor);
+                    } else {
+                        // rare case in which user undoes back to start and
+                        // uses the same char as last time
+                        hist.pushNewChange(tm, change, tm.lastCursor);
+                    }
 
                     // check for timing? if exceeds time, don't merge?
                 } else if (areSameType(currInput, hist.lastInput)) {
