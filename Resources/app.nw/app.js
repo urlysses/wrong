@@ -1080,6 +1080,7 @@
         customizerButtons.style.display = "block";
         themes = document.getElementById("wr-themes");
         $(themes.children).click(function (ev) {
+            swapChecked(this);
             var theme = this,
                 css = theme.dataset.value,
                 link,

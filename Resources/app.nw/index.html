@@ -36,8 +36,10 @@
                 <h1>Customize the current theme</h1>
                 <h2>Backgrounds</h2>
                 <p>Select a background color or upload a background image:</p>
-                <div data-value="#ffffff" id="wr-bg-color"></div>
-                <input type="file" value="Background" accept="image/*" id="wr-bg-img">
+                <div id="wr-background-options">
+                    <div data-value="#ffffff" id="wr-bg-color"></div>
+                    <input type="file" value="Background" accept="image/*" id="wr-bg-img">
+                </div>
                 <p>Repeat the background image horizontally, vertically, or stretch it out:</p>
                 <ul id="wr-tabbed">
                 <li data-value="repeat-y" data-checked="true" id="wr-bg-repeat-y">
@@ -55,7 +57,7 @@
                 <div data-value="#000000" id="wr-text-color"><span>Aa</span></div>
                 <p>Font family:</p>
                 <ul id="wr-text-font">
-                    <li data-value="Vera Mono"><span>Aa</span></li>
+                    <li data-checked="true" data-value="Vera Mono"><span>Aa</span></li>
                     <li data-value="Times New Roman"><span>Aa</span></li>
                     <li data-value="Helvetica Neue"><span>Aa</span></li>
                     <li data-value="Courier New"><span>Aa</span></li>
@@ -65,7 +67,7 @@
                 <p>Font size:</p>
                 <ul id="wr-text-sizes">
                     <li data-value="10"><span>A</span></li>
-                    <li data-value="12"><span>A</span></li>
+                    <li data-checked="true" data-value="12"><span>A</span></li>
                     <li data-value="14"><span>A</span></li>
                     <li data-value="..."><span>...</span></li>
                     <li id="wr-text-sizer">
@@ -81,14 +83,14 @@
                 <ul id="wr-text-weight">
                     <li data-value="100"><span>B</span></li>
                     <li data-value="300"><span>B</span></li>
-                    <li data-value="400"><span>B</span></li>
+                    <li data-checked="true" data-value="400"><span>B</span></li>
                     <li data-value="500"><span>B</span></li>
                     <li data-value="900"><span>B</span></li>
                 </ul>
                 <p>Font italics:</p>
                 <ul id="wr-text-style">
                     <li data-value="italic"><span>I</span></li>
-                    <li data-value="normal"><span>I</span></li>
+                    <li data-checked="true" data-value="normal"><span>I</span></li>
                 </ul>
                 <p>Highlight color:</p>
             </div>
@@ -106,7 +108,7 @@
                 </div>
                 <p>Select or disable ambient tracks:</p>
                 <ul id="wr-fullscreen-audio">
-                    <li data-value="0" id="wr-song-0"><span>&#x266B;</span></li>
+                    <li data-value="0" data-checked="true" id="wr-song-0"><span>&#x266B;</span></li>
                     <li data-value="1" id="wr-song-1"><span>&#x266C;</span></li>
                     <li data-value="off" id="wr-audio-stop">
                         <span>&#x1D110;</span>
@@ -115,7 +117,7 @@
                 </ul>
                 <p>Select or disable click sounds while typing:</p>
                 <ul id="wr-fullscreen-clicks">
-                    <li data-value="1" id="wr-clicks-1"><span>&#x2669;</span></li>
+                    <li data-value="1" data-checked="true" id="wr-clicks-1"><span>&#x2669;</span></li>
                     <li data-value="2" id="wr-clicks-2"><span>&#x266A;</span></li>
                     <li data-value="off" id="wr-clicks-stop"><span>&#x2716;</span></li>
                 </ul>
