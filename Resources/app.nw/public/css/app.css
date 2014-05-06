@@ -204,9 +204,12 @@ body {
 #wr-customizer .is-chosen, li[data-checked="true"] {
     color: rgba(0, 202, 253, 1) !important;
 }
+#wr-background-options {
+    width: 75px;
+}
 #wr-themes, #wr-text-font, #wr-text-sizes, #wr-text-weight,
 #wr-text-style, #wr-fullscreen-audio, #wr-fullscreen-clicks,
-#wr-tabbed, #wr-background-options {
+#wr-tabbed, #wr-background-options, #wr-text-color {
     padding: 0;
     -webkit-user-select: none;
     -webkit-margin-before: 5px;
@@ -260,6 +263,7 @@ li.wr-noclick {
 #wr-bg-color {
     border-color: black;
     background: white;
+    margin-right: 5px;
 }
 
 #wr-bg-img:before {
