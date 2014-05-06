@@ -51,6 +51,7 @@ body {
     word-break: normal;
     word-wrap: break-word;
     white-space: pre-wrap;
+    line-height: 1.8em;
 }
 
 #open, #save, #user-css, #wr-bod-style, 
@@ -116,6 +117,7 @@ body {
     color: rgb(228, 228, 228);
     overflow-y: scroll;
     overflow-x: hidden;
+    box-shadow: inset 0px -2px 6px rgba(0, 0, 0, 0.61);
 }
 #wr-customizer::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.25);
@@ -184,7 +186,7 @@ body {
     display: block;
     width: 90px;
     position: absolute;
-    top: 45px;
+    top: 50px;
     right: -38px;
 }
 #wr-customizer #wr-hider:hover {
@@ -354,7 +356,7 @@ li#wr-text-sizer {
     border-right: 40px solid rgba(0,0,0,0.73);
 }
 #wr-highlight-selected {
-    background: rgba(0, 196, 254, 0.46);
+    background: rgba(0, 133, 255, 0.32);
     padding: 3px;
 }
 #wr-i-beam {
@@ -535,6 +537,10 @@ li#wr-audio-stop span:last-child {
     flex-direction: row;
     flex: 1 1 auto;
     margin-left: 3%;
+    font-family: "Vera Mono", Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
 }
 #wr-tabs li {
     color: #007aff;
