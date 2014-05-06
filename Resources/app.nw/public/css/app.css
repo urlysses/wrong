@@ -644,7 +644,7 @@ body#tm-control-body {
     -webkit-box-sizing: border-box;
     flex: 1 1 auto;
     border: none;
-    height: 44px;
+    height: 53px;
 }
 .wr-tm-fullscreen #tm-wr-control {
     width: 90%;
@@ -719,6 +719,7 @@ body.wr-tm-control-fullscreen {
     color: rgba(128, 128, 128, 0.57);
     border-radius: 3px;
     margin: 0;
+    margin-right: 5px;
     padding: 4px;
     outline: none;
 }

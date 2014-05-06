@@ -393,6 +393,9 @@
                 // replace selected text through insertText
                 var oldContent = this.value;
                 this.insertText(replacement);
+                // Select the new word.
+                this.selectionEnd = this.selectionStart;
+                this.selectionStart -= replacement.length;
                 return true;
             }
         }
@@ -408,6 +411,9 @@
                 {from: oldContent, to: this.value},
                 this.getSelection()
             );
+            // Dispatch input event to update history.
+            var e = new Event("input");
+            this.doc.dispatchEvent(e);
         }
     };
     TM.prototype.scrollToSelection = function () {
@@ -464,16 +470,25 @@
                 cmd.controlOpened = true;
             };
             this.control.addEventListener("keypress", function (e) {
+                var forAll = false;
                 if (e.keyCode === 13) {
                     if (this.value.toLowerCase().indexOf("replace") === 0) {
-                        cmd.modifyForReplace(machine);
+                        if (this.value.toLowerCase().indexOf("replace all") === 0
+                                || this.value.toLowerCase().indexOf("replaceall") === 0) {
+                            forAll = true;
+                        }
+                        cmd.modifyForReplace(machine, forAll);
                     } else {
                         cmd.parse(machine, this.value, e);
                     }
                 } else if (e.keyCode === 32) {
                     if (this.value.toLowerCase().indexOf("replace") === 0) {
                         e.preventDefault();
-                        cmd.modifyForReplace(machine);
+                        if (this.value.toLowerCase().indexOf("replace all") === 0
+                                || this.value.toLowerCase().indexOf("replaceall") === 0) {
+                            forAll = true;
+                        }
+                        cmd.modifyForReplace(machine, forAll);
                     }
                 }
             });
@@ -602,13 +617,11 @@
     };
     CMD.prototype.replace = function (machine) {
         this.show(machine);
-        this.control.value = "replace ";
-        this.modifyForReplace(machine);
+        this.control.value = "replace";
     };
     CMD.prototype.replaceAll = function (machine) {
         this.show(machine);
         this.control.value = "replace all";
-        this.modifyForReplace(machine, true);
     };
     CMD.prototype.define = function (machine) {
         this.show(machine);
