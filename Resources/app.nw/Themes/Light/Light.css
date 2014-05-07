@@ -24,3 +24,9 @@
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.19);
 }
+
+@media (max-width: 800px) {
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0);
+    }
+}
