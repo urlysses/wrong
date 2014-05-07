@@ -123,11 +123,11 @@ body {
 #wr-customizer::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.57);
     border-radius: 4px;
-    -webkit-box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.62);
+    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.62);
 }
 #wr-customizer::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.7);
-    -webkit-box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.17);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.17);
 }
 #wr-customizer hr {
     border: 1px rgba(255, 255, 255, 0.7);
@@ -290,6 +290,9 @@ li.wr-noclick {
 #wr-text-color {
     transition: background 0.2s ease-in-out, border 0.2s ease-in-out;
 }
+#wr-bg-color, #wr-bg-img {
+    transition: border 0.2s ease-in-out;
+}
 
 /*#wr-text-font li {
 display: inline-block;
@@ -380,7 +383,6 @@ li#wr-text-sizer {
 }
 
 #wr-scroller {
-    background: white;
     border-radius: 4px;
     width: 48%;
     margin-top: 4px;
@@ -388,8 +390,8 @@ li#wr-text-sizer {
 #wr-scrolltrack-color {
     cursor: pointer;
     height: 9px;
+    border-radius: 4px;
     background: rgba(255, 255, 255, 0);
-    -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.33);
 }
 #wr-scroll-color {
     cursor: pointer;

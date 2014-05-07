@@ -975,7 +975,7 @@
             textsizetoggle,
             swapChecked,
             setSpectrum,
-            scrollcolor, scrolltrackcolor, allowaudio,
+            scroller, scrollcolor, scrolltrackcolor, allowaudio,
             allowclicks, audioselect, clickselect, loadDefaults, reset, oldCss;
 
         styleDiv = document.getElementById("user-css");
@@ -998,6 +998,7 @@
         textweight = document.getElementById("wr-text-weight");
         textstyle = document.getElementById("wr-text-style");
         texthighlight = document.getElementById("wr-highlight-color");
+        scroller = document.getElementById("wr-scroller");
         scrollcolor = document.getElementById("wr-scroll-color");
         scrolltrackcolor = document.getElementById("wr-scrolltrack-color");
         allowaudio = document.getElementById("wr-audio-stop");
@@ -1102,7 +1103,6 @@
         }
 
         $(themes.children).click(function (ev) {
-            swapChecked(this);
             var theme = this,
                 css = theme.dataset.value,
                 link;
@@ -1121,13 +1121,16 @@
             unloadDefaultTheme();
             link.onload = function () {
                 compileRuntimeCss();
+                loadDefaults(true);
             };
             if (css !== "Light") {
                 styleDiv.appendChild(link);
             } else {
                 // Compile for Light theme.
                 compileRuntimeCss();
+                loadDefaults(true);
             }
+            swapChecked(this);
             setDefaultTheme(css, false);
         });
         setSpectrum = function (el, type, where, cssName, setColor) {
@@ -1451,6 +1454,8 @@
                     i,
                     j,
                     selectColor,
+                    trackColor,
+                    thumbColor,
                     styleSheet = document.styleSheets[5] || document.styleSheets[3];
                 // 1. background color + image
                 bgcolor.dataset.value = bColor;
@@ -1460,7 +1465,7 @@
                 textcolor.dataset.value = tColor;
                 colorSpectrum("text", theme.cm, "color", tinycolor(tColor));
                 setSpectrum(textcolor, "text", theme.cm, "color", tColor);
-                // 3. selection color
+                // selection color (and scroller color while we're at it)
                 for (i = 0; i < styleSheet.rules.length; i++) {
                     var sRule = styleSheet.rules[i];
                     if (sRule.type !== 1) {
@@ -1468,21 +1473,45 @@
                             var cssRule = sRule.cssRules[j];
                             if (cssRule.selectorText.indexOf(":selection") !== -1) {
                                 selectColor = cssRule.style.background;
+                            } else if (cssRule.selectorText.indexOf(":-webkit-scrollbar-thumb")
+                                    !== -1) {
+                                thumbColor = cssRule.style.background;
+                            } else if (cssRule.selectorText.indexOf(":-webkit-scrollbar-track")
+                                    !== -1) {
+                                trackColor = cssRule.style.background;
                             }
                         }
                     } else {
                         if (sRule.selectorText.indexOf(":selection") !== -1) {
                             selectColor = sRule.style.backgroundColor;
+                        } else if (sRule.selectorText.indexOf(":-webkit-scrollbar-thumb")
+                                !== -1) {
+                            thumbColor = sRule.style.background;
+                        } else if (sRule.selectorText.indexOf(":-webkit-scrollbar-track")
+                                !== -1) {
+                            trackColor = sRule.style.background;
                         }
                     }
                 }
+
+                // 3. selection color
                 if (selectColor === undefined) {
                     // The styleSheet is custom, but doesn't modify selection
                     // so use Light's selection bg.
                     selectColor = texthighlight.dataset.value;
                 }
                 texthighlight.children[0].style.backgroundColor = selectColor;
+
                 // 4. scroll color
+                if (thumbColor === undefined) {
+                    thumbColor = scrollcolor.dataset.value;
+                }
+                if (trackColor === undefined) {
+                    trackColor = scrolltrackcolor.dataset.value;
+                }
+                scroller.style.backgroundColor = bColor;
+                scrollcolor.style.backgroundColor = thumbColor;
+                scrolltrackcolor.style.backgroundColor = trackColor;
             }
         };
 
