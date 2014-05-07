@@ -1499,11 +1499,13 @@
 
         reset = document.getElementById("wr-reset");
         reset.onclick = function () {
-            // Remove everything from styleDiv.
+            // Order of actions important here.
             while (styleDiv.firstChild) {
+                // Remove everything from styleDiv.
                 styleDiv.removeChild(styleDiv.firstChild);
             }
             compileRuntimeCss();
+            loadDefaults();
         };
         closer = document.getElementById("wr-close");
         closer.onclick = function () {
