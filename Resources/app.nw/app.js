@@ -1488,9 +1488,7 @@
             }
         };
 
-        win.on("enter-fullscreen", function () {
-            window.setTimeout(loadDefaults, 1000);
-        });
+        window.setTimeout(loadDefaults, 100);
 
         saveTheme = function () {
             // Fires on "Ok, done" click.
@@ -1501,6 +1499,11 @@
 
         reset = document.getElementById("wr-reset");
         reset.onclick = function () {
+            // Remove everything from styleDiv.
+            while (styleDiv.firstChild) {
+                styleDiv.removeChild(styleDiv.firstChild);
+            }
+            compileRuntimeCss();
         };
         closer = document.getElementById("wr-close");
         closer.onclick = function () {
