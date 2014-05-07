@@ -17,6 +17,7 @@
         initTM,
         titlebar,
         tabs,
+        tabDragging,
         updateTabs,
         fullscreenbutton,
         windowbuttons,
@@ -2102,6 +2103,7 @@
 
         newTab.id = "wr-tab-selected";
         newTab.innerHTML = "<span>Untitled</span><span></span>";
+        newTab.setAttribute("draggable", "true");
 
         newTabCloseButton.classList.add("wr-tab-close-button");
         newTabCloseButton.innerText = "x";
@@ -2160,6 +2162,42 @@
                 getFileDirty(this);
             }
         };
+        newTab.addEventListener("dragstart", function (e) {
+            tabDragging = this;
+            this.classList.add("is-being-dragged");
+        }, false);
+        newTab.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            this.classList.add("is-being-dragged-over");
+            return false;
+        }, false);
+        newTab.addEventListener("dragenter", function () {
+            this.classList.add("is-being-dragged-over");
+        }, false);
+        newTab.addEventListener("dragleave", function () {
+            this.classList.remove("is-being-dragged-over");
+        }, false);
+        newTab.addEventListener("drop", function (e) {
+            e.stopPropagation();
+            if (tabDragging !== this) {
+                var targetPos = $(this).index(),
+                    originPos = $(tabDragging).index(),
+                    tabsBar = this.parentNode;
+                tabsBar.insertBefore(tabDragging, this);
+                if (originPos > targetPos) {
+                    tabsBar.insertBefore(this, tabDragging.nextSibling);
+                } else {
+                    tabsBar.insertBefore(this, tabDragging);
+                }
+                tabDragging.dispatchEvent(new Event("click"));
+                this.classList.remove("is-being-dragged-over");
+            }
+            return false;
+        }, false);
+        newTab.addEventListener("dragend", function () {
+            this.classList.remove("is-being-dragged");
+            this.classList.remove("is-being-dragged-over");
+        }, false);
     };
 
     openFileDialog = function () {

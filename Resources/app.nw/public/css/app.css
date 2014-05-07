@@ -562,6 +562,14 @@ li#wr-audio-stop span:last-child {
     border-right: 1px solid #007aff;
     flex-shrink: 6;
     transition: flex 0.09s;
+    -webkit-user-drag: element;
+}
+#wr-tabs li.is-being-dragged {
+    border: none;
+}
+#wr-tabs li.is-being-dragged-over {
+    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.6),
+    inset 0px 0px 8px rgba(255, 255, 255, 0.6);
 }
 #wr-tabs li:last-child {
     border-right: none;
