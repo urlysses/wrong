@@ -2147,6 +2147,7 @@
         toggleSuperfluous(false);
         newTab.style.flexShrink = "1";
         newTab.dataset.file = file;
+        // Tab clicking.
         newTab.onclick = function () {
             var file = this.dataset.file,
                 currentTab = document.getElementById("wr-tab-selected");
@@ -2162,6 +2163,7 @@
                 getFileDirty(this);
             }
         };
+        // Tab dragging.
         newTab.addEventListener("dragstart", function (e) {
             tabDragging = this;
             this.classList.add("is-being-dragged");
@@ -2183,12 +2185,16 @@
                 var targetPos = $(this).index(),
                     originPos = $(tabDragging).index(),
                     tabsBar = this.parentNode;
+                // Insert the tab before the target.
                 tabsBar.insertBefore(tabDragging, this);
+                // Move the target to either before or after
+                // the tab depending on points of origin.
                 if (originPos > targetPos) {
                     tabsBar.insertBefore(this, tabDragging.nextSibling);
                 } else {
                     tabsBar.insertBefore(this, tabDragging);
                 }
+                // Select the tab being dragged.
                 tabDragging.dispatchEvent(new Event("click"));
                 this.classList.remove("is-being-dragged-over");
             }
