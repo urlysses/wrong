@@ -971,11 +971,11 @@
             themes, saveTheme, updateTheme, updateElement,
             styleDiv, bgimg, bgimgy, bgimgx, bgimgcover, bgcolor,
             textfont, textsize, textsizes, textsizer, textsizeunit,
-            textweight, textstyle, textcolor, texthighlight,
+            textweight, textstyle, textcolor, texthighlight, openDTheme,
             textsizetoggle,
             swapChecked,
             scrollcolor, scrolltrackcolor, allowaudio,
-            allowclicks, audioselect, clickselect, reset, oldCss;
+            allowclicks, audioselect, clickselect, loadDefaults, reset, oldCss;
 
         styleDiv = document.getElementById("user-css");
 
@@ -1108,6 +1108,7 @@
                 // Compile for Light theme.
                 compileRuntimeCss();
             }
+            setDefaultTheme(css, false);
         });
         colorSpectrum = function (type, where, cssName, color) {
             updateElement(type, where, cssName,
@@ -1398,9 +1399,6 @@
             }
         });
         allowaudio = document.getElementById("wr-audio-stop");
-        if (parcel.playaudio === false) {
-            allowaudio.className += "is-chosen";
-        }
         audioselect = document.getElementById("wr-fullscreen-audio");
         $(audioselect.children).click(function () {
             swapChecked(this);
@@ -1415,9 +1413,6 @@
             }
         });
         allowclicks = document.getElementById("wr-clicks-stop");
-        if (parcel.playclicks === false) {
-            allowclicks.className += "is-chosen";
-        }
         clickselect = document.getElementById("wr-fullscreen-clicks");
         $(clickselect.children).click(function () {
             swapChecked(this);
@@ -1429,7 +1424,46 @@
             }
         });
 
+        loadDefaults = function () {
+            var dTheme = getDefaultTheme();
+            var openDTheme = themes.querySelector("[data-value='" + dTheme.name + "']");
+            // Theme selector.
+            if (openDTheme) {
+                swapChecked(openDTheme);
+            }
+            if (parcel.playaudio === false) {
+                swapChecked(audioselect.querySelector("[data-value='off']"));
+            }
+            if (parcel.playclicks === false) {
+                swapChecked(clickselect.querySelector("[data-value='off']"));
+            }
+
+            if (dTheme.custom === true) {
+                // load custom values into the customizer.
+                /*if (parcel.backgroundColor) {
+                }*/
+                var filler = null;
+            } else {
+                // Not a custom theme. Use whatever exists on screen.
+                var styles = window.getComputedStyle(global.tm.doc),
+                    bColor = styles.backgroundColor,
+                    bImg = styles.backgroundImage,
+                    tColor = styles.color;
+                // 1. background color + image
+                // 2. text stuff
+                // TODO:
+                // colorSpectrum("text", theme.cm, "color", tColor);
+                // 3. selection color
+                // 4. scroll color
+            }
+        };
+        loadDefaults();
+
         saveTheme = function () {
+            // Fires on "Ok, done" click.
+            // collect all the data in the customizer and
+            // push to parcel with updateParcel(cssName, value);
+            // Also setDefaultTheme(themename, true) for custom.
         };
 
         reset = document.getElementById("wr-reset");
