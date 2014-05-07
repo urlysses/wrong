@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global PROMPT, $, Audio, Event*/
+/*global PROMPT, $, Audio, Event, tinycolor*/
 (function (global) {
     "use strict";
 
@@ -978,6 +978,31 @@
             allowclicks, audioselect, clickselect, loadDefaults, reset, oldCss;
 
         styleDiv = document.getElementById("user-css");
+        customizer = document.getElementById("wr-customizer");
+        customizer.style.display = "block";
+        customizerButtons = document.getElementById("wr-customizer-buttons");
+        customizerButtons.style.display = "block";
+        themes = document.getElementById("wr-themes");
+        bgcolor = document.getElementById("wr-bg-color");
+        bgimg = document.getElementById("wr-bg-img");
+        bgimgy = document.getElementById("wr-bg-repeat-y");
+        bgimgx = document.getElementById("wr-bg-repeat-x");
+        bgimgcover = document.getElementById("wr-bg-stretch");
+        textcolor = document.getElementById("wr-text-color");
+        textfont = document.getElementById("wr-text-font");
+        textsizes = document.getElementById("wr-text-sizes");
+        textsizer = document.getElementById("wr-text-sizer");
+        textsize = document.getElementById("wr-text-size");
+        textsizeunit = document.getElementById("wr-text-size-unit");
+        textweight = document.getElementById("wr-text-weight");
+        textstyle = document.getElementById("wr-text-style");
+        texthighlight = document.getElementById("wr-highlight-color");
+        scrollcolor = document.getElementById("wr-scroll-color");
+        scrolltrackcolor = document.getElementById("wr-scrolltrack-color");
+        allowaudio = document.getElementById("wr-audio-stop");
+        audioselect = document.getElementById("wr-fullscreen-audio");
+        allowclicks = document.getElementById("wr-clicks-stop");
+        clickselect = document.getElementById("wr-fullscreen-clicks");
 
         swapChecked = function (clicked) {
             var clickedParent = clicked.parentNode,
@@ -1075,17 +1100,11 @@
             toggleFullscreen();
         }
 
-        customizer = document.getElementById("wr-customizer");
-        customizer.style.display = "block";
-        customizerButtons = document.getElementById("wr-customizer-buttons");
-        customizerButtons.style.display = "block";
-        themes = document.getElementById("wr-themes");
         $(themes.children).click(function (ev) {
             swapChecked(this);
             var theme = this,
                 css = theme.dataset.value,
-                link,
-                custom = document.getElementById("wr-customtheme");
+                link;
 
             link = document.createElement("link");
             link.rel = "stylesheet";
@@ -1141,7 +1160,6 @@
                 bgcolor.style.backgroundColor = color;
             }
         };
-        bgcolor = document.getElementById("wr-bg-color");
         $(bgcolor).spectrum({
             color: bgcolor.dataset.value,
             showAlpha: true,
@@ -1157,7 +1175,6 @@
                 colorSpectrum("body", theme.body, "background-color", color);
             }
         });
-        bgimg = document.getElementById("wr-bg-img");
         bgimg.onchange = function () {
             var img = bgimg.value;
             if (img !== "") {
@@ -1174,8 +1191,6 @@
             }
             updateTheme();
         };
-        bgimgy = document.getElementById("wr-bg-repeat-y");
-        bgimgx = document.getElementById("wr-bg-repeat-x");
         bgimgy.onclick = function () {
             if (bgimgy.dataset.checked === "true") {
                 // button WAS selected, now being deselected.
@@ -1228,7 +1243,6 @@
             }
             updateTheme();
         };
-        bgimgcover = document.getElementById("wr-bg-stretch");
         bgimgcover.onclick = function () {
             if (bgimgcover.dataset.checked === "false") {
                 // button wasn't selected. clicked, so select it.
@@ -1240,7 +1254,6 @@
             }
             updateTheme();
         };
-        textcolor = document.getElementById("wr-text-color");
         $(textcolor).spectrum({
             color: textcolor.dataset.value,
             showAlpha: true,
@@ -1256,7 +1269,6 @@
                 colorSpectrum("text", theme.cm, "color", color);
             }
         });
-        textfont = document.getElementById("wr-text-font");
         $(textfont.children).each(function (index) {
             var font = this.dataset.value;
             this.style.fontFamily = font;
@@ -1269,10 +1281,6 @@
                 updateTheme();
             }
         });
-        textsizes = document.getElementById("wr-text-sizes");
-        textsizer = document.getElementById("wr-text-sizer");
-        textsize = document.getElementById("wr-text-size");
-        textsizeunit = document.getElementById("wr-text-size-unit");
         $(textsizes.children).click(function () {
             var size = this.dataset.value;
             textsizetoggle = this;
@@ -1299,7 +1307,6 @@
                     textsize.value + textsizeunit.value);
             updateTheme();
         };
-        textweight = document.getElementById("wr-text-weight");
         $(textweight.children).each(function () {
             this.style.fontWeight = this.dataset.value;
         }).click(function () {
@@ -1307,14 +1314,12 @@
             updateElement("text", theme.cm, "font-weight", this.dataset.value);
             updateTheme();
         });
-        textstyle = document.getElementById("wr-text-style");
         $(textstyle.children).click(function () {
             var styl = this.dataset.value;
             swapChecked(this);
             updateElement("text", theme.cm, "font-style", styl);
             updateTheme();
         });
-        texthighlight = document.getElementById("wr-highlight-color");
         $(texthighlight).spectrum({
             color: texthighlight.dataset.value,
             showAlpha: true,
@@ -1342,7 +1347,6 @@
                 texthighlight.children[0].style.backgroundColor = color;
             }
         });
-        scrollcolor = document.getElementById("wr-scroll-color");
         $(scrollcolor).spectrum({
             color: scrollcolor.dataset.value,
             showAlpha: true,
@@ -1370,7 +1374,6 @@
                 scrollcolor.style.backgroundColor = color;
             }
         });
-        scrolltrackcolor = document.getElementById("wr-scrolltrack-color");
         $(scrolltrackcolor).spectrum({
             color: scrolltrackcolor.dataset.value,
             showAlpha: true,
@@ -1398,8 +1401,6 @@
                 scrolltrackcolor.style.backgroundColor = color;
             }
         });
-        allowaudio = document.getElementById("wr-audio-stop");
-        audioselect = document.getElementById("wr-fullscreen-audio");
         $(audioselect.children).click(function () {
             swapChecked(this);
             var audio = this.dataset.value;
@@ -1412,8 +1413,6 @@
                 updateParcel("playaudio", false);
             }
         });
-        allowclicks = document.getElementById("wr-clicks-stop");
-        clickselect = document.getElementById("wr-fullscreen-clicks");
         $(clickselect.children).click(function () {
             swapChecked(this);
             var clicks = this.dataset.value;
@@ -1450,14 +1449,19 @@
                     bImg = styles.backgroundImage,
                     tColor = styles.color;
                 // 1. background color + image
+                bgcolor.dataset.value = bColor;
+                colorSpectrum("body", theme.body, "background-color", tinycolor(bColor));
                 // 2. text stuff
-                // TODO:
-                // colorSpectrum("text", theme.cm, "color", tColor);
+                textcolor.dataset.value = tColor;
+                colorSpectrum("text", theme.cm, "color", tinycolor(tColor));
                 // 3. selection color
                 // 4. scroll color
             }
         };
-        loadDefaults();
+
+        win.on("enter-fullscreen", function () {
+            window.setTimeout(loadDefaults, 1000);
+        });
 
         saveTheme = function () {
             // Fires on "Ok, done" click.
