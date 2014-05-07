@@ -13,7 +13,6 @@
 # important before release:
 + !! allow the app to check for updates on startup.
 + OWN SOUNDS
-+ add a favicon for app completeness (and so nothing unexpected happens).
 + Settings save automatically unless "Reset" is PRESSED AND CONFIRMED.
   this app is about focus and writing, it's not about creating themes
   (can put more advanced theme creator on website). 
