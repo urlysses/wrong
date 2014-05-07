@@ -974,6 +974,7 @@
             textweight, textstyle, textcolor, texthighlight, openDTheme,
             textsizetoggle,
             swapChecked,
+            setSpectrum,
             scrollcolor, scrolltrackcolor, allowaudio,
             allowclicks, audioselect, clickselect, loadDefaults, reset, oldCss;
 
@@ -1040,7 +1041,7 @@
         };
 
         updateTheme = function () {
-            var bod = "body {", cem = ".tm-w-default {", oth = "",
+            var bod = "#TextMap {", cem = ".tm-w-default {", oth = "",
                 bodAll = "", cemAll = "", othAll = "";
             if (theme.updated.body) {
                 theme.updated.body = false;
@@ -1129,21 +1130,41 @@
             }
             setDefaultTheme(css, false);
         });
+        setSpectrum = function (el, type, where, cssName, setColor) {
+            $(el).spectrum({
+                color: setColor,
+                showAlpha: true,
+                clickoutFiresChange: true,
+                showInput: true,
+                move: function (color) {
+                    colorSpectrum(type, where, cssName, color);
+                },
+                hide: function (color) {
+                    colorSpectrum(type, where, cssName, color);
+                },
+                change: function (color) {
+                    colorSpectrum(type, where, cssName, color);
+                }
+            });
+        };
         colorSpectrum = function (type, where, cssName, color) {
             updateElement(type, where, cssName,
                 color.toPercentageRgbString());
             updateTheme();
+
+            // find contrast by calculating the YIQ and compare against
+            // half of white (255 / 2 ~= 128).
+            // (http://24ways.org/2010/calculating-color-contrast/)
+            var col = color.toHex(),
+                r = parseInt(col.substr(0, 2), 16),
+                g = parseInt(col.substr(2, 2), 16),
+                b = parseInt(col.substr(4, 2), 16),
+                yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
             if (type === "text") {
                 texthighlight.style.color = color;
                 textcolor.children[0].style.color = color;
-                // find contrast by calculating the YIQ and compare against
-                // half of white (255 / 2 ~= 128).
-                // (http://24ways.org/2010/calculating-color-contrast/)
-                var col = color.toHex(),
-                    r = parseInt(col.substr(0, 2), 16),
-                    g = parseInt(col.substr(2, 2), 16),
-                    b = parseInt(col.substr(4, 2), 16),
-                    yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
                 if (yiq >= 128) {
                     // light color so use dark.
                     textcolor.style.backgroundColor = "rgba(0,0,0,0.7)";
@@ -1158,23 +1179,16 @@
 
             if (cssName === "background-color") {
                 bgcolor.style.backgroundColor = color;
+                if (yiq >= 128) {
+                    bgcolor.style.borderColor = "black";
+                    bgimg.style.borderColor = "black";
+                } else {
+                    bgcolor.style.borderColor = "white";
+                    bgimg.style.borderColor = "white";
+                }
             }
         };
-        $(bgcolor).spectrum({
-            color: bgcolor.dataset.value,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            showInput: true,
-            move: function (color) {
-                colorSpectrum("body", theme.body, "background-color", color);
-            },
-            hide: function (color) {
-                colorSpectrum("body", theme.body, "background-color", color);
-            },
-            change: function (color) {
-                colorSpectrum("body", theme.body, "background-color", color);
-            }
-        });
+        setSpectrum(bgcolor, "body", theme.body, "background-color", bgcolor.dataset.value);
         bgimg.onchange = function () {
             var img = bgimg.value;
             if (img !== "") {
@@ -1254,21 +1268,7 @@
             }
             updateTheme();
         };
-        $(textcolor).spectrum({
-            color: textcolor.dataset.value,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            showInput: true,
-            move: function (color) {
-                colorSpectrum("text", theme.cm, "color", color);
-            },
-            hide: function (color) {
-                colorSpectrum("text", theme.cm, "color", color);
-            },
-            change: function (color) {
-                colorSpectrum("text", theme.cm, "color", color);
-            }
-        });
+        setSpectrum(textcolor, "text", theme.cm, "color", textcolor.dataset.value);
         $(textfont.children).each(function (index) {
             var font = this.dataset.value;
             this.style.fontFamily = font;
@@ -1423,7 +1423,7 @@
             }
         });
 
-        loadDefaults = function () {
+        loadDefaults = function (ignoreCustom) {
             var dTheme = getDefaultTheme();
             var openDTheme = themes.querySelector("[data-value='" + dTheme.name + "']");
             // Theme selector.
@@ -1437,7 +1437,7 @@
                 swapChecked(clickselect.querySelector("[data-value='off']"));
             }
 
-            if (dTheme.custom === true) {
+            if (!ignoreCustom && dTheme.custom === true) {
                 // load custom values into the customizer.
                 /*if (parcel.backgroundColor) {
                 }*/
@@ -1447,14 +1447,41 @@
                 var styles = window.getComputedStyle(global.tm.doc),
                     bColor = styles.backgroundColor,
                     bImg = styles.backgroundImage,
-                    tColor = styles.color;
+                    tColor = styles.color,
+                    i,
+                    j,
+                    selectColor,
+                    styleSheet = document.styleSheets[5] || document.styleSheets[3];
                 // 1. background color + image
                 bgcolor.dataset.value = bColor;
                 colorSpectrum("body", theme.body, "background-color", tinycolor(bColor));
+                setSpectrum(bgcolor, "body", theme.body, "background-color", bColor);
                 // 2. text stuff
                 textcolor.dataset.value = tColor;
                 colorSpectrum("text", theme.cm, "color", tinycolor(tColor));
+                setSpectrum(textcolor, "text", theme.cm, "color", tColor);
                 // 3. selection color
+                for (i = 0; i < styleSheet.rules.length; i++) {
+                    var sRule = styleSheet.rules[i];
+                    if (sRule.type !== 1) {
+                        for (j = 0; j < sRule.cssRules.length; j++) {
+                            var cssRule = sRule.cssRules[j];
+                            if (cssRule.selectorText.indexOf(":selection") !== -1) {
+                                selectColor = cssRule.style.background;
+                            }
+                        }
+                    } else {
+                        if (sRule.selectorText.indexOf(":selection") !== -1) {
+                            selectColor = sRule.style.backgroundColor;
+                        }
+                    }
+                }
+                if (selectColor === undefined) {
+                    // The styleSheet is custom, but doesn't modify selection
+                    // so use Light's selection bg.
+                    selectColor = texthighlight.dataset.value;
+                }
+                texthighlight.children[0].style.backgroundColor = selectColor;
                 // 4. scroll color
             }
         };
