@@ -971,10 +971,8 @@
             themes, saveTheme, updateTheme, updateElement,
             styleDiv, bgimg, bgimgy, bgimgx, bgimgcover, bgcolor,
             textfont, textsize, textsizes, textsizer, textsizeunit,
-            textweight, textstyle, textcolor, texthighlight, openDTheme,
-            textsizetoggle,
-            swapChecked,
-            setSpectrum,
+            textweight, textstyle, textcolor, texthighlight, textsizetoggle,
+            openDTheme, swapChecked, setSpectrum, setSpectrumMisc,
             scroller, scrollcolor, scrolltrackcolor, allowaudio,
             allowclicks, audioselect, clickselect, loadDefaults, reset, oldCss;
 
@@ -1050,14 +1048,18 @@
                     bod += style.name + ":" + style.value + ";";
                     if (index === theme.body.length - 1) {
                         bod += "}";
-                        var oldBod = document.getElementById("wr-bod-style");
+                        var oldBod = document.getElementById("wr-bod-style"),
+                            styleBod = document.createElement("style");
                         if (oldBod) {
                             styleDiv.removeChild(oldBod);
                         }
-                        bodAll += "<div id='wr-bod-style'><style>";
+                        oldBod = document.createElement("div");
+                        oldBod.id = "wr-bod-style";
                         bodAll += "@media (min-width: 800px) {" + bod;
-                        bodAll += "}</style></div>";
-                        styleDiv.innerHTML += bodAll;
+                        bodAll += "}";
+                        styleBod.appendChild(document.createTextNode(bodAll));
+                        oldBod.appendChild(styleBod);
+                        styleDiv.appendChild(oldBod);
                     }
                 });
             }
@@ -1067,14 +1069,18 @@
                     cem += style.name + ":" + style.value + ";";
                     if (index === theme.cm.length - 1) {
                         cem += "}";
-                        var oldCem = document.getElementById("wr-cem-style");
+                        var oldCem = document.getElementById("wr-cem-style"),
+                            styleCem = document.createElement("style");
                         if (oldCem) {
                             styleDiv.removeChild(oldCem);
                         }
-                        cemAll += "<div id='wr-cem-style'><style>";
+                        oldCem = document.createElement("div");
+                        oldCem.id = "wr-cem-style";
                         cemAll += "@media (min-width: 800px) {" + cem;
-                        cemAll += "}</style></div>";
-                        styleDiv.innerHTML += cemAll;
+                        cemAll += "}";
+                        styleCem.appendChild(document.createTextNode(cemAll));
+                        oldCem.appendChild(styleCem);
+                        styleDiv.appendChild(oldCem);
                     }
                 });
             }
@@ -1085,14 +1091,18 @@
                     oth += style.name + ":" + style.value + ";";
                     oth += style.selector + "}";
                     if (index === theme.other.length - 1) {
-                        var oldOth = document.getElementById("wr-oth-style");
+                        var oldOth = document.getElementById("wr-oth-style"),
+                            styleOth = document.createElement("style");
                         if (oldOth) {
                             styleDiv.removeChild(oldOth);
                         }
-                        othAll += "<div id='wr-oth-style'><style>";
+                        oldOth = document.createElement("div");
+                        oldOth.id = "wr-oth-style";
                         othAll += "@media (min-width: 800px) {" + oth;
-                        othAll += "}</style></div>";
-                        styleDiv.innerHTML += othAll;
+                        othAll += "}";
+                        styleOth.appendChild(document.createTextNode(othAll));
+                        oldOth.appendChild(styleOth);
+                        styleDiv.appendChild(oldOth);
                     }
                 });
             }
@@ -1150,6 +1160,39 @@
                 }
             });
         };
+        setSpectrumMisc = function (el, type, where, cssName, cssClass, setColor) {
+            var elt = el;
+            if (el === texthighlight) {
+                elt = el.children[0];
+            }
+            $(el).spectrum({
+                color: setColor,
+                showAlpha: true,
+                clickoutFiresChange: true,
+                showInput: true,
+                move: function (color) {
+                    updateElement(type, where, cssName,
+                        color.toPercentageRgbString(),
+                        cssClass);
+                    updateTheme();
+                    elt.style.backgroundColor = color;
+                },
+                hide: function (color) {
+                    updateElement(type, where, cssName,
+                        color.toPercentageRgbString(),
+                        cssClass);
+                    updateTheme();
+                    elt.style.backgroundColor = color;
+                },
+                change: function (color) {
+                    updateElement(type, where, cssName,
+                        color.toPercentageRgbString(),
+                        cssClass);
+                    updateTheme();
+                    elt.style.backgroundColor = color;
+                }
+            });
+        };
         colorSpectrum = function (type, where, cssName, color) {
             updateElement(type, where, cssName,
                 color.toPercentageRgbString());
@@ -1191,6 +1234,7 @@
                 }
             }
         };
+
         setSpectrum(bgcolor, "body", theme.body, "background-color", bgcolor.dataset.value);
         bgimg.onchange = function () {
             var img = bgimg.value;
@@ -1323,87 +1367,12 @@
             updateElement("text", theme.cm, "font-style", styl);
             updateTheme();
         });
-        $(texthighlight).spectrum({
-            color: texthighlight.dataset.value,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            showInput: true,
-            move: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::selection");
-                updateTheme();
-                texthighlight.children[0].style.backgroundColor = color;
-            },
-            hide: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::selection");
-                updateTheme();
-                texthighlight.children[0].style.backgroundColor = color;
-            },
-            change: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::selection");
-                updateTheme();
-                texthighlight.children[0].style.backgroundColor = color;
-            }
-        });
-        $(scrollcolor).spectrum({
-            color: scrollcolor.dataset.value,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            showInput: true,
-            move: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::-webkit-scrollbar-thumb");
-                updateTheme();
-                scrollcolor.style.backgroundColor = color;
-            },
-            hide: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::-webkit-scrollbar-thumb");
-                updateTheme();
-                scrollcolor.style.backgroundColor = color;
-            },
-            change: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::-webkit-scrollbar-thumb");
-                updateTheme();
-                scrollcolor.style.backgroundColor = color;
-            }
-        });
-        $(scrolltrackcolor).spectrum({
-            color: scrolltrackcolor.dataset.value,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            showInput: true,
-            move: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::-webkit-scrollbar-track");
-                updateTheme();
-                scrolltrackcolor.style.backgroundColor = color;
-            },
-            hide: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::-webkit-scrollbar-track");
-                updateTheme();
-                scrolltrackcolor.style.backgroundColor = color;
-            },
-            change: function (color) {
-                updateElement("other", theme.other, "background",
-                    color.toPercentageRgbString(),
-                    "::-webkit-scrollbar-track");
-                updateTheme();
-                scrolltrackcolor.style.backgroundColor = color;
-            }
-        });
+        setSpectrumMisc(texthighlight, "other", theme.other, "background",
+                "::selection", texthighlight.dataset.value);
+        setSpectrumMisc(scrollcolor, "other", theme.other, "background",
+                "::-webkit-scrollbar-thumb", scrollcolor.dataset.value);
+        setSpectrumMisc(scrolltrackcolor, "other", theme.other, "background",
+                "::-webkit-scrollbar-track", scrolltrackcolor.dataset.value);
         $(audioselect.children).click(function () {
             swapChecked(this);
             var audio = this.dataset.value;
@@ -1453,18 +1422,22 @@
                     tColor = styles.color,
                     i,
                     j,
-                    selectColor,
-                    trackColor,
-                    thumbColor,
+                    // Default values from light.css
+                    selectColor = "rgba(0, 133, 255, 0.32)",
+                    thumbColor = "rgba(0, 0, 0, 0.35)",
+                    trackColor = "rgba(0, 0, 0, 0.19)",
                     styleSheet = document.styleSheets[5] || document.styleSheets[3];
+
                 // 1. background color + image
                 bgcolor.dataset.value = bColor;
                 colorSpectrum("body", theme.body, "background-color", tinycolor(bColor));
                 setSpectrum(bgcolor, "body", theme.body, "background-color", bColor);
+
                 // 2. text stuff
                 textcolor.dataset.value = tColor;
                 colorSpectrum("text", theme.cm, "color", tinycolor(tColor));
                 setSpectrum(textcolor, "text", theme.cm, "color", tColor);
+
                 // selection color (and scroller color while we're at it)
                 for (i = 0; i < styleSheet.rules.length; i++) {
                     var sRule = styleSheet.rules[i];
@@ -1495,23 +1468,23 @@
                 }
 
                 // 3. selection color
-                if (selectColor === undefined) {
-                    // The styleSheet is custom, but doesn't modify selection
-                    // so use Light's selection bg.
-                    selectColor = texthighlight.dataset.value;
-                }
+                texthighlight.dataset.value = selectColor;
                 texthighlight.children[0].style.backgroundColor = selectColor;
+                setSpectrumMisc(texthighlight, "other", theme.other,
+                        "background", "::selection", selectColor);
 
                 // 4. scroll color
-                if (thumbColor === undefined) {
-                    thumbColor = scrollcolor.dataset.value;
-                }
-                if (trackColor === undefined) {
-                    trackColor = scrolltrackcolor.dataset.value;
-                }
                 scroller.style.backgroundColor = bColor;
+                // Scroll thumb
+                scrollcolor.dataset.value = thumbColor;
                 scrollcolor.style.backgroundColor = thumbColor;
+                setSpectrumMisc(scrollcolor, "other", theme.other, "background",
+                    "::-webkit-scrollbar-thumb", thumbColor);
+                // Scroll track
+                scrolltrackcolor.dataset.value = trackColor;
                 scrolltrackcolor.style.backgroundColor = trackColor;
+                setSpectrumMisc(scrolltrackcolor, "other", theme.other,
+                    "background", "::-webkit-scrollbar-track", trackColor);
             }
         };
 
