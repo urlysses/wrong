@@ -570,8 +570,8 @@ li#wr-audio-stop span:last-child {
     border: none;
 }
 #wr-tabs li.is-being-dragged-over {
-    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.6),
-    inset 0px 0px 8px rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.8),
+    inset 0px 0px 10px rgba(255, 255, 255, 0.8);
 }
 #wr-tabs li:last-child {
     border-right: none;
