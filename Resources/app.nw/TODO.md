@@ -17,4 +17,4 @@
   this app is about focus and writing, it's not about creating themes
   (can put more advanced theme creator on website). 
   Get out of your own way when designing things: it's not about you.
-+ Put better filler under the highlight preview.
++ Scrollbar fading messes up text alignment in fullscreen.
