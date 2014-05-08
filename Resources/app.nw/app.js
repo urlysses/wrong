@@ -1333,15 +1333,19 @@
             textsizetoggle = this;
             swapChecked(this);
             if (size !== "...") {
-                textsize.value = size;
-                $(textsize).change();
-                if (textsizetoggle.style.display === "none") {
-                    textsizetoggle.style.display = "inline-table";
-                    textsizer.style.display = "none";
+                if (this.id !== "wr-text-sizer") {
+                    textsize.value = size;
+                    $(textsize).change();
+                    if (textsizetoggle.style.display === "none") {
+                        textsizetoggle.style.display = "inline-table";
+                        textsizer.style.display = "none";
+                    }
                 }
             } else {
-                textsizetoggle.style.display = "none";
-                textsizer.style.display = "inline-table";
+                if (textsizetoggle.style.display !== "none") {
+                    textsizetoggle.style.display = "none";
+                    textsizer.style.display = "inline-table";
+                }
             }
         });
         textsize.onchange = function () {
@@ -1495,6 +1499,7 @@
             // collect all the data in the customizer and
             // push to parcel with updateParcel(cssName, value);
             // Also setDefaultTheme(themename, true) for custom.
+            console.log(theme);
         };
 
         reset = document.getElementById("wr-reset");
@@ -1511,7 +1516,8 @@
         closer.onclick = function () {
             customizer.style.display = "none";
             customizerButtons.style.display = "none";
-            loadDefaultTheme();
+            // loadDefaultTheme();
+            saveTheme();
             tm.focus();
         };
         hider = document.getElementById("wr-hider");
