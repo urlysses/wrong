@@ -1231,6 +1231,7 @@
 
             if (cssName === "background-color") {
                 bgcolor.style.backgroundColor = color;
+                scroller.style.backgroundColor = color;
                 if (yiq >= 128) {
                     bgcolor.style.borderColor = "black";
                     bgimg.style.borderColor = "black";
@@ -1427,9 +1428,28 @@
                         value = parcel[key];
                     if (selector && name && value) {
                         // TODO.
-                        console.log(selector, name, value);
                         // fill up loadeddefaults ?
                         // not really sure how this will play out yet.
+                        if (selector === "#TextMap") {
+                            console.log(selector, name, value);
+                            /*if (name === "background-color") {
+                            }*/
+                        } else if (selector === "::selection") {
+                            texthighlight.dataset.value = value;
+                            texthighlight.children[0].style.backgroundColor = value;
+                            setSpectrumMisc(texthighlight, "other", theme.other,
+                                "background", selector, value);
+                        } else if (selector === "::-webkit-scrollbar-thumb") {
+                            scrollcolor.dataset.value = value;
+                            scrollcolor.style.backgroundColor = value;
+                            setSpectrumMisc(scrollcolor, "other", theme.other, "background",
+                                selector, value);
+                        } else if (selector === "::-webkit-scrollbar-track") {
+                            scrolltrackcolor.dataset.value = value;
+                            scrolltrackcolor.style.backgroundColor = value;
+                            setSpectrumMisc(scrolltrackcolor, "other", theme.other,
+                                "background", selector, value);
+                        }
                     }
                 });
             } else {
@@ -1492,7 +1512,6 @@
                         "background", "::selection", selectColor);
 
                 // 4. scroll color
-                scroller.style.backgroundColor = bColor;
                 // Scroll thumb
                 scrollcolor.dataset.value = thumbColor;
                 scrollcolor.style.backgroundColor = thumbColor;
