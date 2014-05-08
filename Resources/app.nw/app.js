@@ -60,6 +60,7 @@
         setPageTitle,
         updateCloseDirt,
         updateTitleDirt,
+        fetchParcelStyle,
         openSettings,
         displayWordCount,
         getWordCount,
@@ -969,6 +970,9 @@
         return ret;
     };
 
+    fetchParcelStyle = function (openingSettings) {
+    };
+
     openSettings = function () {
         var customizer, closer, customizerButtons, hider, colorSpectrum,
             themes, saveTheme, updateTheme, updateElement,
@@ -1427,13 +1431,66 @@
                         name = key.split(",")[1],
                         value = parcel[key];
                     if (selector && name && value) {
-                        // TODO.
-                        // fill up loadeddefaults ?
-                        // not really sure how this will play out yet.
                         if (selector === "#TextMap") {
-                            console.log(selector, name, value);
-                            /*if (name === "background-color") {
-                            }*/
+                            switch (name) {
+                            case "background-color":
+                                bgcolor.dataset.value = value;
+                                colorSpectrum("body", theme.body,
+                                    name, tinycolor(value));
+                                setSpectrum(bgcolor, "body", theme.body,
+                                    name, value);
+                                break;
+                            case "background-image":
+                                bgimg.style.backgroundImage = value;
+                                break;
+                            case "background-size":
+                                bgimgcover.dataset.checked = "true";
+                                break;
+                            case "background-repeat":
+                                if (value === "no-repeat") {
+                                    bgimgy.dataset.check = "false";
+                                    bgimgx.dataset.check = "false";
+                                } else if (value === "repeat-y") {
+                                    bgimgy.dataset.check = "true";
+                                    bgimgx.dataset.check = "false";
+                                } else if (value === "repeat-x") {
+                                    bgimgy.dataset.check = "false";
+                                    bgimgx.dataset.check = "true";
+                                } else {
+                                    bgimgy.dataset.check = "true";
+                                    bgimgx.dataset.check = "true";
+                                }
+                                break;
+                            case "color":
+                                textcolor.dataset.value = value;
+                                colorSpectrum("text", theme.cm, name,
+                                        tinycolor(value));
+                                setSpectrum(textcolor, "text", theme.cm, name,
+                                        value);
+                                break;
+                            case "font-family":
+                                swapChecked(textfont.querySelector("[data-value=" + value + "]"));
+                                break;
+                            case "font-size":
+                                var size = value.match(/[\d.]+/)[0],
+                                    unit = value.substring(size.length),
+                                    button = textsizes.querySelector("[data-value='" + size + "']");
+                                if (unit === "px" && button) {
+                                    swapChecked(button);
+                                } else {
+                                    button = textsizes.querySelector("[data-value='...']");
+                                    button.dispatchEvent(new Event("click"));
+                                    textsize.value = size;
+                                    $(textsizeunit).val(unit);
+                                }
+                                break;
+                            case "font-weight":
+                                swapChecked(textweight.querySelector("[data-value='" + value + "']"));
+                                break;
+                            case "font-style":
+                                swapChecked(textstyle.querySelector("[data-value='" + value + "']"));
+                                break;
+                            }
                         } else if (selector === "::selection") {
                             texthighlight.dataset.value = value;
                             texthighlight.children[0].style.backgroundColor = value;
