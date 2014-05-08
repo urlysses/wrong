@@ -113,6 +113,9 @@
         localStorage.parcel = JSON.stringify(parcel);
     };
 
+    // @custom is for user uploads in later versions. Will be
+    // stored in gui.App.dataPath.
+    // (/Users/[name]/Library/Application Support/Wreathe/[etc.])
     setDefaultTheme = function (themeName, custom) {
         localStorage.defaultTheme = JSON.stringify({name: themeName, custom: custom});
     };
@@ -974,7 +977,8 @@
             textweight, textstyle, textcolor, texthighlight, textsizetoggle,
             openDTheme, swapChecked, setSpectrum, setSpectrumMisc,
             scroller, scrollcolor, scrolltrackcolor, allowaudio,
-            allowclicks, audioselect, clickselect, loadDefaults, reset, oldCss;
+            allowclicks, audioselect, clickselect, loadDefaults, loadeddefaults,
+            reset, oldCss;
 
         styleDiv = document.getElementById("user-css");
         customizer = document.getElementById("wr-customizer");
@@ -1004,9 +1008,11 @@
         allowclicks = document.getElementById("wr-clicks-stop");
         clickselect = document.getElementById("wr-fullscreen-clicks");
 
+        loadeddefaults = {};
+
         swapChecked = function (clicked) {
             var clickedParent = clicked.parentNode,
-                currSelect = clickedParent.querySelector('[data-checked~="true"]');
+                currSelect = clickedParent.querySelector("[data-checked~='true']");
             if (currSelect && currSelect !== clicked) {
                 delete currSelect.dataset.checked;
             }
@@ -1172,21 +1178,21 @@
                 showInput: true,
                 move: function (color) {
                     updateElement(type, where, cssName,
-                        color.toPercentageRgbString(),
+                        color.toRgbString(),
                         cssClass);
                     updateTheme();
                     elt.style.backgroundColor = color;
                 },
                 hide: function (color) {
                     updateElement(type, where, cssName,
-                        color.toPercentageRgbString(),
+                        color.toRgbString(),
                         cssClass);
                     updateTheme();
                     elt.style.backgroundColor = color;
                 },
                 change: function (color) {
                     updateElement(type, where, cssName,
-                        color.toPercentageRgbString(),
+                        color.toRgbString(),
                         cssClass);
                     updateTheme();
                     elt.style.backgroundColor = color;
@@ -1195,7 +1201,7 @@
         };
         colorSpectrum = function (type, where, cssName, color) {
             updateElement(type, where, cssName,
-                color.toPercentageRgbString());
+                color.toRgbString());
             updateTheme();
 
             // find contrast by calculating the YIQ and compare against
@@ -1400,8 +1406,8 @@
         });
 
         loadDefaults = function (ignoreCustom) {
-            var dTheme = getDefaultTheme();
-            var openDTheme = themes.querySelector("[data-value='" + dTheme.name + "']");
+            var dTheme = getDefaultTheme(),
+                openDTheme = themes.querySelector("[data-value='" + dTheme.name + "']");
             // Theme selector.
             if (openDTheme) {
                 swapChecked(openDTheme);
@@ -1413,11 +1419,19 @@
                 swapChecked(clickselect.querySelector("[data-value='off']"));
             }
 
-            if (!ignoreCustom && dTheme.custom === true) {
+            if (!ignoreCustom && parcel.themeCustomized === true) {
                 // load custom values into the customizer.
-                /*if (parcel.backgroundColor) {
-                }*/
-                var filler = null;
+                Object.keys(parcel).forEach(function (key, index) {
+                    var selector = key.split(",")[0],
+                        name = key.split(",")[1],
+                        value = parcel[key];
+                    if (selector && name && value) {
+                        // TODO.
+                        console.log(selector, name, value);
+                        // fill up loadeddefaults ?
+                        // not really sure how this will play out yet.
+                    }
+                });
             } else {
                 // Not a custom theme. Use whatever exists on screen.
                 var styles = window.getComputedStyle(global.tm.doc),
@@ -1489,17 +1503,64 @@
                 scrolltrackcolor.style.backgroundColor = trackColor;
                 setSpectrumMisc(scrolltrackcolor, "other", theme.other,
                     "background", "::-webkit-scrollbar-track", trackColor);
+
+                loadeddefaults.backgroundColor = bColor;
+                loadeddefaults.color = tColor;
+                loadeddefaults.selection = selectColor;
+                loadeddefaults.scrollthumbColor = thumbColor;
+                loadeddefaults.scrolltrackColor = trackColor;
             }
         };
 
         window.setTimeout(loadDefaults, 100);
 
         saveTheme = function () {
-            // Fires on "Ok, done" click.
+            // Fires on "Ok done" click.
             // collect all the data in the customizer and
             // push to parcel with updateParcel(cssName, value);
-            // Also setDefaultTheme(themename, true) for custom.
-            console.log(theme);
+            if (theme.saved !== true && theme.customized === true) {
+                var body = theme.body,
+                    text = theme.cm,
+                    other = theme.other;
+                body.forEach(function (rule) {
+                    var name = rule.name,
+                        selector = "#TextMap",
+                        value = rule.value;
+                    if (name !== "background-color"
+                            || (name === "background-color" &&
+                                value !== loadeddefaults.backgroundColor)) {
+                        updateParcel(selector + "," + name, value);
+                    }
+                });
+                text.forEach(function (rule) {
+                    var name = rule.name,
+                        selector = "#TextMap",
+                        value = rule.value;
+                    if (name !== "color"
+                            || (name === "color" &&
+                                value !== loadeddefaults.color)) {
+                        updateParcel(selector + "," + name, value);
+                    }
+                });
+                other.forEach(function (rule) {
+                    var name = rule.name,
+                        selector = rule.selector,
+                        value = rule.value;
+                    if (selector === "::selection"
+                            && value !== loadeddefaults.selection) {
+                        updateParcel(selector + "," + name, value);
+                    } else if (selector === "::-webkit-scrollbar-track"
+                            && value !== loadeddefaults.scrolltrackColor) {
+                        updateParcel(selector + "," + name, value);
+                    } else if (selector === "::-webkit-scrollbar-thumb"
+                            && value !== loadeddefaults.scrollthumbColor) {
+                        updateParcel(selector + "," + name, value);
+                    } // no need for an else, these are all the "other"s so far.
+                });
+                updateParcel("themeCustomized", true);
+                theme.saved = true;
+                theme.customized = false;
+            }
         };
 
         reset = document.getElementById("wr-reset");
@@ -1511,6 +1572,7 @@
             }
             compileRuntimeCss();
             loadDefaults();
+            theme.customized = false;
         };
         closer = document.getElementById("wr-close");
         closer.onclick = function () {
