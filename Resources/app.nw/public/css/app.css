@@ -65,6 +65,7 @@ body {
     bottom: 5px;
     left: 5px;
     font-size: 12px;
+    background: none;
 }
 #wr-wc {
     margin-right: -3px;

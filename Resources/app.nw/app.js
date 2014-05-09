@@ -970,7 +970,26 @@
         return ret;
     };
 
-    fetchParcelStyle = function (openingSettings) {
+    fetchParcelStyle = function () {
+        var tmStyle = ".tm-w-default {", miscStyle = "",
+            parcelStyle = "@media (min-width: 800px) {",
+            parcelContainer = document.getElementById("wr-parcel-style");
+        Object.keys(parcel).forEach(function (key, index) {
+            var selector = key.split(",")[0],
+                name = key.split(",")[1],
+                value = parcel[key];
+            if (selector && name && value) {
+                if (selector === "#TextMap") {
+                    tmStyle += name + ": " + value + ";";
+                } else {
+                    miscStyle += selector + " {" + name + ": " + value + ";" + "}";
+                }
+            }
+        });
+        tmStyle += "}";
+        parcelStyle += tmStyle + miscStyle;
+        parcelStyle += "}";
+        parcelContainer.appendChild(document.createTextNode(parcelStyle));
     };
 
     openSettings = function () {
@@ -2733,6 +2752,7 @@
             audiosrc;
 
         loadDefaultTheme();
+        fetchParcelStyle();
 
         if (argv.length !== 0) {
             delete localStorage.filePath;
