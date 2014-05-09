@@ -1154,16 +1154,18 @@
             } else {
                 link.href = "Themes/" + css + "/" + css + ".css";
             }
-            while (styleDiv.firstChild) {
+            /* while (styleDiv.firstChild) {
                 styleDiv.removeChild(styleDiv.firstChild);
-            }
+            } */
+            document.getElementById("wr-link-extra-theme").href = "";
             unloadDefaultTheme();
             link.onload = function () {
                 compileRuntimeCss();
                 loadDefaults(true);
             };
             if (css !== "Light") {
-                styleDiv.appendChild(link);
+                // styleDiv.appendChild(link);
+                document.getElementById("wr-link-extra-theme").href = link.href;
             } else {
                 // Compile for Light theme.
                 compileRuntimeCss();
@@ -1661,12 +1663,13 @@
         reset = document.getElementById("wr-reset");
         reset.onclick = function () {
             // Order of actions important here.
+            compileRuntimeCss();
+            loadDefaults();
             while (styleDiv.firstChild) {
                 // Remove everything from styleDiv.
                 styleDiv.removeChild(styleDiv.firstChild);
             }
-            compileRuntimeCss();
-            loadDefaults();
+            fetchParcelStyle();
             theme.customized = false;
         };
         closer = document.getElementById("wr-close");
