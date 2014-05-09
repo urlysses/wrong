@@ -13,6 +13,7 @@
         theme,
         parcel,
         updateParcel,
+        clearParcel,
         tm,
         initTM,
         titlebar,
@@ -62,6 +63,7 @@
         updateTitleDirt,
         fetchParcelStyle,
         openSettings,
+        settingsHaveOpened,
         displayWordCount,
         getWordCount,
         loadDefaultTheme,
@@ -79,6 +81,8 @@
     var History = require("./history.js");
 
     global.filePath = filePath;
+
+    settingsHaveOpened = false;
 
     theme = {};
     theme.body = [];
@@ -112,6 +116,11 @@
     updateParcel = function (name, value) {
         parcel[name] = value;
         localStorage.parcel = JSON.stringify(parcel);
+    };
+
+    clearParcel = function () {
+        parcel = {};
+        delete localStorage.parcel;
     };
 
     // @custom is for user uploads in later versions. Will be
@@ -971,7 +980,7 @@
     };
 
     fetchParcelStyle = function () {
-        var tmStyle = ".tm-w-default {", miscStyle = "",
+        var bodStlye = "#TextMap {", tmStyle = ".tm-w-default {", miscStyle = "",
             parcelStyle = "@media (min-width: 800px) {",
             parcelContainer = document.getElementById("wr-parcel-style");
         Object.keys(parcel).forEach(function (key, index) {
@@ -980,14 +989,19 @@
                 value = parcel[key];
             if (selector && name && value) {
                 if (selector === "#TextMap") {
-                    tmStyle += name + ": " + value + ";";
+                    if (name.indexOf("background") === -1) {
+                        tmStyle += name + ": " + value + ";";
+                    } else {
+                        bodStlye += name + ": " + value + ";";
+                    }
                 } else {
                     miscStyle += selector + " {" + name + ": " + value + ";" + "}";
                 }
             }
         });
+        bodStlye += "}";
         tmStyle += "}";
-        parcelStyle += tmStyle + miscStyle;
+        parcelStyle += bodStlye + tmStyle + miscStyle;
         parcelStyle += "}";
         parcelContainer.appendChild(document.createTextNode(parcelStyle));
     };
@@ -1001,13 +1015,14 @@
             openDTheme, swapChecked, setSpectrum, setSpectrumMisc,
             scroller, scrollcolor, scrolltrackcolor, allowaudio,
             allowclicks, audioselect, clickselect, loadDefaults, loadeddefaults,
-            reset, oldCss;
+            reset, oldCss, initialTheme, parcelContainer, runtimeContainer;
 
+        initialTheme = getDefaultTheme();
+        parcelContainer = document.getElementById("wr-parcel-style");
+        runtimeContainer = document.getElementById("wr-runtime-style");
         styleDiv = document.getElementById("user-css");
         customizer = document.getElementById("wr-customizer");
-        customizer.style.display = "block";
         customizerButtons = document.getElementById("wr-customizer-buttons");
-        customizerButtons.style.display = "block";
         themes = document.getElementById("wr-themes");
         bgcolor = document.getElementById("wr-bg-color");
         bgimg = document.getElementById("wr-bg-img");
@@ -1020,6 +1035,7 @@
         textsizer = document.getElementById("wr-text-sizer");
         textsize = document.getElementById("wr-text-size");
         textsizeunit = document.getElementById("wr-text-size-unit");
+        textsizetoggle = document.getElementById("wr-text-size-toggle");
         textweight = document.getElementById("wr-text-weight");
         textstyle = document.getElementById("wr-text-style");
         texthighlight = document.getElementById("wr-highlight-color");
@@ -1137,6 +1153,8 @@
             }
         };
 
+        customizer.style.display = "block";
+        customizerButtons.style.display = "block";
         if (win.isFullscreen === false) {
             toggleFullscreen();
         }
@@ -1154,25 +1172,42 @@
             } else {
                 link.href = "Themes/" + css + "/" + css + ".css";
             }
-            /* while (styleDiv.firstChild) {
-                styleDiv.removeChild(styleDiv.firstChild);
-            } */
             document.getElementById("wr-link-extra-theme").href = "";
             unloadDefaultTheme();
+            setDefaultTheme(css, false);
             link.onload = function () {
+                while (parcelContainer.firstChild) {
+                    parcelContainer.removeChild(parcelContainer.firstChild);
+                }
+                while (runtimeContainer.firstChild) {
+                    runtimeContainer.removeChild(runtimeContainer.firstChild);
+                }
                 compileRuntimeCss();
                 loadDefaults(true);
+                while (styleDiv.firstChild) {
+                    // Remove everything from styleDiv.
+                    styleDiv.removeChild(styleDiv.firstChild);
+                }
             };
             if (css !== "Light") {
-                // styleDiv.appendChild(link);
                 document.getElementById("wr-link-extra-theme").href = link.href;
+                styleDiv.appendChild(link);
             } else {
                 // Compile for Light theme.
+                while (parcelContainer.firstChild) {
+                    parcelContainer.removeChild(parcelContainer.firstChild);
+                }
+                while (runtimeContainer.firstChild) {
+                    runtimeContainer.removeChild(runtimeContainer.firstChild);
+                }
                 compileRuntimeCss();
                 loadDefaults(true);
+                while (styleDiv.firstChild) {
+                    // Remove everything from styleDiv.
+                    styleDiv.removeChild(styleDiv.firstChild);
+                }
             }
             swapChecked(this);
-            setDefaultTheme(css, false);
         });
         setSpectrum = function (el, type, where, cssName, setColor) {
             $(el).spectrum({
@@ -1225,8 +1260,7 @@
             });
         };
         colorSpectrum = function (type, where, cssName, color) {
-            updateElement(type, where, cssName,
-                color.toRgbString());
+            updateElement(type, where, cssName, color.toRgbString());
             updateTheme();
 
             // find contrast by calculating the YIQ and compare against
@@ -1362,7 +1396,6 @@
         });
         $(textsizes.children).click(function () {
             var size = this.dataset.value;
-            textsizetoggle = this;
             swapChecked(this);
             if (size !== "...") {
                 if (this.id !== "wr-text-sizer") {
@@ -1548,11 +1581,18 @@
                 bgcolor.dataset.value = bColor;
                 colorSpectrum("body", theme.body, "background-color", tinycolor(bColor));
                 setSpectrum(bgcolor, "body", theme.body, "background-color", bColor);
+                bgimgcover.dataset.checked = "false";
 
                 // 2. text stuff
                 textcolor.dataset.value = tColor;
                 colorSpectrum("text", theme.cm, "color", tinycolor(tColor));
                 setSpectrum(textcolor, "text", theme.cm, "color", tColor);
+                swapChecked(textfont.querySelector("[data-value='Vera Mono']"));
+                swapChecked(textsizes.querySelector("[data-value='12']"));
+                textsizetoggle.style.display = "inline-table";
+                textsizer.style.display = "none";
+                swapChecked(textweight.querySelector("[data-value='400']"));
+                swapChecked(textstyle.querySelector("[data-value='normal']"));
 
                 // selection color (and scroller color while we're at it)
                 for (i = 0; i < styleSheet.rules.length; i++) {
@@ -1663,6 +1703,9 @@
         reset = document.getElementById("wr-reset");
         reset.onclick = function () {
             // Order of actions important here.
+            if (initialTheme.name !== getDefaultTheme().name) {
+                themes.querySelector("[data-value='" + initialTheme.name + "']").dispatchEvent(new Event("click"));
+            }
             compileRuntimeCss();
             loadDefaults();
             while (styleDiv.firstChild) {
@@ -1677,6 +1720,7 @@
             customizer.style.display = "none";
             customizerButtons.style.display = "none";
             // loadDefaultTheme();
+            clearParcel();
             saveTheme();
             tm.focus();
         };
