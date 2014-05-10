@@ -806,6 +806,7 @@ body.wr-tm-control-fullscreen {
 
     #TextMap {
         padding: 5px;
+        overflow-y: scroll !important;
     }
     #counter {
         display: none;
