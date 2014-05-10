@@ -1049,6 +1049,7 @@
 
         loadeddefaults = {};
 
+        // Functions
         swapChecked = function (clicked) {
             var clickedParent = clicked.parentNode,
                 currSelect = clickedParent.querySelector("[data-checked~='true']");
@@ -1153,62 +1154,6 @@
             }
         };
 
-        customizer.style.display = "block";
-        customizerButtons.style.display = "block";
-        if (win.isFullscreen === false) {
-            toggleFullscreen();
-        }
-
-        $(themes.children).click(function (ev) {
-            var theme = this,
-                css = theme.dataset.value,
-                link;
-
-            link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.type = "text/css";
-            if (theme.parentNode.id === "wr-themes-custom") {
-                link.href = gui.App.dataPath + "/Themes/" + css + "/" + css + ".css";
-            } else {
-                link.href = "Themes/" + css + "/" + css + ".css";
-            }
-            document.getElementById("wr-link-extra-theme").href = "";
-            unloadDefaultTheme();
-            setDefaultTheme(css, false);
-            link.onload = function () {
-                while (parcelContainer.firstChild) {
-                    parcelContainer.removeChild(parcelContainer.firstChild);
-                }
-                while (runtimeContainer.firstChild) {
-                    runtimeContainer.removeChild(runtimeContainer.firstChild);
-                }
-                compileRuntimeCss();
-                loadDefaults(true);
-                while (styleDiv.firstChild) {
-                    // Remove everything from styleDiv.
-                    styleDiv.removeChild(styleDiv.firstChild);
-                }
-            };
-            if (css !== "Light") {
-                document.getElementById("wr-link-extra-theme").href = link.href;
-                styleDiv.appendChild(link);
-            } else {
-                // Compile for Light theme.
-                while (parcelContainer.firstChild) {
-                    parcelContainer.removeChild(parcelContainer.firstChild);
-                }
-                while (runtimeContainer.firstChild) {
-                    runtimeContainer.removeChild(runtimeContainer.firstChild);
-                }
-                compileRuntimeCss();
-                loadDefaults(true);
-                while (styleDiv.firstChild) {
-                    // Remove everything from styleDiv.
-                    styleDiv.removeChild(styleDiv.firstChild);
-                }
-            }
-            swapChecked(this);
-        });
         setSpectrum = function (el, type, where, cssName, setColor) {
             $(el).spectrum({
                 color: setColor,
@@ -1300,169 +1245,6 @@
                 }
             }
         };
-
-        setSpectrum(bgcolor, "body", theme.body, "background-color", bgcolor.dataset.value);
-        bgimg.onchange = function () {
-            var img = bgimg.value;
-            if (img !== "") {
-                updateElement("body", theme.body, "background-image",
-                        "url('" + img + "')");
-                theme.bgImg = img;
-                bgimg.style.backgroundImage = "url('" + img + "')";
-            } else {
-                updateElement("body", theme.body, "background-image", "none");
-                bgimg.style.backgroundImage = "none";
-                if (theme.bgImg) {
-                    delete theme.bgImg;
-                }
-            }
-            updateTheme();
-        };
-        bgimgy.onclick = function () {
-            if (bgimgy.dataset.checked === "true") {
-                // button WAS selected, now being deselected.
-                if (bgimgx.dataset.checked === "false") {
-                    // no repeat selected.
-                    updateElement("body", theme.body, "background-repeat",
-                            "no-repeat");
-                } else {
-                    // repeat-x selected.
-                    updateElement("body", theme.body, "background-repeat",
-                            "repeat-x");
-                }
-                bgimgy.dataset.checked = false;
-            } else {
-                if (bgimgx.dataset.checked === "true") {
-                    // repeat all.
-                    updateElement("body", theme.body, "background-repeat", "repeat");
-                } else {
-                    // repeat-y only.
-                    updateElement("body", theme.body, "background-repeat",
-                            "repeat-y");
-                }
-                bgimgy.dataset.checked = true;
-            }
-            updateTheme();
-        };
-        bgimgx.onclick = function () {
-            if (bgimgx.dataset.checked === "true") {
-                // button WAS selected, now deselected.
-                if (bgimgy.dataset.checked === "false") {
-                    // none selected.
-                    updateElement("body", theme.body, "background-repeat",
-                            "no-repeat");
-                } else {
-                    // repeat y selected.
-                    updateElement("body", theme.body, "background-repeat",
-                            "repeat-y");
-                }
-                bgimgx.dataset.checked = false;
-            } else {
-                if (bgimgy.dataset.checked === "true") {
-                    // all selected.
-                    updateElement("body", theme.body, "background-repeat", "repeat");
-                } else {
-                    // repeat-x only.
-                    updateElement("body", theme.body, "background-repeat",
-                            "repeat-x");
-                }
-                bgimgx.dataset.checked = true;
-            }
-            updateTheme();
-        };
-        bgimgcover.onclick = function () {
-            if (bgimgcover.dataset.checked === "false") {
-                // button wasn't selected. clicked, so select it.
-                bgimgcover.dataset.checked = true;
-                updateElement("body", theme.body, "background-size", "cover");
-            } else {
-                bgimgcover.dataset.checked = false;
-                updateElement("body", theme.body, "background-size", "auto");
-            }
-            updateTheme();
-        };
-        setSpectrum(textcolor, "text", theme.cm, "color", textcolor.dataset.value);
-        $(textfont.children).each(function (index) {
-            var font = this.dataset.value;
-            this.style.fontFamily = font;
-        }).click(function () {
-            var font = this;
-            swapChecked(this);
-            if (font.dataset.value !== "...") {
-                updateElement("text", theme.cm, "font-family", "'" +
-                    font.dataset.value + "'");
-                updateTheme();
-            }
-        });
-        $(textsizes.children).click(function () {
-            var size = this.dataset.value;
-            swapChecked(this);
-            if (size !== "...") {
-                if (this.id !== "wr-text-sizer") {
-                    textsize.value = size;
-                    $(textsize).change();
-                    if (textsizetoggle.style.display === "none") {
-                        textsizetoggle.style.display = "inline-table";
-                        textsizer.style.display = "none";
-                    }
-                }
-            } else {
-                if (textsizetoggle.style.display !== "none") {
-                    textsizetoggle.style.display = "none";
-                    textsizer.style.display = "inline-table";
-                }
-            }
-        });
-        textsize.onchange = function () {
-            updateElement("text", theme.cm, "font-size",
-                textsize.value + textsizeunit.value);
-            updateTheme();
-        };
-        textsizeunit.onchange = function () {
-            updateElement("text", theme.cm, "font-size",
-                    textsize.value + textsizeunit.value);
-            updateTheme();
-        };
-        $(textweight.children).each(function () {
-            this.style.fontWeight = this.dataset.value;
-        }).click(function () {
-            swapChecked(this);
-            updateElement("text", theme.cm, "font-weight", this.dataset.value);
-            updateTheme();
-        });
-        $(textstyle.children).click(function () {
-            var styl = this.dataset.value;
-            swapChecked(this);
-            updateElement("text", theme.cm, "font-style", styl);
-            updateTheme();
-        });
-        setSpectrumMisc(texthighlight, "other", theme.other, "background",
-                "::selection", texthighlight.dataset.value);
-        setSpectrumMisc(scrollcolor, "other", theme.other, "background",
-                "::-webkit-scrollbar-thumb", scrollcolor.dataset.value);
-        setSpectrumMisc(scrolltrackcolor, "other", theme.other, "background",
-                "::-webkit-scrollbar-track", scrolltrackcolor.dataset.value);
-        $(audioselect.children).click(function () {
-            swapChecked(this);
-            var audio = this.dataset.value;
-            if (audio !== "off") {
-                updateParcel("playaudio", true);
-                toggleAudio(true);
-                // play song choice
-            } else {
-                toggleAudio(false);
-                updateParcel("playaudio", false);
-            }
-        });
-        $(clickselect.children).click(function () {
-            swapChecked(this);
-            var clicks = this.dataset.value;
-            if (clicks !== "off") {
-                updateParcel("playclicks", true);
-            } else {
-                updateParcel("playclicks", false);
-            }
-        });
 
         loadDefaults = function (ignoreCustom) {
             var dTheme = getDefaultTheme(),
@@ -1649,8 +1431,6 @@
             }
         };
 
-        window.setTimeout(loadDefaults, 100);
-
         saveTheme = function () {
             // Fires on "Ok done" click.
             // collect all the data in the customizer and
@@ -1700,46 +1480,272 @@
             }
         };
 
-        reset = document.getElementById("wr-reset");
-        reset.onclick = function () {
-            // Order of actions important here.
-            if (initialTheme.name !== getDefaultTheme().name) {
-                themes.querySelector("[data-value='" + initialTheme.name + "']").dispatchEvent(new Event("click"));
-            }
-            compileRuntimeCss();
-            loadDefaults();
-            while (styleDiv.firstChild) {
-                // Remove everything from styleDiv.
-                styleDiv.removeChild(styleDiv.firstChild);
-            }
-            fetchParcelStyle();
-            theme.customized = false;
-        };
-        closer = document.getElementById("wr-close");
-        closer.onclick = function () {
-            customizer.style.display = "none";
-            customizerButtons.style.display = "none";
-            // loadDefaultTheme();
-            clearParcel();
-            saveTheme();
-            tm.focus();
-        };
-        hider = document.getElementById("wr-hider");
-        hider.onclick = function () {
-            if (hider.className.indexOf("wr-close-closed") === -1) {
-                customizer.style.left = "-254px";
-                customizerButtons.style.left = "-254px";
-                hider.children[0].innerText = "show settings";
-                hider.className = "wr-close-closed";
+        // Open settings viewer.
+        customizer.style.display = "block";
+        customizerButtons.style.display = "block";
+        if (win.isFullscreen === false) {
+            toggleFullscreen();
+        }
+
+        // If settingsHaveOpened.
+        if (settingsHaveOpened === false) {
+            window.setTimeout(loadDefaults, 100);
+            settingsHaveOpened = true;
+            $(themes.children).click(function (ev) {
+                var theme = this,
+                    css = theme.dataset.value,
+                    link;
+
+                link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.type = "text/css";
+                if (theme.parentNode.id === "wr-themes-custom") {
+                    link.href = gui.App.dataPath + "/Themes/" + css + "/" + css + ".css";
+                } else {
+                    link.href = "Themes/" + css + "/" + css + ".css";
+                }
+                document.getElementById("wr-link-extra-theme").href = "";
+                unloadDefaultTheme();
+                setDefaultTheme(css, false);
+                link.onload = function () {
+                    while (parcelContainer.firstChild) {
+                        parcelContainer.removeChild(parcelContainer.firstChild);
+                    }
+                    while (runtimeContainer.firstChild) {
+                        runtimeContainer.removeChild(runtimeContainer.firstChild);
+                    }
+                    compileRuntimeCss();
+                    loadDefaults(true);
+                    while (styleDiv.firstChild) {
+                        // Remove everything from styleDiv.
+                        styleDiv.removeChild(styleDiv.firstChild);
+                    }
+                };
+                if (css !== "Light") {
+                    document.getElementById("wr-link-extra-theme").href = link.href;
+                    styleDiv.appendChild(link);
+                } else {
+                    // Compile for Light theme.
+                    while (parcelContainer.firstChild) {
+                        parcelContainer.removeChild(parcelContainer.firstChild);
+                    }
+                    while (runtimeContainer.firstChild) {
+                        runtimeContainer.removeChild(runtimeContainer.firstChild);
+                    }
+                    compileRuntimeCss();
+                    loadDefaults(true);
+                    while (styleDiv.firstChild) {
+                        // Remove everything from styleDiv.
+                        styleDiv.removeChild(styleDiv.firstChild);
+                    }
+                }
+                swapChecked(this);
+            });
+
+            setSpectrum(bgcolor, "body", theme.body, "background-color", bgcolor.dataset.value);
+            bgimg.onchange = function () {
+                var img = bgimg.value;
+                if (img !== "") {
+                    updateElement("body", theme.body, "background-image",
+                            "url('" + img + "')");
+                    theme.bgImg = img;
+                    bgimg.style.backgroundImage = "url('" + img + "')";
+                } else {
+                    updateElement("body", theme.body, "background-image", "none");
+                    bgimg.style.backgroundImage = "none";
+                    if (theme.bgImg) {
+                        delete theme.bgImg;
+                    }
+                }
+                updateTheme();
+            };
+            bgimgy.onclick = function () {
+                if (bgimgy.dataset.checked === "true") {
+                    // button WAS selected, now being deselected.
+                    if (bgimgx.dataset.checked === "false") {
+                        // no repeat selected.
+                        updateElement("body", theme.body, "background-repeat",
+                                "no-repeat");
+                    } else {
+                        // repeat-x selected.
+                        updateElement("body", theme.body, "background-repeat",
+                                "repeat-x");
+                    }
+                    bgimgy.dataset.checked = false;
+                } else {
+                    if (bgimgx.dataset.checked === "true") {
+                        // repeat all.
+                        updateElement("body", theme.body, "background-repeat", "repeat");
+                    } else {
+                        // repeat-y only.
+                        updateElement("body", theme.body, "background-repeat",
+                                "repeat-y");
+                    }
+                    bgimgy.dataset.checked = true;
+                }
+                updateTheme();
+            };
+            bgimgx.onclick = function () {
+                if (bgimgx.dataset.checked === "true") {
+                    // button WAS selected, now deselected.
+                    if (bgimgy.dataset.checked === "false") {
+                        // none selected.
+                        updateElement("body", theme.body, "background-repeat",
+                                "no-repeat");
+                    } else {
+                        // repeat y selected.
+                        updateElement("body", theme.body, "background-repeat",
+                                "repeat-y");
+                    }
+                    bgimgx.dataset.checked = false;
+                } else {
+                    if (bgimgy.dataset.checked === "true") {
+                        // all selected.
+                        updateElement("body", theme.body, "background-repeat", "repeat");
+                    } else {
+                        // repeat-x only.
+                        updateElement("body", theme.body, "background-repeat",
+                                "repeat-x");
+                    }
+                    bgimgx.dataset.checked = true;
+                }
+                updateTheme();
+            };
+            bgimgcover.onclick = function () {
+                if (bgimgcover.dataset.checked === "false") {
+                    // button wasn't selected. clicked, so select it.
+                    bgimgcover.dataset.checked = true;
+                    updateElement("body", theme.body, "background-size", "cover");
+                } else {
+                    bgimgcover.dataset.checked = false;
+                    updateElement("body", theme.body, "background-size", "auto");
+                }
+                updateTheme();
+            };
+            setSpectrum(textcolor, "text", theme.cm, "color", textcolor.dataset.value);
+            $(textfont.children).each(function (index) {
+                var font = this.dataset.value;
+                this.style.fontFamily = font;
+            }).click(function () {
+                var font = this;
+                swapChecked(this);
+                if (font.dataset.value !== "...") {
+                    updateElement("text", theme.cm, "font-family", "'" +
+                        font.dataset.value + "'");
+                    updateTheme();
+                }
+            });
+            $(textsizes.children).click(function () {
+                var size = this.dataset.value;
+                swapChecked(this);
+                if (size !== "...") {
+                    if (this.id !== "wr-text-sizer") {
+                        textsize.value = size;
+                        $(textsize).change();
+                        if (textsizetoggle.style.display === "none") {
+                            textsizetoggle.style.display = "inline-table";
+                            textsizer.style.display = "none";
+                        }
+                    }
+                } else {
+                    if (textsizetoggle.style.display !== "none") {
+                        textsizetoggle.style.display = "none";
+                        textsizer.style.display = "inline-table";
+                    }
+                }
+            });
+            textsize.onchange = function () {
+                updateElement("text", theme.cm, "font-size",
+                    textsize.value + textsizeunit.value);
+                updateTheme();
+            };
+            textsizeunit.onchange = function () {
+                updateElement("text", theme.cm, "font-size",
+                        textsize.value + textsizeunit.value);
+                updateTheme();
+            };
+            $(textweight.children).each(function () {
+                this.style.fontWeight = this.dataset.value;
+            }).click(function () {
+                swapChecked(this);
+                updateElement("text", theme.cm, "font-weight", this.dataset.value);
+                updateTheme();
+            });
+            $(textstyle.children).click(function () {
+                var styl = this.dataset.value;
+                swapChecked(this);
+                updateElement("text", theme.cm, "font-style", styl);
+                updateTheme();
+            });
+            setSpectrumMisc(texthighlight, "other", theme.other, "background",
+                    "::selection", texthighlight.dataset.value);
+            setSpectrumMisc(scrollcolor, "other", theme.other, "background",
+                    "::-webkit-scrollbar-thumb", scrollcolor.dataset.value);
+            setSpectrumMisc(scrolltrackcolor, "other", theme.other, "background",
+                    "::-webkit-scrollbar-track", scrolltrackcolor.dataset.value);
+            $(audioselect.children).click(function () {
+                swapChecked(this);
+                var audio = this.dataset.value;
+                if (audio !== "off") {
+                    updateParcel("playaudio", true);
+                    toggleAudio(true);
+                    // play song choice
+                } else {
+                    toggleAudio(false);
+                    updateParcel("playaudio", false);
+                }
+            });
+            $(clickselect.children).click(function () {
+                swapChecked(this);
+                var clicks = this.dataset.value;
+                if (clicks !== "off") {
+                    updateParcel("playclicks", true);
+                } else {
+                    updateParcel("playclicks", false);
+                }
+            });
+
+            reset = document.getElementById("wr-reset");
+            reset.onclick = function () {
+                // Order of actions important here.
+                if (initialTheme.name !== getDefaultTheme().name) {
+                    themes.querySelector("[data-value='" + initialTheme.name
+                            + "']").dispatchEvent(new Event("click"));
+                }
+                compileRuntimeCss();
+                loadDefaults();
+                while (styleDiv.firstChild) {
+                    // Remove everything from styleDiv.
+                    styleDiv.removeChild(styleDiv.firstChild);
+                }
+                fetchParcelStyle();
+                theme.customized = false;
+            };
+            closer = document.getElementById("wr-close");
+            closer.onclick = function () {
+                customizer.style.display = "none";
+                customizerButtons.style.display = "none";
+                clearParcel();
+                saveTheme();
                 tm.focus();
-            } else {
-                customizer.style.left = "0";
-                customizerButtons.style.left = "0";
-                hider.children[0].innerText = "hide settings";
-                hider.className = "";
-                customizer.focus();
-            }
-        };
+            };
+            hider = document.getElementById("wr-hider");
+            hider.onclick = function () {
+                if (hider.className.indexOf("wr-close-closed") === -1) {
+                    customizer.style.left = "-254px";
+                    customizerButtons.style.left = "-254px";
+                    hider.children[0].innerText = "show settings";
+                    hider.className = "wr-close-closed";
+                    tm.focus();
+                } else {
+                    customizer.style.left = "0";
+                    customizerButtons.style.left = "0";
+                    hider.children[0].innerText = "hide settings";
+                    hider.className = "";
+                    customizer.focus();
+                }
+            };
+        }
     };
 
     /**
