@@ -14,6 +14,7 @@
         parcel,
         updateParcel,
         clearParcel,
+        clearThemeInParcel,
         tm,
         initTM,
         titlebar,
@@ -121,6 +122,16 @@
     clearParcel = function () {
         parcel = {};
         delete localStorage.parcel;
+    };
+
+    clearThemeInParcel = function () {
+        Object.keys(parcel).forEach(function (key, index) {
+            // Keys with "," are theme keys.
+            if (key.indexOf(",") !== -1) {
+                delete parcel[key];
+                delete localStorage.parcel[key];
+            }
+        });
     };
 
     // @custom is for user uploads in later versions. Will be
@@ -1725,7 +1736,7 @@
             closer.onclick = function () {
                 customizer.style.display = "none";
                 customizerButtons.style.display = "none";
-                clearParcel();
+                clearThemeInParcel();
                 saveTheme();
                 tm.focus();
             };
@@ -2717,7 +2728,7 @@
     win.on("blur", function () {
         document.body.id = "blurred";
         // tm.blur();
-        toggleAudio();
+        toggleAudio(false);
         blurWindowButtons();
     });
 
