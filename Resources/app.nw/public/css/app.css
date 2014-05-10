@@ -46,7 +46,7 @@ body {
     padding-top: 6.5%;
     padding-left: 25%;
     padding-right: 25%;
-    overflow-y: scroll;
+    overflow-y: overlay;
     overflow-x: hidden;
     flex: 1 1 auto;
     word-break: normal;

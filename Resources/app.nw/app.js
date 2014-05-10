@@ -914,7 +914,7 @@
                 $counter.fadeOut(duration);
                 $titlebar.fadeOut(duration);
             } else {
-                $(tm.doc).css("overflow-y", "scroll");
+                $(tm.doc).css("overflow-y", "overlay");
                 if (win.isFullscreen) {
                     $counter.fadeIn(duration);
                     $titlebar.fadeIn(duration);
