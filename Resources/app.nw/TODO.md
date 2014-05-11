@@ -9,8 +9,8 @@
   (if want into App Store).
 + Add "Select Next/Prev Tab" option to Window menu, not View menu.
 + Modify Edit to use our Undo & Redo functions.
++ save background image to app path (library/application support/etc.)
 
 # important before release:
 + !! allow the app to check for updates on startup.
 + OWN SOUNDS
-+ background image saving.
