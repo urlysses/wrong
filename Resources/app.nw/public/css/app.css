@@ -9,7 +9,7 @@ body {
     padding: 0;
     margin: 0;
     overflow: hidden;
-    background: white;
+    background: black;
     display: flex;
     flex-direction: column;
 }
@@ -29,6 +29,8 @@ body {
     overflow-y: hidden;
     overflow-x: hidden;
     flex: 1 1 auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 #TextMap {
@@ -790,10 +792,7 @@ body.wr-tm-control-fullscreen {
 
 @media (max-width: 800px) {
     body { 
-        /*border-top: 1px solid #8B8B8B;*/
-    }
-    #blurred {
-        /*border-top-color: #aaa;*/
+        background: white;
     }
     html.is-frameless {
         border-radius: 4px;
@@ -804,6 +803,9 @@ body.wr-tm-control-fullscreen {
         border-top: none;
     }
 
+    #TextMapHolder {
+        margin: 0;
+    }
     #TextMap {
         padding: 5px;
         overflow-y: scroll !important;

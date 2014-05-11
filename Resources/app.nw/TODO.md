@@ -13,5 +13,4 @@
 # important before release:
 + !! allow the app to check for updates on startup.
 + OWN SOUNDS
-+ selection-dragging doesn't work in fullscreen.
 + background image saving.
