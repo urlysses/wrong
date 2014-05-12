@@ -13,3 +13,4 @@
 + Allow literals (" within quotes ") and regexp (/\s+/g) in Find & Replace?
 + Inline comments (just color styling)? Like i tend to do with [(comments)].
 + auto-complete while typing (words used in document only?)
++ chroma theme (soothing fade of colors in bg).
