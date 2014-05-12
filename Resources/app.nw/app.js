@@ -103,7 +103,8 @@
 
     sounds = {};
     sounds.mood = [];
-    sounds.clicks = [{name: "switch", len: 8, format: "wav"}];
+    sounds.clicks = [{name: "revolver", len: 8, format: "wav"},
+        {name: "typewriter", len: 8, format: "wav"}];
 
     // User settings are stored in localStorage under "parcel"
     if (localStorage.parcel) {
@@ -1264,11 +1265,16 @@
             if (openDTheme) {
                 swapChecked(openDTheme);
             }
+
             if (parcel.playaudio === false) {
                 swapChecked(audioselect.querySelector("[data-value='off']"));
             }
+
             if (parcel.playclicks === false) {
                 swapChecked(clickselect.querySelector("[data-value='off']"));
+            } else if (parcel.playclicks === true) {
+                var clicks = parcel.clicks;
+                swapChecked(clickselect.querySelector("[data-value='" + clicks + "']"));
             }
 
             if (!ignoreCustom && parcel.themeCustomized === true) {
@@ -1710,6 +1716,7 @@
                 swapChecked(this);
                 var clicks = this.dataset.value;
                 if (clicks !== "off") {
+                    updateParcel("clicks", clicks);
                     updateParcel("playclicks", true);
                 } else {
                     updateParcel("playclicks", false);
