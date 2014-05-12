@@ -12,3 +12,4 @@
 + Images in document?
 + Allow literals (" within quotes ") and regexp (/\s+/g) in Find & Replace?
 + Inline comments (just color styling)? Like i tend to do with [(comments)].
++ auto-complete while typing (words used in document only?)
