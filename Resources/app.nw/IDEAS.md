@@ -15,3 +15,4 @@
 + auto-complete while typing (words used in document only?)
 + chroma theme (soothing fade of colors in bg).
 + multiple clipboards using cmd-[1,2,3,4,etc.]?
++ add "settings" / "config" command to control (opens app settings).
