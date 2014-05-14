@@ -14,6 +14,7 @@
     min-width: 350px;
     background: white;
     height: 149px;
+    border-radius: none;
     margin: auto;
     position: relative;
     left: 0; 
@@ -124,4 +125,10 @@
 
 .btn-disabled:hover, .btn[disabled]:hover {
     cursor: default;
+}
+
+@media (max-width: 800px) {
+    #prompt-box {
+        border-radius: 2px;
+    }
 }
