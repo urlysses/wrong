@@ -1702,11 +1702,13 @@
                     "::-webkit-scrollbar-track", scrolltrackcolor.dataset.value);
             $(audioselect.children).click(function () {
                 swapChecked(this);
-                var audio = this.dataset.value;
-                if (audio !== "off") {
+                var track = this.dataset.value;
+                if (track !== "off") {
+                    var trackURL = "Audio/" + track + ".ogg";
                     updateParcel("playaudio", true);
+                    updateParcel("audio", trackURL);
+                    audio.src = trackURL;
                     toggleAudio(true);
-                    // play song choice
                 } else {
                     toggleAudio(false);
                     updateParcel("playaudio", false);
@@ -2846,7 +2848,7 @@
         if (parcel.audio) {
             audiosrc = parcel.audio;
         } else {
-            audiosrc = "Audio/1.ogg";
+            audiosrc = "Audio/0.ogg";
         }
 
         audio.src = audiosrc;
