@@ -9,5 +9,5 @@ install (mac only):
 0. right-click > Show Package Contents. open the "Contents" folder
 0. clone this repo into Contents with 
 ```
-git clone git@bitbucket.org:handstrings/wrong.git
+git clone https://github.com/handstrings/wrong.git
 ```
