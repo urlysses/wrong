@@ -17,14 +17,12 @@
 			<array>
 				<string>text/plain</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>app.icns</string>
 			<key>LSHandlerRank</key>
 			<string>Alternate</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>wrong</string>
-				<string>rong</string>
+				<string>wromd</string>
 				<string>wro</string>
 			</array>
 			<key>CFBundleTypeRole</key>
@@ -33,6 +31,10 @@
 			<array>
 				<string>com.handstrings.wrong</string>
 			</array>
+			<key>LSIsAppleDefaultForType</key>
+			<true/>
+			<key>NSDocumentClass</key>
+			<string>MyDocument</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -41,8 +43,6 @@
 				<string>text</string>
 				<string>utf8</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>app.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>text/plain</string>
@@ -62,8 +62,6 @@
 				<string>mdown</string>
 				<string>md</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>app.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Markdown document</string>
 			<key>CFBundleTypeRole</key>
@@ -111,7 +109,7 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.text</string>
+				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Wrong Document</string>
@@ -122,34 +120,39 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>wrong</string>
-					<string>rong</string>
+					<string>wromd</string>
 					<string>wro</string>
+					<string>md</string>
+					<string>markdown</string>
+					<string>text</string>
+					<string>txt</string>
 				</array>
 			</dict>
 		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>com.pkware.zip-archive</string>
+				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>node-webkit App</string>
-			<key>UTTypeIconFile</key>
-			<string>nw.icns</string>
+			<string>Wrong Document</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.intel.nw.app</string>
-			<key>UTTypeReferenceURL</key>
-			<string>https://github.com/rogerwang/node-webkit/wiki/How-to-package-and-distribute-your-apps</string>
+			<string>com.handstrings.wrong</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>com.apple.ostype</key>
-				<string>node-webkit</string>
 				<key>public.filename-extension</key>
 				<array>
-					<string>nw</string>
+					<string>wrong</string>
+					<string>wromd</string>
+					<string>wro</string>
+					<string>md</string>
+					<string>markdown</string>
+					<string>text</string>
+					<string>txt</string>
 				</array>
-				<key>public.mime-type</key>
-				<string>application/x-node-webkit-app</string>
 			</dict>
 		</dict>
 	</array>
