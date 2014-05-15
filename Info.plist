@@ -7,12 +7,12 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Wreathe</string>
+	<string>Wrong</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>Wreath</string>
+			<string>Wrong</string>
 			<key>CFBundleTypeIconFile</key>
 			<string>app.icns</string>
 			<key>LSHandlerRank</key>
@@ -21,7 +21,7 @@
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.handstrings.wreath</string>
+				<string>com.handstrings.wrong</string>
 			</array>
 		</dict>
 		<dict>
@@ -65,15 +65,15 @@
 	<key>CFBundleIconFile</key>
 	<string>app.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.handstrings.wreathe</string>
+	<string>com.handstrings.wrong</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Wreathe</string>
+	<string>Wrong</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.16.4</string>
+	<string>0.16.5</string>
 	<key>CFBundleVersion</key>
 	<string>1700.107</string>
 	<key>DTSDKBuild</key>
@@ -104,14 +104,14 @@
 				<string>public.text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Wreathe File</string>
+			<string>Wrong File</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.handstrings.wreath</string>
+			<string>com.handstrings.wrong</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>wreath</string>
+					<string>wro</string>
 				</array>
 			</dict>
 		</dict>
