@@ -2,7 +2,7 @@
   [this](https://github.com/rogerwang/node-webkit/issues/367)?
   [lighttable's nw implements this](https://github.com/LightTable/node-webkit).
 + quiet backups =>
-  (into ~/Library/Application Support/Wreathe/Backups/file(date).wreath)
+  (into ~/Library/Application Support/Wrong/Backups/file(date).wreath)
 + allow users to upload own sounds (ambient only? e.g. can't upload click sounds
   from settings ui)
 + iCloud & file nav implementation (see that lua HN post or w/e)

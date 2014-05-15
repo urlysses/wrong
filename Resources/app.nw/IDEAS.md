@@ -1,4 +1,4 @@
-+ make app's own filetype (.wreath?) => 
++ make app's own filetype (.wro?) => 
   make special no-delete modes? only crosses out or obfuscates text when 
   "delete" is pressed. Also allow for inline comments (/* */ style?) 
 + add focus mode? (e.g. document centers & focuses on current line while typing)

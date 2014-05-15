@@ -137,7 +137,7 @@
 
     // @custom is for user uploads in later versions. Will be
     // stored in gui.App.dataPath.
-    // (/Users/[name]/Library/Application Support/Wreathe/[etc.])
+    // (/Users/[name]/Library/Application Support/Wrong/[etc.])
     setDefaultTheme = function (themeName, custom) {
         localStorage.defaultTheme = JSON.stringify({name: themeName, custom: custom});
     };
@@ -2881,6 +2881,6 @@
     global.win = win;
     global.menu = menu;
     global.tabs = tabs;
-    global.Wreathe = {newFile: newFile, saveFile: saveFile,
+    global.Wrong = {newFile: newFile, saveFile: saveFile,
         openFileDialog: openFileDialog};
 }(this));
