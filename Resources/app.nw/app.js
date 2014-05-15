@@ -200,10 +200,10 @@
         }
 
         this.doc = document.createElement("pre");
-        this.doc.id = "TextMap";
+        this.doc.id = "TM";
         this.doc.className += "tm-w-default";
         this.doc.contentEditable = "plaintext-only";
-        document.getElementById("TextMapHolder").appendChild(this.doc);
+        document.getElementById("TMHolder").appendChild(this.doc);
         this.value = val;
         this.store = val;
         this.selectionStart = 0;
@@ -285,7 +285,7 @@
         global.tm = this;
     };
     TM.prototype.upgrade = function (tm) {
-        var tmholder = document.getElementById("TextMapHolder");
+        var tmholder = document.getElementById("TMHolder");
         while (tmholder.lastChild) {
             tmholder.removeChild(tmholder.lastChild);
         }
@@ -992,7 +992,7 @@
     };
 
     fetchParcelStyle = function () {
-        var bodStlye = "#TextMap {", tmStyle = ".tm-w-default {", miscStyle = "",
+        var bodStlye = "#TM {", tmStyle = ".tm-w-default {", miscStyle = "",
             parcelStyle = "@media (min-width: 800px) {",
             parcelContainer = document.getElementById("wr-parcel-style");
         Object.keys(parcel).forEach(function (key, index) {
@@ -1000,7 +1000,7 @@
                 name = key.split(",")[1],
                 value = parcel[key];
             if (selector && name && value) {
-                if (selector === "#TextMap") {
+                if (selector === "#TM") {
                     if (name.indexOf("background") === -1) {
                         tmStyle += name + ": " + value + ";";
                     } else {
@@ -1098,7 +1098,7 @@
         };
 
         updateTheme = function () {
-            var bod = "#TextMap {", cem = ".tm-w-default {", oth = "",
+            var bod = "#TM {", cem = ".tm-w-default {", oth = "",
                 bodAll = "", cemAll = "", othAll = "";
             if (theme.updated.body) {
                 theme.updated.body = false;
@@ -1284,7 +1284,7 @@
                         name = key.split(",")[1],
                         value = parcel[key];
                     if (selector && name && value) {
-                        if (selector === "#TextMap") {
+                        if (selector === "#TM") {
                             switch (name) {
                             case "background-color":
                                 bgcolor.dataset.value = value;
@@ -1458,7 +1458,7 @@
                     other = theme.other;
                 body.forEach(function (rule) {
                     var name = rule.name,
-                        selector = "#TextMap",
+                        selector = "#TM",
                         value = rule.value;
                     if (name !== "background-color"
                             || (name === "background-color" &&
@@ -1468,7 +1468,7 @@
                 });
                 text.forEach(function (rule) {
                     var name = rule.name,
-                        selector = "#TextMap",
+                        selector = "#TM",
                         value = rule.value;
                     if (name !== "color"
                             || (name === "color" &&

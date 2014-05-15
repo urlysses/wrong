@@ -14,7 +14,7 @@ body {
     flex-direction: column;
 }
 
-#TextMapHolder {
+#TMHolder {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -33,7 +33,7 @@ body {
     margin-bottom: 5px;
 }
 
-#TextMap {
+#TM {
     height: 100%;
     display: block;
     background: none;
@@ -803,10 +803,10 @@ body.wr-tm-control-fullscreen {
         border-top: none;
     }
 
-    #TextMapHolder {
+    #TMHolder {
         margin: 0;
     }
-    #TextMap {
+    #TM {
         padding: 5px;
         overflow-y: scroll !important;
     }
