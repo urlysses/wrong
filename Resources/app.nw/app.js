@@ -783,10 +783,12 @@
                 }
                 // Cmd-S
                 if (!alt && !shift && k === 83) {
+                    e.preventDefault();
                     saveFile(global.filePath);
                 }
                 // Shift-Cmd-S 
                 if (!alt && shift && k === 83) {
+                    e.preventDefault();
                     saveFile();
                 }
                 // Cmd-N OR Cmd-T
@@ -2380,7 +2382,11 @@
             });
         } else {
             var saveButton = document.getElementById("save");
-            saveButton.click();
+
+            var home = process.env.HOME;
+            if (home) {
+                saveButton.setAttribute("nwworkingdir", home + "/Desktop");
+            }
 
             saveButton.onchange = function () {
                 global.filePath = saveButton.value;
@@ -2394,6 +2400,8 @@
                     setPageTitle(global.filePath);
                 }
             };
+
+            saveButton.click();
         }
     };
 
