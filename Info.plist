@@ -12,11 +12,21 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>Wrong</string>
+			<string>Wrong Document</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>text/plain</string>
+			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>app.icns</string>
 			<key>LSHandlerRank</key>
 			<string>Alternate</string>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>wrong</string>
+				<string>rong</string>
+				<string>wro</string>
+			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -104,13 +114,15 @@
 				<string>public.text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Wrong File</string>
+			<string>Wrong Document</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.handstrings.wrong</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
+					<string>wrong</string>
+					<string>rong</string>
 					<string>wro</string>
 				</array>
 			</dict>
