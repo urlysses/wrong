@@ -51,7 +51,7 @@ define(["view", "control", "settings"], function (View, Control, Settings) {
                 }
                 // Cmd-F
                 if (!alt && !shift && k === 70) {
-                    Control.find(tm);
+                    Control.find(Keys, tm);
                 }
                 // Cmd-G
                 if (!alt && !shift && k === 71) {
@@ -63,19 +63,19 @@ define(["view", "control", "settings"], function (View, Control, Settings) {
                 }
                 // Cmd-Alt-F
                 if (alt && !shift && k === 70) {
-                    Control.replace(tm);
+                    Control.replace(Keys, tm);
                 }
                 // Shift-Cmd-Alt-F
                 if (alt && shift && k === 70) {
-                    Control.replaceAll(tm);
+                    Control.replaceAll(Keys, tm);
                 }
                 // Cmd-D
                 if (!alt && !shift && k === 68) {
-                    Control.define(tm);
+                    Control.define(Keys, tm);
                 }
                 // Cmd-/
                 if (!alt && !shift && k === 191) {
-                    Control.toggle(tm);
+                    Control.toggle(Keys, tm);
                 }
                 // Cmd-Z
                 if (!alt && !shift && k === 90) {

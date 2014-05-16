@@ -293,17 +293,17 @@ define(["history", "view"], function (History, View) {
             View.toggleSuperfluous(true);
 
             if (!e.metaKey && !e.altKey && e.keyIdentifier !== "Shift") {
-                tm.lastInput = e.which;
+                window.tm.lastInput = e.which;
             }
 
             // Insert tab.
-            if (tm.isFocused() && e.which === 9) {
-                tm.insertText("\t");
+            if (window.tm.isFocused() && e.which === 9) {
+                window.tm.insertText("\t");
                 e.preventDefault();
             }
 
             // store the cursor position/selection.
-            tm.lastCursor = tm.getSelection();
+            window.tm.lastCursor = window.tm.getSelection();
         });
         tm.doc.addEventListener("keypress", function () {
             View.playClicks();
@@ -312,7 +312,7 @@ define(["history", "view"], function (History, View) {
             View.displayWordCount();
 
             // store the cursor position/selection.
-            tm.lastCursor = tm.getSelection();
+            window.tm.lastCursor = window.tm.getSelection();
         });
         tm.doc.onpaste = function (e) {
             e.preventDefault();

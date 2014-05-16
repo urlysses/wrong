@@ -19,7 +19,7 @@ define([], function () {
         this.replacequeryto = "";
         this.definequery = "";
     }
-    CMD.prototype.show = function (machine) {
+    CMD.prototype.show = function (Keys, machine) {
         if (this.controlOpened === false) {
             machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
             machine.doc.classList.add("tm-control-on");
@@ -45,7 +45,7 @@ define([], function () {
 
                 // bind general editor shortcuts here too so no functionality is 
                 // lost.
-                window.Keys.bindEditorShortcuts(cmd.controlpack.contentDocument);
+                Keys.bindEditorShortcuts(cmd.controlpack.contentDocument);
                 cmd.control.focus();
                 cmd.controlOpened = true;
             };
@@ -94,11 +94,11 @@ define([], function () {
             this.controlOpened = false;
         }
     };
-    CMD.prototype.toggle = function (machine) {
+    CMD.prototype.toggle = function (K, machine) {
         if (this.controlOpened === true) {
             this.hide(machine);
         } else {
-            this.show(machine);
+            this.show(K, machine);
         }
     };
     CMD.prototype.updateFullscreenStyle = function (isOn) {
@@ -114,8 +114,8 @@ define([], function () {
             copack.body.classList.remove("wr-tm-control-fullscreen");
         }
     };
-    CMD.prototype.find = function (machine) {
-        this.show(machine);
+    CMD.prototype.find = function (K, machine) {
+        this.show(K, machine);
         this.control.value = "find " + this.findquery;
     };
     CMD.prototype.findNext = function (machine) {
@@ -195,15 +195,15 @@ define([], function () {
             }
         });
     };
-    CMD.prototype.replace = function (machine) {
-        this.show(machine);
+    CMD.prototype.replace = function (K, machine) {
+        this.show(K, machine);
         this.control.value = "replace";
     };
-    CMD.prototype.replaceAll = function (machine) {
+    CMD.prototype.replaceAll = function (K, machine) {
         this.show(machine);
         this.control.value = "replace all";
     };
-    CMD.prototype.define = function (machine) {
+    CMD.prototype.define = function (K, machine) {
         this.show(machine);
         this.control.value = "define ";
         // yeah idk how i'm going to do this.

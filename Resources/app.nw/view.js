@@ -4,12 +4,21 @@ define(["control"], function (Control) {
     Control = new Control();
     function View() {
         this.$counter = $("#counter");
+        this.fileDirty = false;
+        this.tabs = {};
         this.audio = document.getElementById("wr-audio");
         this.titlebar = document.getElementById("titlebar");
         this.windowbuttons = document.getElementById("wr-window-buttons");
         this.fullscreenbutton = document.getElementById("wr-fullscreen-button");
         this.addtabsbutton = document.getElementById("wr-add-tab-button");
     }
+
+    View.prototype.updateTabs = function (TM, file, data) {
+        this.tabs[file] = TM.init();
+        if (data) {
+            this.tabs[file].value = data;
+        }
+    };
 
     View.prototype.toggleFullscreen = function () {
         window.win.toggleFullscreen();
@@ -116,10 +125,11 @@ define(["control"], function (Control) {
             }
         }
 
-        window.fileDirty = fd;
-        this.updateCloseDirt(window.fileDirty);
-        this.updateTitleDirt(window.fileDirty);
-        this.updateCounterDirt(window.fileDirty);
+        this.fileDirty = fd;
+        window.fileDirty = this.fileDirty;
+        this.updateCloseDirt(this.fileDirty);
+        this.updateTitleDirt(this.fileDirty);
+        this.updateCounterDirt(this.fileDirty);
     };
 
     View.prototype.getFileDirty = function (tab) {
@@ -232,17 +242,19 @@ define(["control"], function (Control) {
 
 
     View.prototype.playClicks = function () {
-        if (window.parcel.playclicks !== false) {
+        var parcel = window.Settings.parcel,
+            sounds = window.Settings.sounds;
+        if (parcel.playclicks !== false) {
             if (window.win.isFullscreen) {
                 var id, name, len, format, path, rand, sound;
-                if (window.parcel.clicks) {
-                    id = window.parcel.clicks;
+                if (parcel.clicks) {
+                    id = parcel.clicks;
                 } else {
                     id = 0;
                 }
-                name = window.sounds.clicks[id].name;
-                len  = window.sounds.clicks[id].len - 1;
-                format = window.sounds.clicks[id].format;
+                name = sounds.clicks[id].name;
+                len  = sounds.clicks[id].len - 1;
+                format = sounds.clicks[id].format;
                 path = "Audio Clicks/" + name + "/";
                 rand = Math.floor(Math.random() * len) + 1;
                 sound = new Audio(path + rand + "." + format);
@@ -253,8 +265,9 @@ define(["control"], function (Control) {
     };
 
     View.prototype.toggleAudio = function (playAudio) {
+        var parcel = window.Settings.parcel;
         if (playAudio === undefined) {
-            if (window.parcel.playaudio !== false) {
+            if (parcel.playaudio !== false) {
                 if (window.win.isFullscreen === true) {
                     if (this.audio.paused === true) {
                         this.audio.play();

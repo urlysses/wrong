@@ -18,8 +18,20 @@ define(["view"], function (View) {
             {name: "Terminal", custom: false},
             {name: "Blue Yonder", custom: false}
         ];
+
+        this.sounds = {};
+        this.sounds.mood = [];
+        this.sounds.clicks = [{name: "revolver", len: 8, format: "wav"},
+            {name: "typewriter", len: 8, format: "wav"}];
+
         this.settingsHaveOpened = false;
-        this.parcel = {};
+
+        if (localStorage.parcel) {
+            this.parcel = JSON.parse(localStorage.parcel);
+        } else {
+            this.parcel = {};
+        }
+
         this.audio = document.getElementById("wr-audio");
         this.parcelContainer = document.getElementById("wr-parcel-style");
         this.runtimeContainer = document.getElementById("wr-runtime-style");
@@ -52,6 +64,9 @@ define(["view"], function (View) {
         this.loadeddefaults = {};
     }
 
+    // @custom is for user uploads in later versions. Will be
+    // stored in gui.App.dataPath.
+    // (/Users/[name]/Library/Application Support/Wrong/[etc.])
     Settings.prototype.setDefaultTheme = function (themeName, custom) {
         localStorage.defaultTheme = JSON.stringify({name: themeName, custom: custom});
     };
