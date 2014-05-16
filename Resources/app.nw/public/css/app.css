@@ -57,6 +57,10 @@ body {
     line-height: 1.8em;
 }
 
+#TM.hideScroll::-webkit-scrollbar { 
+    width: 0px;
+}
+
 #open, #save, #user-css, #wr-bod-style, 
 #wr-cem-style, #wr-oth-style, #wr-audio {
     display: none;

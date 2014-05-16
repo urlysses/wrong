@@ -757,9 +757,6 @@
 
     tm = initTM();
 
-    document.onmousemove = function () {
-        displayWordCount();
-    };
     // Keyboard Shortcuts
     bindEditorShortcuts = function (el) {
         el.addEventListener("keydown", function (e) {
@@ -786,11 +783,13 @@
                 // Cmd-S
                 if (!alt && !shift && k === 83) {
                     e.preventDefault();
+                    toggleSuperfluous(false);
                     saveFile(global.filePath);
                 }
                 // Shift-Cmd-S 
                 if (!alt && shift && k === 83) {
                     e.preventDefault();
+                    toggleSuperfluous(false);
                     saveFile();
                 }
                 // Cmd-N OR Cmd-T
@@ -873,7 +872,8 @@
     };
     bindEditorShortcuts(document);
 
-    window.onmousemove = function () {
+    window.onmouseover = function () {
+        displayWordCount();
         toggleSuperfluous(false);
     };
 
@@ -920,17 +920,16 @@
     toggleSuperfluous = function (hide, override) {
         // "override" is for special case when app leaves fullscreen and needs
         // to unhide all superfluous.
-        var duration, scrollCss, counterCss, $titlebar = $(titlebar);
+        var duration, counterCss, $titlebar = $(titlebar);
         duration = 100;
         if (win.isFullscreen || override === true) {
-            scrollCss = $(tm.doc).css("overflow-y");
             counterCss = $counter.css("display");
             if (hide) {
-                $(tm.doc).css("overflow-y", "hidden");
+                tm.doc.classList.add("hideScroll");
                 $counter.fadeOut(duration);
                 $titlebar.fadeOut(duration);
             } else {
-                $(tm.doc).css("overflow-y", "overlay");
+                tm.doc.classList.remove("hideScroll");
                 if (win.isFullscreen) {
                     $counter.fadeIn(duration);
                     $titlebar.fadeIn(duration);
