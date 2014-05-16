@@ -1,5 +1,6 @@
 // Undo Manager for TM.
-(function() {
+/*global define*/
+define([], function () {
     function History (depth, histDelay) {
         if (depth === undefined) {
             depth = Infinity;
@@ -201,6 +202,6 @@
     History.prototype.clearRedos = function (tm) {
         tm.history.undone = [];
     };
-    module.exports.History = History;
-}());
+    return History;
+});
 
