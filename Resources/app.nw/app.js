@@ -3,11 +3,11 @@
 (function (global) {
     "use strict";
 
-    var gui   = require("nw.gui"),
-        fs    = require("fs"),
-        win   = gui.Window.get(),
-        menu  = new gui.Menu(),
-        clip  = gui.Clipboard.get(),
+    var gui = require("nw.gui"),
+        fs = require("fs"),
+        win = gui.Window.get(),
+        menu = new gui.Menu(),
+        clip = gui.Clipboard.get(),
         audio = document.getElementById("wr-audio"),
         sounds,
         theme,
@@ -81,7 +81,7 @@
         $counter,
         playClicks;
 
-    var History = require("./history.js");
+    var History = require("./history.js").History;
 
     global.filePath = filePath;
 
@@ -118,11 +118,13 @@
     tabs = {};
 
     updateParcel = function (name, value) {
+        global.parcel[name] = value;
         parcel[name] = value;
         localStorage.parcel = JSON.stringify(parcel);
     };
 
     clearParcel = function () {
+        global.parcel = {};
         parcel = {};
         delete localStorage.parcel;
     };
@@ -214,7 +216,7 @@
         this.storedScrollTop = 0;
         this.lastInput = null;
         this.lastCursor = {selectionStart: 0, selectionEnd: 0};
-        this.history = new History.History();
+        this.history = new History();
         this.hasSaved = false;
         this.checkpoint = null;
     }
@@ -2946,6 +2948,11 @@
     global.win = win;
     global.menu = menu;
     global.tabs = tabs;
+    global.clip = clip;
+    global.editmenu = editmenu;
+    global.fileDirty = fileDirty;
+    global.sounds = sounds;
+    global.parcel = parcel;
     global.Wrong = {newFile: newFile, saveFile: saveFile,
         openFileDialog: openFileDialog};
 }(this));
