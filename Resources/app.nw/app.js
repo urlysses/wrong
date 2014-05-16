@@ -59,6 +59,8 @@
         hasRecentFiles,
         removeRecentFile,
         completeInit,
+        promptForUpdate,
+        programCheckForUpdates,
         setPageTitle,
         updateCloseDirt,
         updateTitleDirt,
@@ -2821,13 +2823,67 @@
         }
     };
 
+    promptForUpdate = function () {
+        var P = new PROMPT.init("Updates Available",
+                "There's a new version of Wrong available for download.");
+        P.addBtn({
+            text: "Update",
+            onclick: function () {
+                // TODO: go to download page
+                // or just let the app download on its own?
+                // Also, clear hasIgnoredUpdate ?
+                delete localStorage.hasIgnoredUpdate;
+                gui.Shell.openExternal("http://handstrings.github.io/wrong");
+            },
+            type: "btn-blue",
+            focus: true
+        }).addBtn({
+            text: "Later",
+            onclick: function () {
+                tm.focus();
+                return false;
+            },
+        });
+        P.show();
+    };
+
+    programCheckForUpdates = function () {
+        // Store date of last check. Don't check if last check was within 24 hours.
+        var timeNow = new Date().getTime(),
+            ADAY = 24 * 60 * 60 * 1000,
+            currentVersion = gui.App.manifest.version;
+        if ((!localStorage.lastUpdateCheck
+                || parseInt(localStorage.lastUpdateCheck, 10) + ADAY < timeNow)
+                && !localStorage.hasIgnoredUpdate) {
+            var json = $.ajax({
+                dataType: "json",
+                url: "https://api.github.com/repos/handstrings/wrong/releases",
+                success: function (data) {
+                    if (data[0] && data[0].tag_name) {
+                        // Remove starting "v" from tag_name to get version number.
+                        var latestVersion = data[0].tag_name.substring(1);
+                        if (latestVersion > currentVersion) {
+                            promptForUpdate();
+                        }
+                    }
+                    localStorage.lastUpdateCheck = timeNow;
+                    localStorage.hasIgnoredUpdate = true;
+                }
+            });
+        } else if (localStorage.hasIgnoredUpdate) {
+            // User ignored the update prompt sometime earlier. Prompt again.
+            promptForUpdate();
+        }
+    };
+
     // Restore some data on startup.
     global.onload = function () {
-    // SUPERFLUOUS
-    // might as well use jQuery for fading here since we've already imported 
-    // it for the color picker
+        // FOR SUPERFLUOUS
+        // might as well use jQuery for fading here since we've already imported 
+        // it for the color picker
         $counter = $("#counter");
 
+        // FOR DOC LOAD
         var argv = gui.App.argv,
             lsfp,
             audiosrc;
@@ -2882,6 +2938,8 @@
         } else {
             completeInit();
         }
+
+        programCheckForUpdates();
     };
 
     global.tm = tm;

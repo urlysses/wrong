@@ -107,14 +107,15 @@
 }
 
 .btn-green {
-    background: rgb(41, 162, 79);
-    border-color: rgb(21, 102, 46);
-    text-shadow: 1px 1px 1px rgb(16, 119, 48);
+    background: rgb(0, 202, 57);
+    border-color: rgb(20, 138, 53);
+    color: white;
+    text-shadow: 1px 1px 1px rgb(27, 100, 48);
 }
 
 .btn-green:hover {
-    background: rgb(32, 129, 62);
-    border-color: rgb(14, 66, 30);
+    background: rgb(34, 162, 73);
+    border-color: rgb(16, 112, 45);
 }
 
 .btn-disabled, .btn[disabled] {

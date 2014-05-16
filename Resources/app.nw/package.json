@@ -1,7 +1,7 @@
 {
   "name": "Wrong",
   "description": "Writing app",
-  "version": "0.16.5",
+  "version": "0.16.6",
   "window": {
     "min_width": 400,
     "min_height": 200,
