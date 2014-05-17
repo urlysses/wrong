@@ -896,7 +896,7 @@
                             // or just let the app download on its own?
                             // Also, clear hasIgnoredUpdate ?
                             delete localStorage.hasIgnoredUpdate;
-                            gui.Shell.openExternal("http://handstrings.github.io/wrong");
+                            gui.Shell.openExternal("http://handstrings.github.io/wrong#dl");
                         },
                         type: "btn-blue",
                         focus: true
