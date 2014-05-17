@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global $, Event, Audio, define*/
+/*global $, Event, define*/
 define(["view"], function (View) {
     View = new View();
     function Settings() {

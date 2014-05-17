@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global Event, History, define*/
+/*global Event, define*/
 define(["history", "view"], function (History, View) {
     View = new View();
     function TM(val) {

@@ -1,12 +1,13 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global $, Event, Audio, define*/
-define(["view", "control", "settings"], function (View, Control, Settings) {
+/*global define*/
+define(["view", "control", "settings", "files"], function (View, Control, Settings) {
     View = new View();
     Control = new Control();
     Settings = new Settings();
     function Keys() {
     }
-    Keys.prototype.bindEditorShortcuts = function (el) {
+    Keys.prototype.bindEditorShortcuts = function (el, Files) {
+        var Key = this;
         el.addEventListener("keydown", function (e) {
             var k = e.keyCode,
                 cmd = e.metaKey,
@@ -33,7 +34,7 @@ define(["view", "control", "settings"], function (View, Control, Settings) {
                 if (!alt && !shift && k === 83) {
                     e.preventDefault();
                     View.toggleSuperfluous(false);
-                    window.Wrong.saveFile(global.filePath);
+                    window.Wrong.saveFile(window.filePath);
                 }
                 // Shift-Cmd-S 
                 if (!alt && shift && k === 83) {
@@ -51,7 +52,7 @@ define(["view", "control", "settings"], function (View, Control, Settings) {
                 }
                 // Cmd-F
                 if (!alt && !shift && k === 70) {
-                    Control.find(Keys, tm);
+                    Control.find(Key, Files, tm);
                 }
                 // Cmd-G
                 if (!alt && !shift && k === 71) {
@@ -63,19 +64,19 @@ define(["view", "control", "settings"], function (View, Control, Settings) {
                 }
                 // Cmd-Alt-F
                 if (alt && !shift && k === 70) {
-                    Control.replace(Keys, tm);
+                    Control.replace(Key, Files, tm);
                 }
                 // Shift-Cmd-Alt-F
                 if (alt && shift && k === 70) {
-                    Control.replaceAll(Keys, tm);
+                    Control.replaceAll(Key, Files, tm);
                 }
                 // Cmd-D
                 if (!alt && !shift && k === 68) {
-                    Control.define(Keys, tm);
+                    Control.define(Key, Files, tm);
                 }
                 // Cmd-/
                 if (!alt && !shift && k === 191) {
-                    Control.toggle(Keys, tm);
+                    Control.toggle(Key, Files, tm);
                 }
                 // Cmd-Z
                 if (!alt && !shift && k === 90) {
@@ -104,11 +105,11 @@ define(["view", "control", "settings"], function (View, Control, Settings) {
                 }
                 // Cmd-Alt-[Left Arrow]
                 if (alt && !shift && k === 37) {
-                    View.goToPrevTab();
+                    View.goToPrevTab(Files);
                 }
                 // Cmd-Alt-[Right Arrow]
                 if (alt && !shift && k === 39) {
-                    View.goToNextTab();
+                    View.goToNextTab(Files);
                 }
             }
             // Esc

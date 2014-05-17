@@ -5,7 +5,6 @@ define(["control"], function (Control) {
     function View() {
         this.$counter = $("#counter");
         this.fileDirty = false;
-        this.tabs = {};
         this.audio = document.getElementById("wr-audio");
         this.titlebar = document.getElementById("titlebar");
         this.windowbuttons = document.getElementById("wr-window-buttons");
@@ -13,15 +12,13 @@ define(["control"], function (Control) {
         this.addtabsbutton = document.getElementById("wr-add-tab-button");
     }
 
-    View.prototype.updateTabs = function (TM, file, data) {
-        this.tabs[file] = TM.init();
-        if (data) {
-            this.tabs[file].value = data;
-        }
-    };
-
     View.prototype.toggleFullscreen = function () {
         window.win.toggleFullscreen();
+    };
+
+    View.prototype.makeUTF8 = function (data) {
+        // Sanitizes the txt contents.
+        return JSON.parse(new Buffer(JSON.stringify(data)).toString("utf8"));
     };
 
     View.prototype.toggleTitlebar = function () {
@@ -206,8 +203,8 @@ define(["control"], function (Control) {
         }
     };
 
-    View.prototype.goToNextTab = function () {
-        if (Object.keys(window.tabs).length > 1) {
+    View.prototype.goToNextTab = function (Files) {
+        if (Object.keys(Files.tabs).length > 1) {
             var tabsbar = document.getElementById("wr-tabs"),
                 currentTab = document.getElementById("wr-tab-selected"),
                 e = new Event("click"),
@@ -223,8 +220,8 @@ define(["control"], function (Control) {
         }
     };
 
-    View.prototype.goToPrevTab = function () {
-        if (Object.keys(window.tabs).length > 1) {
+    View.prototype.goToPrevTab = function (Files) {
+        if (Object.keys(Files.tabs).length > 1) {
             var tabsbar = document.getElementById("wr-tabs"),
                 currentTab = document.getElementById("wr-tab-selected"),
                 e = new Event("click"),

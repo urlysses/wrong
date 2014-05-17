@@ -9,6 +9,7 @@
         menu = new gui.Menu(),
         clip = gui.Clipboard.get(),
         TM,
+        Files,
         History,
         View,
         Keys,
@@ -16,12 +17,11 @@
         Settings,
         tm,
         tabDragging,
-        makeUTF8,
         saveFile,
         filePath,
         newFile,
         openFileDialog,
-        openFile,
+        readFile,
         closeWindow,
         closeTab,
         closeAllTabs,
@@ -106,11 +106,12 @@
     global.editmenu = editmenu;
     // Restore some data on startup.
     global.onload = function () {
-        requirejs(["history", "view", "tm", "keys", "control", "settings"],
-            function (H, V, T, K, C, S) {
+        requirejs(["history", "view", "tm", "files", "keys", "control", "settings"],
+            function (H, V, T, F, K, C, S) {
                 History = new H();
                 View = new V();
                 TM = new T();
+                Files = new F();
                 Keys = new K();
                 Control = new C();
                 Settings = new S();
@@ -118,12 +119,10 @@
                 global.tm = tm;
                 global.Keys = Keys;
                 global.View = View;
+                global.Files = Files;
+                global.TM = TM;
+                global.History = History;
                 global.Settings = Settings;
-
-                makeUTF8 = function (data) {
-                    // Sanitizes the txt contents.
-                    return JSON.parse(new Buffer(JSON.stringify(data)).toString("utf8"));
-                };
 
                 saveFile = function (path, callback) {
                     if (path !== undefined && path.indexOf("untitled-") === 0) {
@@ -136,7 +135,7 @@
                     }
 
                     if (path !== undefined && typeof path !== "function") {
-                        var data = makeUTF8(tm.value);
+                        var data = View.makeUTF8(tm.value);
                         fs.writeFile(path, data, function (err) {
                             if (err) {
                                 alert("Couldn't save file: " + err);
@@ -181,10 +180,14 @@
                 };
 
                 newFile = function (file, callback) {
+                    // I attempted to put this into files.js but I'm afraid
+                    // I'm at a loss for how to get it work
+                    // (broke while clicking between tabs).
                     var tabsbar = document.getElementById("wr-tabs"),
                         currentTab = document.getElementById("wr-tab-selected"),
                         newTab = document.createElement("li"),
-                        newTabCloseButton = document.createElement("button");
+                        newTabCloseButton = document.createElement("button"),
+                        fileSuccess = true;
 
                     newTab.id = "wr-tab-selected";
                     newTab.innerHTML = "<span>Untitled</span><span></span>";
@@ -200,32 +203,74 @@
                     };
 
                     if (file) {
-                        if (global.tm.value.length > 0
-                                || currentTab.dataset.file.indexOf("untitled-") !== 0) {
-                            // Current tab is either being used or already a saved file
-                            currentTab.removeAttribute("id");
-                            tabsbar.appendChild(newTab);
-                            View.tabs[currentTab.dataset.file] = tm.clone();
-                        } else {
-                            // Current tab untitled and unused. Open file within this tab.
-                            delete View.tabs[currentTab.dataset.file];
-                            currentTab.dataset.file = file;
-                        }
+                        // The gates of callback hell.
+                        // All hope abandon ye who enter here.
+                        Files.exists(file, function (exists, element, err) {
+                            if (err) {
+                                return false;
+                            }
 
-                        openFile(file, callback); // updateTabs() appears within this fn.
+                            if (exists === true) {
+                                var el = tabsbar.querySelector("[data-file='" + file + "']");
+                                el.dispatchEvent(new Event("click"));
+                                fileSuccess = false;
+                            } else {
+                                fs.readFile(file, function (err, data) {
+                                    if (err) {
+                                        var errmsg = "";
+                                        if (err.code === "ENOENT") {
+                                            errmsg = "The file \"" + file + "\" doesn't exist.\n\nDid you rename it or move it somewhere else?";
+                                        } else {
+                                            errmsg = "Couldn't open file:\n\n" + err + ".";
+                                        }
+                                        var P = new PROMPT.init("Error", errmsg);
+                                        P.addBtn({
+                                            text: "Ok",
+                                            onclick: function () {
+                                                tm.focus();
+                                                return false;
+                                            },
+                                            type: "btn-blue"
+                                        });
+                                        P.show();
+
+                                        removeRecentFile(file);
+                                        return false;
+                                    }
+
+                                    if (global.tm.value.length > 0
+                                            || currentTab.dataset.file.indexOf("untitled-") !== 0) {
+                                        // Current tab is either being used or already a saved file
+                                        currentTab.removeAttribute("id");
+                                        tabsbar.appendChild(newTab);
+                                        Files.tabs[currentTab.dataset.file] = tm.clone();
+                                    } else {
+                                        // Current tab untitled and unused.
+                                        // Open file within this tab.
+                                        delete Files.tabs[currentTab.dataset.file];
+                                        currentTab.dataset.file = file;
+                                    }
+
+                                    readFile(file, data, callback);
+                                });
+                            }
+                        });
                     } else {
                         file = "untitled-" + Math.floor(Math.random() * Math.pow(10, 17));
-                        View.updateTabs(TM, file);
+                        Files.updateTabs(file);
                         if (currentTab) {
                             currentTab.removeAttribute("id");
-                            View.tabs[currentTab.dataset.file] = tm.clone();
+                            Files.tabs[currentTab.dataset.file] = tm.clone();
                         }
                         tabsbar.appendChild(newTab);
-                        tm.upgrade(View.tabs[file]);
-                        tm = View.tabs[file];
+                        tm.upgrade(Files.tabs[file]);
+                        tm = Files.tabs[file];
                         tm.update();
                         tm.focus();
                         View.setFileDirty(false);
+                        if (callback) {
+                            callback();
+                        }
                     }
 
                     View.toggleSuperfluous(false);
@@ -237,11 +282,11 @@
                             currentTab = document.getElementById("wr-tab-selected");
                         if (this !== currentTab) {
                             currentTab.removeAttribute("id");
-                            View.tabs[currentTab.dataset.file] = tm.clone();
+                            Files.tabs[currentTab.dataset.file] = tm.clone();
                             this.id = "wr-tab-selected";
                             global.filePath = file;
-                            tm.upgrade(View.tabs[file]);
-                            tm = View.tabs[file];
+                            tm.upgrade(Files.tabs[file]);
+                            tm = Files.tabs[file];
                             tm.update();
                             tm.focus();
                             View.getFileDirty(this);
@@ -295,55 +340,35 @@
                     openButton.click();
                     openButton.onchange = function () {
                         if (openButton.value !== "") {
-                            // TODO: If file is already opened, do nothing
-                            // or at least just focus on the file.
                             newFile(openButton.value);
                         }
                     };
                 };
                 global.Wrong = {newFile: newFile, saveFile: saveFile,
                     openFileDialog: openFileDialog};
-                openFile = function (path, callback) {
-                    fs.readFile(path, function (err, data) {
-                        if (err) {
-                            var P = new PROMPT.init("Error",
-                                    "Couldn't open file.\n" + err);
-                            P.addBtn({
-                                text: "Ok",
-                                onclick: function () {
-                                    tm.focus();
-                                    return false;
-                                },
-                                type: "btn-blue"
-                            });
-                            P.show();
 
-                            removeRecentFile(path);
-                            return false;
-                        }
-
-                        // set global filePath to this new path
-                        global.filePath = path;
-                        // update the recentFiles list for the "Open Recent >" submenu
-                        updateRecentFiles(path);
-                        // update document title
-                        View.setPageTitle(path);
-                        // data
-                        var dataUTF8 = makeUTF8(data.toString("utf8"));
-                        // tabs
-                        View.updateTabs(TM, path, dataUTF8);
-                        // add data to textarea
-                        tm.upgrade(View.tabs[path]);
-                        tm = View.tabs[path];
-                        tm.store = tm.value;
-                        tm.update();
-                        tm.focus();
-                        // clear the dirt
-                        View.setFileDirty(false);
-                        if (callback) {
-                            callback();
-                        }
-                    });
+                readFile = function (path, data, callback) {
+                    // set global filePath to this new path
+                    global.filePath = path;
+                    // update the recentFiles list for the "Open Recent >" submenu
+                    updateRecentFiles(path);
+                    // update document title
+                    View.setPageTitle(path);
+                    // data
+                    var dataUTF8 = View.makeUTF8(data.toString("utf8"));
+                    // tabs
+                    Files.updateTabs(path, dataUTF8);
+                    // add data to textarea
+                    tm.upgrade(Files.tabs[path]);
+                    tm = Files.tabs[path];
+                    tm.store = tm.value;
+                    tm.update();
+                    tm.focus();
+                    // clear the dirt
+                    View.setFileDirty(false);
+                    if (callback) {
+                        callback();
+                    }
                 };
 
                 closeTab = function () {
@@ -355,14 +380,14 @@
                         nextTab = $(currentTab).prev()[0];
                     }
 
-                    delete View.tabs[currentTab.dataset.file];
+                    delete Files.tabs[currentTab.dataset.file];
                     currentTab.removeAttribute("id");
                     tabsbar.removeChild(currentTab);
                     if (nextTab) {
                         nextTab.id = "wr-tab-selected";
                         global.filePath = nextTab.dataset.file;
-                        tm.upgrade(View.tabs[nextTab.dataset.file]);
-                        tm = View.tabs[nextTab.dataset.file];
+                        tm.upgrade(Files.tabs[nextTab.dataset.file]);
+                        tm = Files.tabs[nextTab.dataset.file];
                         tm.update();
                         tm.focus();
                         View.getFileDirty(nextTab);
@@ -704,14 +729,14 @@
                     viewmenu.append(new gui.MenuItem({
                         label: "Go to Next Tab (\u2325\u2318\u2192)",
                         click: function () {
-                            View.goToNextTab();
+                            View.goToNextTab(Files);
                         }
                     }));
 
                     viewmenu.append(new gui.MenuItem({
                         label: "Go to Previous Tab (\u2325\u2318\u2190)",
                         click: function () {
-                            View.goToNextTab();
+                            View.goToPrevTab(Files);
                         }
                     }));
 
@@ -902,10 +927,10 @@
                                     var latestVersion = data[0].tag_name.substring(1);
                                     if (latestVersion > currentVersion) {
                                         promptForUpdate();
+                                        localStorage.hasIgnoredUpdate = true;
                                     }
                                 }
                                 localStorage.lastUpdateCheck = timeNow;
-                                localStorage.hasIgnoredUpdate = true;
                             }
                         });
                     } else if (localStorage.hasIgnoredUpdate) {
@@ -918,7 +943,7 @@
                     View.displayWordCount();
                     View.toggleSuperfluous(false);
                 };
-                Keys.bindEditorShortcuts(document);
+                Keys.bindEditorShortcuts(document, Files);
 
                 // FOR DOC LOAD
                 var argv = gui.App.argv,

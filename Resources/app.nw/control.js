@@ -1,7 +1,7 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global $, Event, Audio, define*/
+/*global define*/
 define([], function () {
-    function CMD() {
+    function Control() {
         // Control & Control Pack
         this.controlpack = document.createElement("iframe");
         this.controlpack.id = "tm-wr-control";
@@ -19,7 +19,7 @@ define([], function () {
         this.replacequeryto = "";
         this.definequery = "";
     }
-    CMD.prototype.show = function (Keys, machine) {
+    Control.prototype.show = function (Keys, Files, machine) {
         if (this.controlOpened === false) {
             machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
             machine.doc.classList.add("tm-control-on");
@@ -45,7 +45,7 @@ define([], function () {
 
                 // bind general editor shortcuts here too so no functionality is 
                 // lost.
-                Keys.bindEditorShortcuts(cmd.controlpack.contentDocument);
+                Keys.bindEditorShortcuts(cmd.controlpack.contentDocument, Files);
                 cmd.control.focus();
                 cmd.controlOpened = true;
             };
@@ -81,7 +81,7 @@ define([], function () {
 
         }
     };
-    CMD.prototype.hide = function (machine) {
+    Control.prototype.hide = function (machine) {
         if (this.controlOpened === true) {
             if (this.controlpack.parentNode === machine.doc.parentNode) {
                 machine.doc.parentNode.removeChild(this.controlpack);
@@ -94,14 +94,14 @@ define([], function () {
             this.controlOpened = false;
         }
     };
-    CMD.prototype.toggle = function (K, machine) {
+    Control.prototype.toggle = function (K, F, machine) {
         if (this.controlOpened === true) {
             this.hide(machine);
         } else {
-            this.show(K, machine);
+            this.show(K, F, machine);
         }
     };
-    CMD.prototype.updateFullscreenStyle = function (isOn) {
+    Control.prototype.updateFullscreenStyle = function (isOn) {
         var copack = this.controlpack.contentDocument;
         if (isOn) {
             var runtimeCss = document.getElementById("wr-runtime-style").cloneNode(true).childNodes[0],
@@ -114,17 +114,17 @@ define([], function () {
             copack.body.classList.remove("wr-tm-control-fullscreen");
         }
     };
-    CMD.prototype.find = function (K, machine) {
-        this.show(K, machine);
+    Control.prototype.find = function (K, F, machine) {
+        this.show(K, F, machine);
         this.control.value = "find " + this.findquery;
     };
-    CMD.prototype.findNext = function (machine) {
+    Control.prototype.findNext = function (machine) {
         machine.find(this.findquery);
     };
-    CMD.prototype.findPrev = function (machine) {
+    Control.prototype.findPrev = function (machine) {
         machine.find(this.findquery, true);
     };
-    CMD.prototype.modifyForReplace = function (machine, forAll) {
+    Control.prototype.modifyForReplace = function (machine, forAll) {
         this.replControl = document.createElement("div");
         this.replValue = document.createElement("input");
         this.replReplacement = document.createElement("input");
@@ -195,20 +195,20 @@ define([], function () {
             }
         });
     };
-    CMD.prototype.replace = function (K, machine) {
-        this.show(K, machine);
+    Control.prototype.replace = function (K, F, machine) {
+        this.show(K, F, machine);
         this.control.value = "replace";
     };
-    CMD.prototype.replaceAll = function (K, machine) {
-        this.show(machine);
+    Control.prototype.replaceAll = function (K, F, machine) {
+        this.show(K, F, machine);
         this.control.value = "replace all";
     };
-    CMD.prototype.define = function (K, machine) {
-        this.show(machine);
+    Control.prototype.define = function (K, F, machine) {
+        this.show(K, F, machine);
         this.control.value = "define ";
         // yeah idk how i'm going to do this.
     };
-    CMD.prototype.parse = function (machine, query, keyEvent) {
+    Control.prototype.parse = function (machine, query, keyEvent) {
         var commands = ["find", "define"],
             lowerquery = query.toLowerCase(),
             i,
@@ -246,5 +246,5 @@ define([], function () {
             }
         }
     };
-    return CMD;
+    return Control;
 });
