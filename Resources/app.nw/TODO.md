@@ -14,6 +14,3 @@
 # important before release:
 + Theme selector broken using app's top menu.
 + Should redefine edit & window menu tabs. they use fns that could break app.
-+ Play with info.plist or something until OS X stops throwing an error on
-  document open ("The document 'untitled.wro' could not be opened. Wrong
-  cannot open files in the'Wrong Document' format.").
