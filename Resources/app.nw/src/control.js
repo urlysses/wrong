@@ -1,6 +1,7 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
 /*global define*/
-define([], function () {
+define(["view"], function (View) {
+    View = new View();
     function Control() {
         // Control & Control Pack
         this.controlpack = document.createElement("iframe");
@@ -39,7 +40,7 @@ define([], function () {
                 cmd.controlpack.contentDocument.body.id = "tm-control-body";
                 cmd.controlpack.contentDocument.body.appendChild(cmd.control);
                 cmd.controlpack.contentDocument.body.appendChild(cmd.controlCloseButton);
-                if (window.win.isFullscreen) {
+                if (View.isFullscreen()) {
                     cmd.controlpack.contentDocument.body.classList.add("wr-tm-control-fullscreen");
                 }
 
