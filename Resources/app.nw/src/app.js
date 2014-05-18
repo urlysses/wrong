@@ -234,30 +234,30 @@
                 tm.focus();
 
                 // Window & Document Events.
-                window.on("enter-fullscreen", function () {
+                window.addEventListener("enter-fullscreen", function () {
                     window.setTimeout(View.toggleTitlebar, 1000);
                     View.toggleAudio();
                 });
 
-                window.on("leave-fullscreen", function () {
+                window.addEventListener("leave-fullscreen", function () {
                     View.toggleAudio();
                     View.toggleTitlebar();
                     View.toggleSuperfluous(false, true);
                 });
 
-                window.on("focus", function () {
+                window.onfocus = function () {
                     document.body.id = "";
                     // tm.focus();
                     View.toggleAudio();
                     View.focusWindowButtons();
-                });
+                };
 
-                window.on("blur", function () {
+                window.onblur = function () {
                     document.body.id = "blurred";
                     // tm.blur();
                     View.toggleAudio(false);
                     View.blurWindowButtons();
-                });
+                };
 
                 View.fullscreenbutton.onclick = function () {
                     View.toggleFullscreen();
@@ -308,7 +308,7 @@
                 View.displayWordCount();
                 View.toggleSuperfluous(false);
             };
-            // Keys.bindEditorShortcuts(document, Files);
+            Keys.bindEditorShortcuts(View.tmWebEditor, Files);
 
             // FOR DOC LOAD
             var audiosrc;
