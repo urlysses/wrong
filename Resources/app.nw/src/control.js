@@ -204,7 +204,7 @@ define([], function () {
         this.control.value = "replace all";
     };
     Control.prototype.define = function (K, F, V, machine) {
-        this.show(K, F, machine);
+        this.show(K, F, V, machine);
         this.control.value = "define ";
         // yeah idk how i'm going to do this.
     };
