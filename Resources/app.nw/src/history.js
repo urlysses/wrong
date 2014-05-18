@@ -1,6 +1,8 @@
-// Undo Manager for TM.
-var History = (function() {
-    function History (depth, histDelay) {
+/*jslint node: true, browser: true, devel:true, white: false*/
+/*global define*/
+// Undo Manager for TM
+define([], function () {
+    function History(depth, histDelay) {
         if (depth === undefined) {
             depth = Infinity;
         }
@@ -17,7 +19,7 @@ var History = (function() {
         this.lastInput = null;
     }
 
-    function isPunctuation (keycode) {
+    function isPunctuation(keycode) {
         // punctuation: 186-222
         var punct = false;
         if (keycode >= 186 && keycode <= 222) {
@@ -26,7 +28,7 @@ var History = (function() {
         return punct;
     }
 
-    function isWhitespace (keycode) {
+    function isWhitespace(keycode) {
         // tab: 9
         // space: 32 (removed, happens too often)
         var white = false;
@@ -36,7 +38,7 @@ var History = (function() {
         return white;
     }
 
-    function isDelete (keycode) {
+    function isDelete(keycode) {
         // backspace: 8
         // delete: 46
         var del = false;
@@ -45,8 +47,8 @@ var History = (function() {
         }
         return del;
     }
-    
-    function isNewline (keycode) {
+
+    function isNewline(keycode) {
         // enter: 13
         // insert: 45
         var enter = false;
@@ -56,7 +58,7 @@ var History = (function() {
         return enter;
     }
 
-    function isSpecial (keyCode) {
+    function isSpecial(keyCode) {
         // backspace: 8
         // delete: 46
         // enter: 13
@@ -72,7 +74,7 @@ var History = (function() {
         return special;
     }
 
-    function areSameType (curr, last) {
+    function areSameType(curr, last) {
         var same = false;
         if ((isNewline(curr) && isNewline(last))
                 || (isDelete(curr) && isDelete(last))
@@ -202,6 +204,5 @@ var History = (function() {
         tm.history.undone = [];
     };
     return History;
-}());
+});
 
-module.exports.History = History;
