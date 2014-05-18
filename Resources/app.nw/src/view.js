@@ -10,7 +10,10 @@ define(["control"], function (Control) {
         this.windowbuttons = document.getElementById("wr-window-buttons");
         this.fullscreenbutton = document.getElementById("wr-fullscreen-button");
         this.addtabsbutton = document.getElementById("wr-add-tab-button");
-        this.tmWebEditor = document.getElementById("tmWebEditor");
+        // web editors should always be in iframes.
+        if (window.parent) {
+            this.tmWebEditor = window.parent.document.getElementById("tmWebEditor");
+        }
     }
 
     View.prototype.toggleFullscreen = function () {
