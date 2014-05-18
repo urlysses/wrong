@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="is-frameless">
+    <head>
+        <title>Wrong App</title>
+        <link rel="stylesheet" type="text/css" href="public/css/prompt.css">
+        <link rel="stylesheet" type="text/css" href="public/spectrum/spectrum.css">
+        <link rel="stylesheet" type="text/css" href="public/css/app.css">
+        <link rel="stylesheet" type="text/css" href="Themes/Light/Light.css">
+        <style type="text/css" id="wr-runtime-style"></style>
+        <link rel="stylesheet" type="text/css" id="wr-link-extra-theme">
+        <style type="text/css" id="wr-parcel-style"></style>
+    </head>
+        <body class="is-frameless">
+        <div id="prompt">
+            <div id="prompt-box">
+                <div id="prompt-title"></div>
+                <div id="prompt-text"></div>
+                <div id="prompt-buttons"></div>
+            </div>
+        </div>
+        <div id="wr-customizer">
+            <div id="wr-hider"><span>hide settings</span></div>
+            <div class="wr-c-element">
+                <h1>Pick a theme</h1>
+                <ul id="wr-themes">
+                    <li data-value="Light" id="wr-theme-Light">Light</li>
+                    <li data-value="Dark" id="wr-theme-Dark">Dark</li>
+                    <li data-value="Terminal" id="wr-theme-Terminal">Terminal</li>
+                    <li data-value="Blue Yonder" id="wr-theme-Blue-Yonder">Blue Yonder</li>
+                    <!-- <li id="wr-themes-custom"></li> -->
+                </ul>
+                <h1>Customize the current theme</h1>
+                <h2>Backgrounds</h2>
+                <p>Select a background color or upload a background image:</p>
+                <div id="wr-background-options">
+                    <div data-value="rbg(255, 255, 255)" id="wr-bg-color"></div>
+                    <input type="file" value="Background" accept="image/*" id="wr-bg-img">
+                </div>
+                <p>Repeat the background image horizontally, vertically, or stretch it out:</p>
+                <ul id="wr-tabbed">
+                <li data-value="repeat-y" data-checked="true" id="wr-bg-repeat-y">
+                        <span>&#8597;</span>
+                    </li>
+                    <li data-value="repeat-x" data-checked="true" id="wr-bg-repeat-x">
+                        <span>&#8596;</span>
+                    </li>
+                    <li data-value="cover" data-checked="false" id="wr-bg-stretch">
+                        <span>&#x2042;</span>
+                    </li>
+                </ul>
+                <h2>Fonts</h2>
+                <p>Font (and tab) color:</p>
+                <div data-value="#000000" id="wr-text-color"><span>Aa</span></div>
+                <p>Font family:</p>
+                <ul id="wr-text-font">
+                    <li data-checked="true" data-value="Vera Mono"><span>Aa</span></li>
+                    <li data-value="Times New Roman"><span>Aa</span></li>
+                    <li data-value="Helvetica Neue"><span>Aa</span></li>
+                    <li data-value="Courier New"><span>Aa</span></li>
+                    <!--<li data-value="..."><span>...</span></li>-->
+                    <!--http://www.jquery4u.com/snippets/system-fonts-javascript/-->
+                </ul>
+                <p>Font size:</p>
+                <ul id="wr-text-sizes">
+                    <li data-value="10"><span>A</span></li>
+                    <li data-checked="true" data-value="12"><span>A</span></li>
+                    <li data-value="14"><span>A</span></li>
+                    <li data-value="..." id="wr-text-size-toggle"><span>...</span></li>
+                    <li id="wr-text-sizer">
+                        <input type="number" id="wr-text-size" min="0" value="12">
+                        <select id="wr-text-size-unit">
+                            <option selected="selected" value="px">px</option>
+                            <option value="%">%</option>
+                            <option value="em">em</option>
+                        </select>
+                    </li>
+                </ul>
+                <p>Font weight:</p>
+                <ul id="wr-text-weight">
+                    <li data-value="100"><span>B</span></li>
+                    <li data-value="300"><span>B</span></li>
+                    <li data-checked="true" data-value="400"><span>B</span></li>
+                    <li data-value="500"><span>B</span></li>
+                    <li data-value="900"><span>B</span></li>
+                </ul>
+                <p>Font italics:</p>
+                <ul id="wr-text-style">
+                    <li data-value="italic"><span>I</span></li>
+                    <li data-checked="true" data-value="normal"><span>I</span></li>
+                </ul>
+                <p>Selection color:</p>
+            </div>
+            <div data-value="rgba(0, 133, 255, 0.32)" id="wr-highlight-color">
+                <span id="wr-highlight-selected">ifdkjfdgmnfgmnfg</span>
+                <span id="wr-i-beam">&#x1D678;</span>
+                fkjdkr
+            </div>
+            <div class="wr-c-element wr-c-element-bottom">
+                <h2>Miscellany</h2>
+                <p>Scrollbar colors:</p>
+                <div id="wr-scroller">
+                    <div data-value="rgba(255, 255, 255, 0.3)" id="wr-scrolltrack-color"></div>
+                    <div data-value="rgba(0, 0, 0, 0.35)" id="wr-scroll-color"></div>
+                </div>
+                <p>Select or disable ambient tracks:</p>
+                <ul id="wr-fullscreen-audio">
+                    <li data-value="0" data-checked="true" id="wr-song-0"><span>&#x266B;</span></li>
+                    <li data-value="1" id="wr-song-1"><span>&#x266C;</span></li>
+                    <li data-value="off" id="wr-audio-stop">
+                        <span>&#x1D110;</span>
+                        <span>&mdash;</span>
+                    </li>
+                </ul>
+                <p>Select or disable click sounds while typing:</p>
+                <ul id="wr-fullscreen-clicks">
+                    <li data-value="0" data-checked="true" id="wr-clicks-1"><span>&#x2669;</span></li>
+                    <li data-value="1" id="wr-clicks-2"><span>&#x266A;</span></li>
+                    <li data-value="off" id="wr-clicks-stop"><span>&#x2716;</span></li>
+                </ul>
+            </div>
+        </div>
+        <div id="wr-customizer-buttons">
+            <button class="btn btn-red" id="wr-reset">Cancel changes</button>
+            <button class="btn btn-blue" id="wr-close">This is fine</button>
+        </div>
+        <div id="titlebar">
+            <ul id="wr-window-buttons">
+                <li id="wr-close-button"></li>
+                <li id="wr-minimize-button"></li>
+                <li id="wr-maximize-button"></li>
+            </ul>
+            <div id="wr-tabs-holder">
+                <ul id="wr-tabs" class="tm-w-default">
+                </ul>
+                <div id="wr-add-tab-button">+</div>
+            </div>
+            <div class="wr-window-fullscreen">
+                <div id="wr-fullscreen-button"></div>
+            </div>
+        </div>
+        <div id="TMHolder"></div>
+        <div id="user-html"></div>
+        <div id="counter" class="tm-w-default">
+            <span id="wr-wc"></span>
+            <span id="wr-dirt"></span>
+        </div>
+        <audio id="wr-audio" loop></audio>
+        <script type="text/javascript" src="public/js/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="public/spectrum/spectrum.js"></script>
+        <script type="text/javascript" src="public/js/prompt.js"></script>
+        <script type="text/javascript" src="app.js"></script>
+        <div id="user-js"></div>
+    </body>
+</html>
