@@ -756,7 +756,7 @@ define(["view"], function (View) {
         // Open settings viewer.
         customizer.style.display = "block";
         customizerButtons.style.display = "block";
-        if (window.win.isFullscreen === false) {
+        if (View.isFullscreen() === false) {
             View.toggleFullscreen();
         }
 
