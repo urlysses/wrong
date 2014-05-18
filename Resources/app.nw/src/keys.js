@@ -54,7 +54,7 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 }
                 // Cmd-F
                 if (!alt && !shift && k === 70) {
-                    Control.find(Key, Files, tm);
+                    Control.find(Key, Files, View, tm);
                 }
                 // Cmd-G
                 if (!alt && !shift && k === 71) {
@@ -66,19 +66,19 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 }
                 // Cmd-Alt-F
                 if (alt && !shift && k === 70) {
-                    Control.replace(Key, Files, tm);
+                    Control.replace(Key, Files, View, tm);
                 }
                 // Shift-Cmd-Alt-F
                 if (alt && shift && k === 70) {
-                    Control.replaceAll(Key, Files, tm);
+                    Control.replaceAll(Key, Files, View, tm);
                 }
                 // Cmd-D
                 if (!alt && !shift && k === 68) {
-                    Control.define(Key, Files, tm);
+                    Control.define(Key, Files, View, tm);
                 }
                 // Cmd-/
                 if (!alt && !shift && k === 191) {
-                    Control.toggle(Key, Files, tm);
+                    Control.toggle(Key, Files, View, tm);
                 }
                 // Cmd-Z
                 if (!alt && !shift && k === 90) {

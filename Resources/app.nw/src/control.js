@@ -1,7 +1,6 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
 /*global define*/
-define(["view"], function (View) {
-    View = new View();
+define([], function () {
     function Control() {
         // Control & Control Pack
         this.controlpack = document.createElement("iframe");
@@ -20,7 +19,7 @@ define(["view"], function (View) {
         this.replacequeryto = "";
         this.definequery = "";
     }
-    Control.prototype.show = function (Keys, Files, machine) {
+    Control.prototype.show = function (Keys, Files, View, machine) {
         if (this.controlOpened === false) {
             machine.doc.parentNode.insertBefore(this.controlpack, machine.doc);
             machine.doc.classList.add("tm-control-on");
@@ -95,11 +94,11 @@ define(["view"], function (View) {
             this.controlOpened = false;
         }
     };
-    Control.prototype.toggle = function (K, F, machine) {
+    Control.prototype.toggle = function (K, F, V, machine) {
         if (this.controlOpened === true) {
             this.hide(machine);
         } else {
-            this.show(K, F, machine);
+            this.show(K, F, V, machine);
         }
     };
     Control.prototype.updateFullscreenStyle = function (isOn) {
@@ -115,8 +114,8 @@ define(["view"], function (View) {
             copack.body.classList.remove("wr-tm-control-fullscreen");
         }
     };
-    Control.prototype.find = function (K, F, machine) {
-        this.show(K, F, machine);
+    Control.prototype.find = function (K, F, V, machine) {
+        this.show(K, F, V, machine);
         this.control.value = "find " + this.findquery;
     };
     Control.prototype.findNext = function (machine) {
@@ -196,15 +195,15 @@ define(["view"], function (View) {
             }
         });
     };
-    Control.prototype.replace = function (K, F, machine) {
-        this.show(K, F, machine);
+    Control.prototype.replace = function (K, F, V, machine) {
+        this.show(K, F, V, machine);
         this.control.value = "replace";
     };
-    Control.prototype.replaceAll = function (K, F, machine) {
-        this.show(K, F, machine);
+    Control.prototype.replaceAll = function (K, F, V, machine) {
+        this.show(K, F, V, machine);
         this.control.value = "replace all";
     };
-    Control.prototype.define = function (K, F, machine) {
+    Control.prototype.define = function (K, F, V, machine) {
         this.show(K, F, machine);
         this.control.value = "define ";
         // yeah idk how i'm going to do this.
