@@ -55,8 +55,10 @@
                 newTabCloseButton.classList.add("wr-tab-close-button");
                 newTabCloseButton.innerText = "x";
                 newTab.appendChild(newTabCloseButton);
-                newTabCloseButton.onclick = function () {
-                    closeTab();
+                newTabCloseButton.onclick = function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    closeTab(e.target.parentNode);
                 };
 
                 file = "untitled-" + Math.floor(Math.random() * Math.pow(10, 17));
@@ -86,7 +88,6 @@
                         currentTab.removeAttribute("id");
                         Files.tabs[currentTab.dataset.file] = tm.clone();
                         this.id = "wr-tab-selected";
-                        global.filePath = file;
                         tm.upgrade(Files.tabs[file]);
                         tm = Files.tabs[file];
                         tm.update();
@@ -139,31 +140,34 @@
 
             global.Wrong = {newFile: newFile};
 
-            closeTab = function () {
-                var currentTab = document.getElementById("wr-tab-selected"),
-                    tabsbar = currentTab.parentElement,
+            closeTab = function (closethis) {
+                var currentTab = document.getElementById("wr-tab-selected");
+                if (closethis) {
+                    currentTab = closethis;
+                }
+
+                var tabsbar = currentTab.parentElement,
                     nextTab = $(currentTab).next()[0];
 
                 if (nextTab === undefined) {
                     nextTab = $(currentTab).prev()[0];
                 }
 
-                delete Files.tabs[currentTab.dataset.file];
-                currentTab.removeAttribute("id");
-                tabsbar.removeChild(currentTab);
                 if (nextTab) {
-                    nextTab.id = "wr-tab-selected";
-                    global.filePath = nextTab.dataset.file;
                     tm.upgrade(Files.tabs[nextTab.dataset.file]);
                     tm = Files.tabs[nextTab.dataset.file];
                     tm.update();
                     tm.focus();
                     View.getFileDirty(nextTab);
                     View.toggleSuperfluous(false);
+                    currentTab.removeAttribute("id");
+                    tabsbar.removeChild(currentTab);
+                    nextTab.id = "wr-tab-selected";
                 } else {
                     closeWindow();
                 }
 
+                delete Files.tabs[currentTab.dataset.file];
                 return true;
             };
 
@@ -172,47 +176,63 @@
                     allFilesClean = true,
                     tabsbar = document.getElementById("wr-tabs"),
                     tabslen = tabsbar.children.length;
-                if (tabslen > 1) {
-                    for (i = 0; i < tabslen; i++) {
-                        var tab = tabsbar.children[i];
-                        if (tab && tab.children[1].innerText !== "") {
-                            allFilesClean = false;
-                        }
+                for (i = 0; i < tabslen; i++) {
+                    var tab = tabsbar.children[i];
+                    if (tab && tab.children[1].innerText !== "") {
+                        allFilesClean = false;
                     }
+                }
 
-                    if (allFilesClean === false) {
-                        var P = new PROMPT.init("Notice",
-                                "Some files contain unsaved changes.\n\nClose all without saving?");
-                        P.addBtn({
-                            text: "Cancel",
-                            onclick: function () {
-                                tm.focus();
-                                return false;
-                            },
-                        }).addBtn({
-                            text: "Don't Save",
-                            onclick: function () {
-                                closeWindow();
-                            },
-                            type: "btn-red"
-                        });
-                        P.show();
-                    } else {
-                        closeWindow();
-                    }
+                if (allFilesClean === false) {
+                    var P = new PROMPT.init("Notice",
+                            "Some files contain unsaved changes.\n\nClose all without saving?");
+                    P.addBtn({
+                        text: "Cancel",
+                        onclick: function () {
+                            tm.focus();
+                            return false;
+                        },
+                    }).addBtn({
+                        text: "Don't Save",
+                        onclick: function () {
+                            closeWindow(tabsbar, tabslen);
+                        },
+                        type: "btn-red"
+                    });
+                    P.show();
                 } else {
-                    // Only one tab open. Just close regularly.
-                    closeWindow();
+                    closeWindow(tabsbar, tabslen);
                 }
             };
 
-            closeWindow = function () {
+            closeWindow = function (tabsbar, tabslen) {
+                // Just close every tab for this preview.
+                if (tabslen === undefined) {
+                    if (tabsbar === undefined) {
+                        tabsbar = document.getElementById("wr-tabs");
+                    }
+                    tabslen = tabsbar.children.length;
+                }
+
+                if (tabslen === 1) {
+                    var closethis = tabsbar.children[0];
+                    newFile();
+                    closeTab(closethis);
+                } else {
+                    var i;
+                    for (i = 0; i < tabslen; i++) {
+                        var tab = tabsbar.children[i];
+                        closeTab(tab);
+                    }
+                }
             };
 
             minimizeWindow = function () {
+                // You can do stuff here. Not useful for this preview though.
             };
 
             maximizeWindow = function () {
+                // You can do stuff here. Not useful for this preview though.
             };
 
             completeInit = function (path) {
@@ -252,10 +272,13 @@
                     if (View.isFullscreen()) {
                         View.toggleTitlebar();
                         View.toggleAudio();
+                        View.fullscreenbutton.parentNode.style.visibility = "visible";
+                        View.fullscreenbutton.parentNode.style.paddingRight = "8px";
                     } else {
                         View.toggleAudio();
                         View.toggleTitlebar();
                         View.toggleSuperfluous(false, true);
+                        View.fullscreenbutton.parentNode.style.paddingRight = "0px";
                     }
                 }
                 View.tmWebEditor.addEventListener("fullscreenchange", fullscreenchange, false);
