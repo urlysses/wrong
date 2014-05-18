@@ -13,7 +13,7 @@ define(["history", "view"], function (History, View) {
         try {
             this.doc.contentEditable = "plaintext-only";
         } catch (e) {
-            this.doc.contentEditable = "";
+            this.doc.contentEditable = true;
         }
         document.getElementById("TMHolder").appendChild(this.doc);
         this.value = val;
