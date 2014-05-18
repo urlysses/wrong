@@ -19,8 +19,8 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 /* Dev shortcuts */
                 // Cmd-Alt-J
                 if (alt && !shift && k === 74) {
-                    if (window.win) {
-                        window.win.showDevTools();
+                    if (window.Wrong.win) {
+                        window.Wrong.win.showDevTools();
                     }
                 }
                 /* Editor shortcuts */

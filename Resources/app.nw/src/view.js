@@ -17,8 +17,8 @@ define(["control"], function (Control) {
     }
 
     View.prototype.toggleFullscreen = function () {
-        if (window.win) {
-            window.win.toggleFullscreen();
+        if (window.Wrong.win) {
+            window.Wrong.win.toggleFullscreen();
         } else {
             if (this.tmWebEditor) {
                 if (this.isFullscreen() === false) {
@@ -50,8 +50,8 @@ define(["control"], function (Control) {
     View.prototype.isFullscreen = function () {
         var fullscreen,
             pardoc = window.parent.document;
-        if (window.win) {
-            fullscreen = window.win.isFullscreen;
+        if (window.Wrong.win) {
+            fullscreen = window.Wrong.win.isFullscreen;
         } else {
             fullscreen = pardoc.fullscreenElement || pardoc.msFullscreenElement
                 || pardoc.mozFullScreen || pardoc.webkitIsFullScreen;
@@ -166,7 +166,7 @@ define(["control"], function (Control) {
         }
 
         this.fileDirty = fd;
-        window.fileDirty = this.fileDirty;
+        window.Wrong.fileDirty = this.fileDirty;
         this.updateCloseDirt(this.fileDirty);
         this.updateTitleDirt(this.fileDirty);
         this.updateCounterDirt(this.fileDirty);

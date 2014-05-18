@@ -194,7 +194,7 @@ define(["view"], function (View) {
     Settings.prototype.loadTheme = function (themeName, custom) {
         var themePath;
         if (custom) {
-            themePath = window.gui.App.dataPath + "/Themes/" + themeName + "/" + themeName + ".css";
+            themePath = window.Wrong.gui.App.dataPath + "/Themes/" + themeName + "/" + themeName + ".css";
         } else {
             themePath = "Themes/" + themeName + "/" + themeName + ".css";
         }
@@ -772,7 +772,7 @@ define(["view"], function (View) {
                 link.rel = "stylesheet";
                 link.type = "text/css";
                 if (theme.parentNode.id === "wr-themes-custom") {
-                    link.href = window.gui.App.dataPath + "/Themes/" + css + "/" + css + ".css";
+                    link.href = window.Wrong.gui.App.dataPath + "/Themes/" + css + "/" + css + ".css";
                 } else {
                     link.href = "Themes/" + css + "/" + css + ".css";
                 }
