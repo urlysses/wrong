@@ -11,7 +11,6 @@
         Control,
         Settings,
         tm,
-        fileDirty,
         tabDragging,
         newFile,
         closeWindow,
@@ -20,8 +19,6 @@
         closeTab,
         closeAllTabs,
         completeInit;
-
-    global.fileDirty = fileDirty;
 
     requirejs(["history", "view", "tm", "files", "keys", "control", "settings"],
         function (H, V, T, F, K, C, S) {
