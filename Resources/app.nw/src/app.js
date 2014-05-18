@@ -97,10 +97,11 @@
         return ret;
     };
 
-    global.win = win;
-    global.menu = menu;
-    global.clip = clip;
-    global.gui = gui;
+    global.Wrong = {};
+    global.Wrong.win = win;
+    global.Wrong.menu = menu;
+    global.Wrong.clip = clip;
+    global.Wrong.gui = gui;
     requirejs(["history", "view", "tm", "files", "keys", "control", "settings"],
         function (H, V, T, F, K, C, S) {
             History = new H();
@@ -350,8 +351,9 @@
                     }
                 };
             };
-            global.Wrong = {newFile: newFile, saveFile: saveFile,
-                openFileDialog: openFileDialog};
+            global.Wrong.newFile = newFile;
+            global.Wrong.saveFile = saveFile;
+            global.Wrong.openFileDialog = openFileDialog;
 
             readFile = function (path, data, callback) {
                 // set global filePath to this new path
@@ -865,7 +867,7 @@
                         closeAllTabs();
                     }
 
-                    if (global.fileDirty) {
+                    if (global.Wrong.fileDirty) {
                         var P = new PROMPT.init("Notice", "Close file without saving?");
                         P.addBtn({
                             text: "Save",

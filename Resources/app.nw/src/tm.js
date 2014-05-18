@@ -326,7 +326,7 @@ define(["history", "view"], function (History, View) {
                 content = e.clipboardData.getData("text/plain");
             } else {
                 // Right-click > paste
-                content = window.clip.get();
+                content = window.Wrong.clip.get();
             }
             var oldContent = window.tm.value;
             window.tm.insertText(content);
