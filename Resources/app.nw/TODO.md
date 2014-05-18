@@ -12,5 +12,4 @@
 + save background image to app path (library/application support/etc.)
 
 # important before release:
-+ Theme selector broken using app's top menu.
 + Should redefine edit & window menu tabs. they use fns that could break app.

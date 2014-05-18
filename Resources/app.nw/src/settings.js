@@ -222,11 +222,10 @@ define(["view"], function (View) {
         }
     };
 
-    Settings.prototype.submenuLoadTheme = function (settings, themeName, custom) {
+    Settings.prototype.submenuLoadTheme = function (settings, thememenu, themeName, custom) {
         settings.unloadDefaultTheme(settings);
         settings.setDefaultTheme(themeName, custom);
         settings.loadDefaultTheme(settings);
-        var thememenu = new window.gui.Menu();
         thememenu.items.forEach(function (item, index) {
             if (item.label !== themeName) {
                 item.checked = false;

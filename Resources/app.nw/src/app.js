@@ -628,7 +628,7 @@
                     findmenu.append(new gui.MenuItem({
                         label: "Find  (\u2318F)",
                         click: function () {
-                            Control.find(tm);
+                            Control.find(Keys, Files, tm);
                         }
                     }));
 
@@ -649,14 +649,14 @@
                     findmenu.append(new gui.MenuItem({
                         label: "Find & Replace  (\u2325\u2318F)",
                         click: function () {
-                            Control.replace(tm);
+                            Control.replace(Keys, Files, tm);
                         }
                     }));
 
                     findmenu.append(new gui.MenuItem({
                         label: "Replace All  (\u21E7\u2325\u2318F)",
                         click: function () {
-                            Control.replaceAll(tm);
+                            Control.replaceAll(Keys, Files, tm);
                         }
                     }));
 
@@ -683,7 +683,8 @@
                             label: skin.name,
                             type: "checkbox",
                             click: function () {
-                                Settings.submenuLoadTheme(Settings, skin.name, skin.custom);
+                                Settings.submenuLoadTheme(Settings, thememenu,
+                                    skin.name, skin.custom);
                             }
                         };
                         if (defaultTheme.name === skin.name) {
