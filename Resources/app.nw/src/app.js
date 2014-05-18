@@ -308,7 +308,7 @@
                 View.displayWordCount();
                 View.toggleSuperfluous(false);
             };
-            Keys.bindEditorShortcuts(View.tmWebEditor, Files);
+            Keys.bindEditorShortcuts(document, Files);
 
             // FOR DOC LOAD
             var audiosrc;
