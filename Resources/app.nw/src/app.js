@@ -138,7 +138,18 @@
                         var data = View.makeUTF8(tm.value);
                         fs.writeFile(path, data, function (err) {
                             if (err) {
-                                alert("Couldn't save file: " + err);
+                                var P = new PROMPT.init("Error", "Couldn't save file: " + err);
+                                P.addBtn({
+                                    text: "Ok",
+                                    onclick: function () {
+                                        tm.focus();
+                                        return false;
+                                    },
+                                    type: "btn-blue"
+                                });
+                                P.show();
+
+                                return false;
                             }
 
                             View.setFileDirty(false);
@@ -892,9 +903,6 @@
                     P.addBtn({
                         text: "Update",
                         onclick: function () {
-                            // TODO: go to download page
-                            // or just let the app download on its own?
-                            // Also, clear hasIgnoredUpdate ?
                             delete localStorage.hasIgnoredUpdate;
                             gui.Shell.openExternal("http://handstrings.github.io/wrong#dl");
                         },
