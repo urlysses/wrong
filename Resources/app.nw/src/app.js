@@ -623,7 +623,7 @@
                 findmenu.append(new gui.MenuItem({
                     label: "Find  (\u2318F)",
                     click: function () {
-                        Control.find(Keys, Files, tm);
+                        Control.find(Keys, Files, View, tm);
                     }
                 }));
 
@@ -644,14 +644,14 @@
                 findmenu.append(new gui.MenuItem({
                     label: "Find & Replace  (\u2325\u2318F)",
                     click: function () {
-                        Control.replace(Keys, Files, tm);
+                        Control.replace(Keys, Files, View, tm);
                     }
                 }));
 
                 findmenu.append(new gui.MenuItem({
                     label: "Replace All  (\u21E7\u2325\u2318F)",
                     click: function () {
-                        Control.replaceAll(Keys, Files, tm);
+                        Control.replaceAll(Keys, Files, View, tm);
                     }
                 }));
 
