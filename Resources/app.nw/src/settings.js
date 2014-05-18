@@ -83,13 +83,11 @@ define(["view"], function (View) {
     };
 
     Settings.prototype.updateParcel = function (settings, name, value) {
-        window.parcel[name] = value;
         settings.parcel[name] = value;
-        localStorage.parcel = JSON.stringify(this.parcel);
+        localStorage.parcel = JSON.stringify(settings.parcel);
     };
 
     Settings.prototype.clearParcel = function (settings) {
-        window.parcel = {};
         settings.parcel = {};
         delete localStorage.parcel;
     };
@@ -102,7 +100,6 @@ define(["view"], function (View) {
                 delete localStorage.parcel[key];
             }
         });
-        window.parcel = settings.parcel;
     };
 
     Settings.prototype.compileRuntimeCss = function (color, rgb, yiq) {
@@ -463,7 +460,7 @@ define(["view"], function (View) {
     Settings.prototype.loadDefaults = function (ignoreCustom, settings) {
         var dTheme = settings.getDefaultTheme(),
             openDTheme = settings.themes.querySelector("[data-value='" + dTheme.name + "']"),
-            parcel = window.parcel;
+            parcel = settings.parcel;
         // Theme selector.
         if (openDTheme) {
             settings.swapChecked(openDTheme);
