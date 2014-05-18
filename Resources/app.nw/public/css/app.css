@@ -10,8 +10,6 @@ body {
     margin: 0;
     overflow: hidden;
     background: black;
-    display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
     flex-direction: column;
 }
@@ -670,8 +668,6 @@ li#wr-audio-stop span:last-child {
 
 /*** CONTROL ***/
 body#tm-control-body {
-    display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
     flex-direction: row;
 }
