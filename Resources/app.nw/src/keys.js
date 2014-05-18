@@ -26,10 +26,12 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 /* Editor shortcuts */
                 // Cmd-,
                 if (!alt && !shift && k === 188) {
+                    e.preventDefault();
                     Settings.openSettings();
                 }
                 // Cmd-O
                 if (!alt && !shift && k === 79) {
+                    e.preventDefault();
                     window.Wrong.openFileDialog();
                 }
                 // Cmd-S
@@ -46,38 +48,47 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 }
                 // Cmd-N OR Cmd-T
                 if ((!alt && !shift && k === 78) || (!alt && !shift && k === 84)) {
+                    e.preventDefault();
                     window.Wrong.newFile();
                 }
                 // Shift-Cmd-F OR Cmd-[Enter]
                 if ((!alt && shift && k === 70) || (!alt && !shift && k === 13)) {
+                    e.preventDefault();
                     View.toggleFullscreen();
                 }
                 // Cmd-F
                 if (!alt && !shift && k === 70) {
+                    e.preventDefault();
                     Control.find(Key, Files, View, tm);
                 }
                 // Cmd-G
                 if (!alt && !shift && k === 71) {
+                    e.preventDefault();
                     Control.findNext(tm);
                 }
                 // Shift-Cmd-G
                 if (!alt && shift && k === 71) {
+                    e.preventDefault();
                     Control.findPrev(tm);
                 }
                 // Cmd-Alt-F
                 if (alt && !shift && k === 70) {
+                    e.preventDefault();
                     Control.replace(Key, Files, View, tm);
                 }
                 // Shift-Cmd-Alt-F
                 if (alt && shift && k === 70) {
+                    e.preventDefault();
                     Control.replaceAll(Key, Files, View, tm);
                 }
                 // Cmd-D
                 if (!alt && !shift && k === 68) {
+                    e.preventDefault();
                     Control.define(Key, Files, View, tm);
                 }
                 // Cmd-/
                 if (!alt && !shift && k === 191) {
+                    e.preventDefault();
                     Control.toggle(Key, Files, View, tm);
                 }
                 // Cmd-Z
@@ -107,10 +118,12 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 }
                 // Cmd-Alt-[Left Arrow]
                 if (alt && !shift && k === 37) {
+                    e.preventDefault();
                     View.goToPrevTab(Files);
                 }
                 // Cmd-Alt-[Right Arrow]
                 if (alt && !shift && k === 39) {
+                    e.preventDefault();
                     View.goToNextTab(Files);
                 }
             }

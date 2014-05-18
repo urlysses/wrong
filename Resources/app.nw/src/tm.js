@@ -230,6 +230,7 @@ define(["history", "view"], function (History, View) {
             if (found) {
                 // replace selected text through insertText
                 var oldContent = this.value;
+                this.lastInput = null; // set lastInput to null so it forces an undo.
                 this.insertText(replacement);
                 // Select the new word.
                 this.selectionEnd = this.selectionStart;
