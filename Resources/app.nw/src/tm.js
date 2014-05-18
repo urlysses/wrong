@@ -10,7 +10,11 @@ define(["history", "view"], function (History, View) {
         this.doc = document.createElement("pre");
         this.doc.id = "TM";
         this.doc.className += "tm-w-default";
-        this.doc.contentEditable = "plaintext-only";
+        try {
+            this.doc.contentEditable = "plaintext-only";
+        } catch (e) {
+            this.doc.contentEditable = "";
+        }
         document.getElementById("TMHolder").appendChild(this.doc);
         this.value = val;
         this.store = val;

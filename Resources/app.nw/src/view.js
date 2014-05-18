@@ -21,21 +21,40 @@ define(["control"], function (Control) {
             window.win.toggleFullscreen();
         } else {
             if (this.tmWebEditor) {
-                if (document.webkitIsFullscreen === false) {
-                    this.tmWebEditor.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                if (this.isFullscreen() === false) {
+                    if (this.tmWebEditor.requestFullscreen) {
+                        this.tmWebEditor.requestFullscreen();
+                    } else if (this.tmWebEditor.msRequestFullscreen) {
+                        this.tmWebEditor.msRequestFullscreen();
+                    } else if (this.tmWebEditor.mozRequestFullScreen) {
+                        this.tmWebEditor.mozRequestFullScreen();
+                    } else if (this.tmWebEditor.webkitRequestFullScreen) {
+                        //this.tmWebEditor.webkitRequestFullScreen();
+                        this.tmWebEditor.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
                 } else {
-                    document.webkitExitFullscreen();
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen();
+                    }
                 }
             }
         }
     };
 
     View.prototype.isFullscreen = function () {
-        var fullscreen;
+        var fullscreen,
+            pardoc = window.parent.document;
         if (window.win) {
             fullscreen = window.win.isFullscreen;
         } else {
-            fullscreen = document.webkitIsFullscreen;
+            fullscreen = pardoc.fullscreenElement || pardoc.msFullscreenElement
+                || pardoc.mozFullScreen || pardoc.webkitIsFullScreen;
         }
         return fullscreen;
     };
