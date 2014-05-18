@@ -10,12 +10,16 @@ body {
     margin: 0;
     overflow: hidden;
     background: black;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     flex-direction: column;
 }
 
 #TMHolder {
     height: 100%;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     flex-direction: column;
     background: none;
@@ -444,6 +448,8 @@ li#wr-audio-stop span:last-child {
     -webkit-app-region: drag;
     padding: 4px;
     padding-bottom: 0px;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     background: white; /* rgba(0, 0, 0, 0.04); */ /* #f4f4f4; */
     border-top-left-radius: 4px;
@@ -541,6 +547,8 @@ li#wr-audio-stop span:last-child {
 
 #wr-tabs-holder {
     width: 100%;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     flex-direction: row;
 }
@@ -552,6 +560,8 @@ li#wr-audio-stop span:last-child {
     border-radius: 2px;
     position: relative;
     top: -1px;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     flex-direction: row;
     flex: 1 1 auto;
@@ -660,6 +670,8 @@ li#wr-audio-stop span:last-child {
 
 /*** CONTROL ***/
 body#tm-control-body {
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     flex-direction: row;
 }
