@@ -251,16 +251,20 @@
                 View.fullscreenbutton.onclick = function () {
                     View.toggleFullscreen();
                 };
-                document.addEventListener("webkitfullscreenchange", function () {
+                function fullscreenchange() {
                     if (View.isFullscreen()) {
-                        window.setTimeout(View.toggleTitlebar, 1000);
+                        View.toggleTitlebar();
                         View.toggleAudio();
                     } else {
                         View.toggleAudio();
                         View.toggleTitlebar();
                         View.toggleSuperfluous(false, true);
                     }
-                }, false);
+                }
+                View.tmWebEditor.addEventListener("fullscreenchange", fullscreenchange, false);
+                View.tmWebEditor.addEventListener("msfullscreenchange", fullscreenchange, false);
+                View.tmWebEditor.addEventListener("mozfullscreenchange", fullscreenchange, false);
+                View.tmWebEditor.addEventListener("webkitfullscreenchange", fullscreenchange, false);
 
                 View.windowbuttons.addEventListener("mouseover", function () {
                     var i, windowbuttons = View.windowbuttons;
