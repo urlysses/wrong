@@ -19,7 +19,9 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 /* Dev shortcuts */
                 // Cmd-Alt-J
                 if (alt && !shift && k === 74) {
-                    window.win.showDevTools();
+                    if (window.win) {
+                        window.win.showDevTools();
+                    }
                 }
                 /* Editor shortcuts */
                 // Cmd-,
@@ -114,8 +116,8 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
             }
             // Esc
             if (!cmd && !alt && !shift && k === 27) {
-                if (window.win.isFullscreen === true) {
-                    window.toggleFullscreen();
+                if (View.isFullscreen() === true) {
+                    View.toggleFullscreen();
                 }
             }
         });

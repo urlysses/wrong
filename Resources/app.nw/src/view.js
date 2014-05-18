@@ -34,6 +34,7 @@ define(["control"], function (Control) {
         } else {
             fullscreen = document.webkitIsFullscreen;
         }
+        return fullscreen;
     };
 
     View.prototype.makeUTF8 = function (data) {
