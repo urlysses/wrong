@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global PROMPT, $, Audio, Event, tinycolor, requirejs*/
+/*global PROMPT, $, Audio, Event, requirejs*/
 (function (global) {
     "use strict";
 
@@ -234,17 +234,6 @@
                 tm.focus();
 
                 // Window & Document Events.
-                window.addEventListener("enter-fullscreen", function () {
-                    window.setTimeout(View.toggleTitlebar, 1000);
-                    View.toggleAudio();
-                });
-
-                window.addEventListener("leave-fullscreen", function () {
-                    View.toggleAudio();
-                    View.toggleTitlebar();
-                    View.toggleSuperfluous(false, true);
-                });
-
                 window.onfocus = function () {
                     document.body.id = "";
                     // tm.focus();
@@ -262,6 +251,16 @@
                 View.fullscreenbutton.onclick = function () {
                     View.toggleFullscreen();
                 };
+                document.addEventListener("webkitfullscreenchange", function () {
+                    if (View.isFullscreen()) {
+                        window.setTimeout(View.toggleTitlebar, 1000);
+                        View.toggleAudio();
+                    } else {
+                        View.toggleAudio();
+                        View.toggleTitlebar();
+                        View.toggleSuperfluous(false, true);
+                    }
+                }, false);
 
                 View.windowbuttons.addEventListener("mouseover", function () {
                     var i, windowbuttons = View.windowbuttons;
