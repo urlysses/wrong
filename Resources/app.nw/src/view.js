@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global $, Event, Audio, define*/
+/*global $, Event, Audio, Element, define*/
 define(["control"], function (Control) {
     Control = new Control();
     function View() {
@@ -10,10 +10,30 @@ define(["control"], function (Control) {
         this.windowbuttons = document.getElementById("wr-window-buttons");
         this.fullscreenbutton = document.getElementById("wr-fullscreen-button");
         this.addtabsbutton = document.getElementById("wr-add-tab-button");
+        this.tmWebEditor = document.getElementById("tmWebEditor");
     }
 
     View.prototype.toggleFullscreen = function () {
-        window.win.toggleFullscreen();
+        if (window.win) {
+            window.win.toggleFullscreen();
+        } else {
+            if (this.tmWebEditor) {
+                if (document.webkitIsFullscreen === false) {
+                    this.tmWebEditor.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                } else {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+    };
+
+    View.prototype.isFullscreen = function () {
+        var fullscreen;
+        if (window.win) {
+            fullscreen = window.win.isFullscreen;
+        } else {
+            fullscreen = document.webkitIsFullscreen;
+        }
     };
 
     View.prototype.makeUTF8 = function (data) {
@@ -183,14 +203,14 @@ define(["control"], function (Control) {
         // to unhide all superfluous.
         var duration, $titlebar = $("#titlebar");
         duration = 100;
-        if (window.win.isFullscreen || override === true) {
+        if (this.isFullscreen() || override === true) {
             if (hide) {
                 window.tm.doc.classList.add("hideScroll");
                 this.$counter.fadeOut(duration);
                 $titlebar.fadeOut(duration);
             } else {
                 window.tm.doc.classList.remove("hideScroll");
-                if (window.win.isFullscreen) {
+                if (this.isFullscreen()) {
                     this.$counter.fadeIn(duration);
                     $titlebar.fadeIn(duration);
                 }
@@ -242,7 +262,7 @@ define(["control"], function (Control) {
         var parcel = window.Settings.parcel,
             sounds = window.Settings.sounds;
         if (parcel.playclicks !== false) {
-            if (window.win.isFullscreen) {
+            if (this.isFullscreen()) {
                 var id, name, len, format, path, rand, sound;
                 if (parcel.clicks) {
                     id = parcel.clicks;
@@ -265,7 +285,7 @@ define(["control"], function (Control) {
         var parcel = window.Settings.parcel;
         if (playAudio === undefined) {
             if (parcel.playaudio !== false) {
-                if (window.win.isFullscreen === true) {
+                if (this.isFullscreen() === true) {
                     if (this.audio.paused === true) {
                         this.audio.play();
                     } else {
