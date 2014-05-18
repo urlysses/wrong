@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="is-frameless">
     <head>
-        <title>Wrong App</title>
+        <title>Wrong</title>
         <link rel="stylesheet" type="text/css" href="public/css/prompt.css">
         <link rel="stylesheet" type="text/css" href="public/spectrum/spectrum.css">
         <link rel="stylesheet" type="text/css" href="public/css/app.css">
@@ -11,6 +11,11 @@
         <style type="text/css" id="wr-parcel-style"></style>
     </head>
         <body class="is-frameless">
+        <div id="user-css"></div>
+        <form action>
+            <input type="file" id="open">
+            <input type="file" id="save" nwsaveas="untitled.wro">
+        </form>
         <div id="prompt">
             <div id="prompt-box">
                 <div id="prompt-title"></div>
@@ -145,10 +150,10 @@
             <span id="wr-dirt"></span>
         </div>
         <audio id="wr-audio" loop></audio>
-        <script type="text/javascript" src="public/js/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="public/js/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="public/spectrum/spectrum.js"></script>
         <script type="text/javascript" src="public/js/prompt.js"></script>
-        <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" data-main="src/app.js" src="public/js/require.js"></script>
         <div id="user-js"></div>
     </body>
 </html>
