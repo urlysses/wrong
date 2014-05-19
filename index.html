@@ -2,19 +2,86 @@
 <html>
     <head>
         <title>Wrong App</title>
+        <link rel="icon" type="image/png" href="Resources/app.nw/favicon.ico">
+        <link href='http://fonts.googleapis.com/css?family=Merriweather:400,400italic|Merriweather+Sans:300italic,700italic,700' rel='stylesheet' type='text/css'>
         <style type="text/css">
-            #tmBoxStyle {
+            body {
+                background: #DAD9DB url(Resources/app.nw/Themes/Blue%20Yonder/img/2D4.jpg);
+                margin: 0;
+                padding: 0;
+                /* color: #DAD9DB; */
+                color: #212121;
+                font-size: 16px;
+                font-family: "Merriweather", serif;
+                font-weight: 400;
+            }
+            header {
+                text-align: center;
+                margin-bottom: 4%;
+                margin-top: -1.7%;
+                font-family: "Merriweather Sans", sans-serif;
+            }
+            header img {
+                max-width: 256px;
+                width: 50%;
+                display: block;
+                margin: 0 auto;
+            }
+            h1 {
+                font-weight: 300;
+                font-style: italic;
+                font-size: 3.8em;
+            }
+            h2 {
+                font-weight: 300;
+                font-style: italic;
+                font-size: 1.8em;
+            }
+            a {
+                text-decoration: none;
+                color: #007aff;
+                font-weight: 700;
+                font-family: "Merriweather Sans", sans-serif;
+            }
+            #dl img {
+                width: 64px;
+            }
+            #others {
+                text-align: center;
+            }
+            #others a {
+                display: inline-block;
+                margin-left: 1%;
+                margin-right: 1%;
+            }
+            #others a img {
+                width: 100px;
+                display: block;
+                margin-bottom: 5px;
+            }
+            footer {
+                margin-bottom: 4%;
+            }
+            .tryme {
+                /*background: #212121;*/
+                padding: 1.5%;
+                margin-top: 3%;
+            }
+            .tmBoxStyle {
                 border: 1px solid #B4B4B4;
                 border-radius: 4px;
                 display: block;
                 width: 40%;
                 max-width: 799px;
                 margin: 0 auto;
+                margin-top: -4%;
                 height: 320px;
+                max-height: 600px;
                 resize: both;
                 box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.17);
                 min-width: 550px;
                 overflow: overlay;
+                background: white;
             }
             #tmWebEditor {
                 width: 100%;
@@ -31,8 +98,36 @@
         </style>
     </head>
     <body>
-        <div id="tmBoxStyle">
-            <iframe id="tmWebEditor" src="Resources/app.nw/index.html" allowfullscreen="true"></iframe>
-        </div>
+        <header>
+            <h1><img src="app.png" alt="Wrong App"></h1>
+        </header>
+        <section class="tryme">
+            <div class="tmBoxStyle">
+                <iframe id="tmWebEditor" src="Resources/app.nw/index.html" allowfullscreen="true"></iframe>
+            </div>
+        </section>
+        <section id="dl">
+            <img src="app.png" alt="">
+            <a href="">Download the latest version of Wrong.</a><br>
+            <em>(You agree to Wrong's <a href="">Terms of Service</a> by clicking the above download link.)</em>
+        </section>
+        <section id="others">
+            <h2>Don't like it? Try these:</h2>
+            <a href="//www.hogbaysoftware.com/products/writeroom" rel="noreferrer nofollow">
+                <img src="writeroom.png">
+                WriteRoom
+            </a>
+            <a href="//www.iawriter.com" rel="noreferrer nofollow">
+                <img src="iawriter.png">
+                iA Writer
+            </a>
+            <a href="//www.ommwriter.com" rel="noreferrer nofollow">
+                <img src="ommwriter.png">
+                Ommwriter
+            </a>
+        </section>
+        <footer>
+            footer
+        </footer>
     </body>
 </html>

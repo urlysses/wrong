@@ -13,11 +13,13 @@
         tm,
         tabDragging,
         newFile,
+        readFile,
         closeWindow,
         minimizeWindow,
         maximizeWindow,
         closeTab,
         closeAllTabs,
+        constructDefaultPreview,
         completeInit;
 
     requirejs(["history", "view", "tm", "files", "keys", "control", "settings"],
@@ -38,7 +40,7 @@
             global.History = History;
             global.Settings = Settings;
 
-            newFile = function (callback) {
+            newFile = function (data, callback) {
                 // I attempted to put this into files.js but I'm afraid
                 // I'm at a loss for how to get it work
                 // (broke while clicking between tabs).
@@ -47,6 +49,11 @@
                     newTab = document.createElement("li"),
                     newTabCloseButton = document.createElement("button"),
                     file;
+
+                if (typeof data === "function") {
+                    callback = data;
+                    data = null;
+                }
 
                 newTab.id = "wr-tab-selected";
                 newTab.innerHTML = "<span>Untitled</span><span></span>";
@@ -61,20 +68,25 @@
                     closeTab(e.target.parentNode);
                 };
 
-                file = "untitled-" + Math.floor(Math.random() * Math.pow(10, 17));
-                Files.updateTabs(file);
-                if (currentTab) {
-                    currentTab.removeAttribute("id");
-                    Files.tabs[currentTab.dataset.file] = tm.clone();
-                }
-                tabsbar.appendChild(newTab);
-                tm.upgrade(Files.tabs[file]);
-                tm = Files.tabs[file];
-                tm.update();
-                tm.focus();
-                View.setFileDirty(false);
-                if (callback) {
-                    callback();
+                if (data) {
+                    tabsbar.appendChild(newTab);
+                    readFile(data.title, data.data, callback);
+                } else {
+                    file = "untitled-" + Math.floor(Math.random() * Math.pow(10, 17));
+                    Files.updateTabs(file);
+                    if (currentTab) {
+                        currentTab.removeAttribute("id");
+                        Files.tabs[currentTab.dataset.file] = tm.clone();
+                    }
+                    tabsbar.appendChild(newTab);
+                    tm.upgrade(Files.tabs[file]);
+                    tm = Files.tabs[file];
+                    tm.update();
+                    tm.focus();
+                    View.setFileDirty(false);
+                    if (callback) {
+                        callback();
+                    }
                 }
 
                 View.toggleSuperfluous(false);
@@ -136,6 +148,26 @@
                     this.classList.remove("is-being-dragged");
                     this.classList.remove("is-being-dragged-over");
                 }, false);
+            };
+
+            readFile = function (path, data, callback) {
+                // update document title
+                View.setPageTitle(path);
+                // data
+                var dataUTF8 = View.makeUTF8(data.toString("utf8"));
+                // tabs
+                Files.updateTabs(path, dataUTF8);
+                // add data to textarea
+                tm.upgrade(Files.tabs[path]);
+                tm = Files.tabs[path];
+                tm.store = tm.value;
+                tm.update();
+                tm.focus();
+                // clear the dirt
+                View.setFileDirty(false);
+                if (callback) {
+                    callback();
+                }
             };
 
             global.Wrong = {newFile: newFile};
@@ -216,7 +248,7 @@
 
                 if (tabslen === 1) {
                     var closethis = tabsbar.children[0];
-                    newFile();
+                    constructDefaultPreview();
                     closeTab(closethis);
                 } else {
                     var i;
@@ -235,10 +267,14 @@
                 // You can do stuff here. Not useful for this preview though.
             };
 
+            constructDefaultPreview = function () {
+                newFile({title: "welcome.wro", data: "Hi"});
+            };
+
             completeInit = function (path) {
                 var defaultTheme, themeSelector;
                 if (path === undefined) {
-                    newFile();
+                    constructDefaultPreview();
                 }
                 View.toggleAudio();
                 View.setPageTitle(path);
