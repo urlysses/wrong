@@ -61,13 +61,7 @@ define(["control"], function (Control) {
 
     View.prototype.makeUTF8 = function (data) {
         // Sanitizes the txt contents.
-        var ret;
-        if (Buffer) {
-            ret = JSON.parse(new Buffer(JSON.stringify(data)).toString("utf8"));
-        } else {
-            ret = data;
-        }
-        return ret;
+        return JSON.parse(new Buffer(JSON.stringify(data)).toString("utf8"));
     };
 
     View.prototype.toggleTitlebar = function () {
