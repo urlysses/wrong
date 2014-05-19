@@ -13,7 +13,6 @@
         tm,
         tabDragging,
         newFile,
-        readFile,
         closeWindow,
         minimizeWindow,
         maximizeWindow,
@@ -64,29 +63,24 @@
                 newTab.appendChild(newTabCloseButton);
                 newTabCloseButton.onclick = function (e) {
                     e.stopPropagation();
-                    e.preventDefault();
                     closeTab(e.target.parentNode);
                 };
 
-                if (data) {
-                    tabsbar.appendChild(newTab);
-                    readFile(data.title, data.data, callback);
-                } else {
-                    file = "untitled-" + Math.floor(Math.random() * Math.pow(10, 17));
-                    Files.updateTabs(file);
-                    if (currentTab) {
-                        currentTab.removeAttribute("id");
-                        Files.tabs[currentTab.dataset.file] = tm.clone();
-                    }
-                    tabsbar.appendChild(newTab);
-                    tm.upgrade(Files.tabs[file]);
-                    tm = Files.tabs[file];
-                    tm.update();
-                    tm.focus();
-                    View.setFileDirty(false);
-                    if (callback) {
-                        callback();
-                    }
+                file = "untitled-" + Math.floor(Math.random() * Math.pow(10, 17));
+                Files.updateTabs(file, data);
+                if (currentTab) {
+                    currentTab.removeAttribute("id");
+                    Files.tabs[currentTab.dataset.file] = tm.clone();
+                }
+                tabsbar.appendChild(newTab);
+                tm.upgrade(Files.tabs[file]);
+                tm = Files.tabs[file];
+                tm.store = tm.value;
+                tm.update();
+                tm.focus();
+                View.setFileDirty(false);
+                if (callback) {
+                    callback();
                 }
 
                 View.toggleSuperfluous(false);
@@ -150,30 +144,16 @@
                 }, false);
             };
 
-            readFile = function (path, data, callback) {
-                // update document title
-                View.setPageTitle(path);
-                // data
-                var dataUTF8 = View.makeUTF8(data.toString("utf8"));
-                // tabs
-                Files.updateTabs(path, dataUTF8);
-                // add data to textarea
-                tm.upgrade(Files.tabs[path]);
-                tm = Files.tabs[path];
-                tm.store = tm.value;
-                tm.update();
-                tm.focus();
-                // clear the dirt
-                View.setFileDirty(false);
-                if (callback) {
-                    callback();
-                }
-            };
-
             global.Wrong = {newFile: newFile};
 
             closeTab = function (closethis) {
-                var currentTab = document.getElementById("wr-tab-selected");
+                var currentTab = document.getElementById("wr-tab-selected"),
+                    oldCurrent;
+
+                if (currentTab) {
+                    oldCurrent = currentTab;
+                }
+
                 if (closethis) {
                     currentTab = closethis;
                 }
@@ -193,6 +173,9 @@
                     View.getFileDirty(nextTab);
                     View.toggleSuperfluous(false);
                     currentTab.removeAttribute("id");
+                    if (oldCurrent) {
+                        oldCurrent.removeAttribute("id");
+                    }
                     tabsbar.removeChild(currentTab);
                     nextTab.id = "wr-tab-selected";
                 } else {
@@ -268,7 +251,8 @@
             };
 
             constructDefaultPreview = function () {
-                newFile({title: "welcome.wro", data: "Hi"});
+                newFile("Hi");
+                View.setPageTitle("Welcome.wro");
             };
 
             completeInit = function (path) {
@@ -277,7 +261,6 @@
                     constructDefaultPreview();
                 }
                 View.toggleAudio();
-                View.setPageTitle(path);
                 View.displayWordCount();
                 defaultTheme = Settings.getDefaultTheme();
                 themeSelector = document.getElementById("wr-theme-" + defaultTheme.name);
