@@ -319,6 +319,9 @@ define(["history", "view"], function (History, View) {
             // store the cursor position/selection.
             window.tm.lastCursor = window.tm.getSelection();
         });
+        tm.doc.addEventListener("dragenter", function (e) {
+            View.toggleSuperfluous(false);
+        });
         tm.doc.addEventListener("drop", function (e) {
             var data = e.dataTransfer.getData("text");
             if (data.length > 0) {
