@@ -309,7 +309,6 @@ define(["control"], function (Control) {
         // Force it to refresh.
         window.Settings.updateLocalParcel();
         var parcel = window.Settings.parcel;
-        console.log(playAudio, parcel.playaudio, this.isFullscreen());
         if (playAudio === undefined) {
             if (parcel.playaudio !== false) {
                 if (this.isFullscreen() === true) {
