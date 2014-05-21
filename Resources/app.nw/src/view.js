@@ -305,7 +305,11 @@ define(["control"], function (Control) {
     };
 
     View.prototype.toggleAudio = function (playAudio) {
+        // Sometimes the local parcel doesn't update properly.
+        // Force it to refresh.
+        window.Settings.updateLocalParcel();
         var parcel = window.Settings.parcel;
+        console.log(playAudio, parcel.playaudio, this.isFullscreen());
         if (playAudio === undefined) {
             if (parcel.playaudio !== false) {
                 if (this.isFullscreen() === true) {
@@ -315,6 +319,10 @@ define(["control"], function (Control) {
                         this.audio.pause();
                     }
                 } else {
+                    this.audio.pause();
+                }
+            } else {
+                if (this.isFullscreen() === true) {
                     this.audio.pause();
                 }
             }

@@ -82,14 +82,24 @@ define(["view"], function (View) {
         return ret;
     };
 
+    Settings.prototype.updateLocalParcel = function () {
+        if (localStorage.parcel) {
+            this.parcel = JSON.parse(localStorage.parcel);
+        } else {
+            this.parcel = {};
+        }
+    };
+
     Settings.prototype.updateParcel = function (settings, name, value) {
         settings.parcel[name] = value;
         localStorage.parcel = JSON.stringify(settings.parcel);
+        this.updateLocalParcel();
     };
 
     Settings.prototype.clearParcel = function (settings) {
         settings.parcel = {};
         delete localStorage.parcel;
+        this.updateLocalParcel();
     };
 
     Settings.prototype.clearThemeInParcel = function (settings) {
@@ -98,6 +108,7 @@ define(["view"], function (View) {
             if (key.indexOf(",") !== -1) {
                 delete settings.parcel[key];
                 delete localStorage.parcel[key];
+                this.updateLocalParcel();
             }
         });
     };
