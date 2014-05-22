@@ -88,12 +88,17 @@ a:hover {
 #dl img {
     width: 64px;
 }
-#dl img, span {
+#dl img, div {
     display: inline-block;
 }
-#dl span {
+#dl div {
     vertical-align: top;
     margin-top: 10px;
+}
+#dl h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.07em;
 }
 footer {
     padding-top: 4%;
