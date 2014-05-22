@@ -989,6 +989,7 @@ define(["view"], function (View) {
                 } else {
                     settings.updateParcel(settings, "playclicks", false);
                 }
+                window.Settings.updateLocalParcel();
             });
 
             reset = document.getElementById("wr-reset");
