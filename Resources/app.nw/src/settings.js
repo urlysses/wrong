@@ -108,7 +108,7 @@ define(["view"], function (View) {
             if (key.indexOf(",") !== -1) {
                 delete settings.parcel[key];
                 delete localStorage.parcel[key];
-                this.updateLocalParcel();
+                settings.updateLocalParcel();
             }
         });
     };
