@@ -61,6 +61,7 @@ a:hover {
     resize: both;
     overflow: overlay;
     background: white;
+    border-radius: 6px;
 }
 #tmWebEditor {
     width: 100%;
