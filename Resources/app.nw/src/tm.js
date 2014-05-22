@@ -344,7 +344,9 @@ define(["history", "view"], function (History, View) {
         };
         tm.doc.addEventListener("contextmenu", function (e) {
             // Insert editmenu on right-click.
-            window.editmenu.popup(e.x, e.y);
+            if (window.Wrong.editmenu) {
+                window.Wrong.editmenu.popup(e.x, e.y);
+            }
         });
         return tm;
     };

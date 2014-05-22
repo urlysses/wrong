@@ -637,7 +637,7 @@
                         global.tm.select();
                     }
                 }));
-                global.editmenu = editmenu;
+                global.Wrong.editmenu = editmenu;
 
                 // (Menus) Find >
                 findmenu = new gui.Menu();
