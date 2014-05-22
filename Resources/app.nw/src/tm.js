@@ -319,6 +319,16 @@ define(["history", "view"], function (History, View) {
             // store the cursor position/selection.
             window.tm.lastCursor = window.tm.getSelection();
         });
+        tm.doc.addEventListener("dragenter", function (e) {
+            View.toggleSuperfluous(false);
+        });
+        tm.doc.addEventListener("drop", function (e) {
+            var data = e.dataTransfer.getData("text");
+            if (data.length > 0) {
+                e.stopPropagation();
+                tm.insertText(data);
+            }
+        });
         tm.doc.onpaste = function (e) {
             e.preventDefault();
             var content;
@@ -334,7 +344,9 @@ define(["history", "view"], function (History, View) {
         };
         tm.doc.addEventListener("contextmenu", function (e) {
             // Insert editmenu on right-click.
-            window.editmenu.popup(e.x, e.y);
+            if (window.Wrong.editmenu) {
+                window.Wrong.editmenu.popup(e.x, e.y);
+            }
         });
         return tm;
     };

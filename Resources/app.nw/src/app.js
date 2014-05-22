@@ -102,6 +102,7 @@
                     }
                 };
                 // Tab dragging.
+                var dragTimer;
                 newTab.addEventListener("dragstart", function (e) {
                     tabDragging = this;
                     this.classList.add("is-being-dragged");
@@ -111,30 +112,48 @@
                     this.classList.add("is-being-dragged-over");
                     return false;
                 }, false);
-                newTab.addEventListener("dragenter", function () {
+                newTab.addEventListener("dragenter", function (e) {
                     this.classList.add("is-being-dragged-over");
+                    var data = e.dataTransfer.getData("text");
+                    var btn = this;
+                    if (data.length > 0) {
+                        // User is attempting to drag text between
+                        // tabs. Select the tab.
+                        dragTimer = window.setTimeout(function () {
+                            btn.dispatchEvent(new Event("click"));
+                        }, 500);
+                    }
                 }, false);
                 newTab.addEventListener("dragleave", function () {
                     this.classList.remove("is-being-dragged-over");
+                    // Cancel tab timer.
+                    window.clearTimeout(dragTimer);
                 }, false);
                 newTab.addEventListener("drop", function (e) {
                     e.stopPropagation();
-                    if (tabDragging !== this) {
-                        var targetPos = $(this).index(),
-                            originPos = $(tabDragging).index(),
-                            tabsBar = this.parentNode;
-                        // Insert the tab before the target.
-                        tabsBar.insertBefore(tabDragging, this);
-                        // Move the target to either before or after
-                        // the tab depending on points of origin.
-                        if (originPos > targetPos) {
-                            tabsBar.insertBefore(this, tabDragging.nextSibling);
-                        } else {
-                            tabsBar.insertBefore(this, tabDragging);
+                    var data = e.dataTransfer.getData("text");
+                    if (data.length === 0) {
+                        if (tabDragging !== this) {
+                            var targetPos = $(this).index(),
+                                originPos = $(tabDragging).index(),
+                                tabsBar = this.parentNode;
+                            // Insert the tab before the target.
+                            tabsBar.insertBefore(tabDragging, this);
+                            // Move the target to either before or after
+                            // the tab depending on points of origin.
+                            if (originPos > targetPos) {
+                                tabsBar.insertBefore(this, tabDragging.nextSibling);
+                            } else {
+                                tabsBar.insertBefore(this, tabDragging);
+                            }
+                            // Select the tab being dragged.
+                            tabDragging.dispatchEvent(new Event("click"));
+                            this.classList.remove("is-being-dragged-over");
                         }
-                        // Select the tab being dragged.
-                        tabDragging.dispatchEvent(new Event("click"));
+                    } else {
+                        this.dispatchEvent(new Event("click"));
                         this.classList.remove("is-being-dragged-over");
+                        tm.insertText(data);
                     }
                     return false;
                 }, false);

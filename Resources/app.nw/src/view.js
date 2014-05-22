@@ -61,13 +61,7 @@ define(["control"], function (Control) {
 
     View.prototype.makeUTF8 = function (data) {
         // Sanitizes the txt contents.
-        var ret;
-        if (Buffer) {
-            ret = JSON.parse(new Buffer(JSON.stringify(data)).toString("utf8"));
-        } else {
-            ret = data;
-        }
-        return ret;
+        return JSON.parse(new Buffer(JSON.stringify(data)).toString("utf8"));
     };
 
     View.prototype.toggleTitlebar = function () {
@@ -311,6 +305,9 @@ define(["control"], function (Control) {
     };
 
     View.prototype.toggleAudio = function (playAudio) {
+        // Sometimes the local parcel doesn't update properly.
+        // Force it to refresh.
+        window.Settings.updateLocalParcel();
         var parcel = window.Settings.parcel;
         if (playAudio === undefined) {
             if (parcel.playaudio !== false) {
@@ -321,6 +318,10 @@ define(["control"], function (Control) {
                         this.audio.pause();
                     }
                 } else {
+                    this.audio.pause();
+                }
+            } else {
+                if (this.isFullscreen() === true) {
                     this.audio.pause();
                 }
             }
