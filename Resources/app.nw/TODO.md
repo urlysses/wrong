@@ -1,3 +1,4 @@
+# todo before releasing v1.0.0
 + make changes to node-webkit allowing for 
   [this](https://github.com/rogerwang/node-webkit/issues/367)?
   [lighttable's nw implements this](https://github.com/LightTable/node-webkit).
@@ -10,6 +11,4 @@
 + save background image to app path (library/application support/etc.)
 + text dragging works between tabs. just be careful about dragging files
   into the app and dropping them onto the tabs bar.
-
-# important before release:
 + Should redefine edit & window menu tabs. they use fns that could break app.
