@@ -1,0 +1,144 @@
+body {
+    background: #010111; 
+    background: url(Resources/app.nw/Themes/Blue%20Yonder/img/2D4.jpg);
+    margin: 0;
+    padding: 0;
+    /*color: #DAD9DB;*/ 
+    color: #212121;
+    font-size: 16px;
+    font-family: "Merriweather", serif;
+    font-weight: 400;
+}
+header {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 3%;
+    margin-top: 3%;
+    font-family: "Merriweather Sans", sans-serif;
+}
+header h1 {
+    margin: 0;
+    padding: 0;
+}
+header img {
+    max-width: 256px;
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+}
+h1 {
+    font-weight: 300;
+    font-style: italic;
+    font-size: 3.8em;
+}
+h2 {
+    font-weight: 300;
+    font-style: italic;
+    font-size: 1.8em;
+}
+a {
+    text-decoration: none;
+    color: #007aff;
+    font-weight: 700;
+    font-family: "Merriweather Sans", sans-serif;
+}
+a:hover {
+    color: rgba(4, 106, 221, 1);
+}
+.tryme {
+    /*background: #212121;*/
+    padding: 1.5%;
+    margin-top: 3%;
+}
+.tmBoxStyle {
+    border: 1px solid #B4B4B4;
+    border-radius: 4px;
+    display: block;
+    width: 50%;
+    max-width: 799px;
+    min-width: 350px;
+    margin: 0 auto;
+    height: 320px;
+    max-height: 600px;
+    resize: both;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.17);
+    overflow: overlay;
+    background: white;
+}
+#tmWebEditor {
+    width: 100%;
+    height: 97%;
+    /*
+    can also do 
+        height: inherit; 
+        display: block;
+    but this covers up the box resizer.
+    */
+    border: none;
+    resize: none;
+}
+#dl {
+    background: #fff;
+    display: block;
+    width: 50%;
+    margin: 0 auto;
+    border-radius: 50px;
+    height: 64px;
+    border: 1px solid #B4B4B4;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.17);
+    margin-top: 4%;
+}
+#dl img {
+    width: 64px;
+}
+#dl img, span {
+    display: inline-block;
+}
+#dl span {
+    vertical-align: top;
+    margin-top: 10px;
+}
+footer {
+    padding-top: 4%;
+    padding-bottom: 4%;
+    margin-top: 4%;
+    text-align: center;
+    background: #FFFFFF;
+    margin-top: 4%;
+    border-top: 1px solid #B4B4B4;
+}
+footer a {
+    margin-right: 3%;
+    display: inline-block;
+}
+footer a:last-child {
+    margin-right: 0;
+}
+
+/* Other Pages */
+#longtext {
+    background: #ffffff;
+    border-top: 1px solid #B4B4B4;
+    padding-bottom: 4%;
+    padding-left: 20%;
+    padding-right: 20%;
+    margin-bottom: -4%;
+}
+
+@media (max-width: 800px) {
+    #longtext, footer {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    h1 {
+        font-size: 2.5em;
+    }
+    #dl {
+        width: 90%;
+        font-size: 0.8em;
+    }
+    .tmBoxStyle {
+        width: 90%;
+    }
+}

@@ -2,91 +2,15 @@
 <html>
     <head>
         <title>Wrong App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="Resources/app.nw/favicon.ico">
-        <link href='http://fonts.googleapis.com/css?family=Merriweather:400,400italic|Merriweather+Sans:300italic,700italic,700' rel='stylesheet' type='text/css'>
-        <style type="text/css">
-            body {
-                background: #DAD9DB url(Resources/app.nw/Themes/Blue%20Yonder/img/2D4.jpg);
-                margin: 0;
-                padding: 0;
-                /* color: #DAD9DB; */
-                color: #212121;
-                font-size: 16px;
-                font-family: "Merriweather", serif;
-                font-weight: 400;
-            }
-            header {
-                text-align: center;
-                margin-bottom: 4%;
-                margin-top: -1.7%;
-                font-family: "Merriweather Sans", sans-serif;
-            }
-            header img {
-                max-width: 256px;
-                width: 50%;
-                display: block;
-                margin: 0 auto;
-            }
-            h1 {
-                font-weight: 300;
-                font-style: italic;
-                font-size: 3.8em;
-            }
-            h2 {
-                font-weight: 300;
-                font-style: italic;
-                font-size: 1.8em;
-            }
-            a {
-                text-decoration: none;
-                color: #007aff;
-                font-weight: 700;
-                font-family: "Merriweather Sans", sans-serif;
-            }
-            #dl img {
-                width: 64px;
-            }
-            footer {
-                margin-bottom: 4%;
-            }
-            .tryme {
-                /*background: #212121;*/
-                padding: 1.5%;
-                margin-top: 3%;
-            }
-            .tmBoxStyle {
-                border: 1px solid #B4B4B4;
-                border-radius: 4px;
-                display: block;
-                width: 40%;
-                max-width: 799px;
-                margin: 0 auto;
-                margin-top: -4%;
-                height: 320px;
-                max-height: 600px;
-                resize: both;
-                box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.17);
-                min-width: 550px;
-                overflow: overlay;
-                background: white;
-            }
-            #tmWebEditor {
-                width: 100%;
-                height: 97%;
-                /*
-                can also do 
-                    height: inherit; 
-                    display: block;
-                but this covers up the box resizer.
-                */
-                border: none;
-                resize: none;
-            }
-        </style>
+        <link href="http://fonts.googleapis.com/css?family=Merriweather:400,400italic,700|Merriweather+Sans:300italic,700italic,700" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" media="screen, projection" type="text/css" href="styles.css">
     </head>
     <body>
         <header>
             <h1><img src="app.png" alt="Wrong App"></h1>
+            
         </header>
         <section class="tryme">
             <div class="tmBoxStyle">
@@ -95,11 +19,20 @@
         </section>
         <section id="dl">
             <img src="app.png" alt="">
-            <a href="">Download the latest version of Wrong.</a><br>
-            <em>(You agree to Wrong's <a href="">Terms of Service</a> by clicking the above download link.)</em>
+            <span>
+                <a href="//github.com/handstrings/wrong/releases/latest">
+                    Download the latest version of Wrong.
+                </a><br>
+                <em>(See Wrong's <a href="/tos.html">Terms of Service</a>.)</em>
+            </span>
         </section>
         <footer>
-            footer
+            <a href="/">Wrong</a>
+            <a href="/about.html">About</a>
+            <a href="/#dl">Download</a>
+            <a href="/tos.html">Terms of Service</a>
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="//github.com/handstrings/wrong">Source on Github</a>
         </footer>
     </body>
 </html>
