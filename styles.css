@@ -49,7 +49,7 @@ a:hover {
     margin-top: 3%;
 }
 .tmBoxStyle {
-    border: 1px solid #B4B4B4;
+    border: 3px solid #dad9db;
     border-radius: 4px;
     display: block;
     width: 50%;
@@ -59,7 +59,6 @@ a:hover {
     height: 320px;
     max-height: 600px;
     resize: both;
-    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.17);
     overflow: overlay;
     background: white;
 }
@@ -82,8 +81,7 @@ a:hover {
     margin: 0 auto;
     border-radius: 50px;
     height: 64px;
-    border: 1px solid #B4B4B4;
-    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.17);
+    border: 3px solid #dad9db;
     margin-top: 4%;
 }
 #dl img {
@@ -103,7 +101,7 @@ footer {
     text-align: center;
     background: #FFFFFF;
     margin-top: 4%;
-    border-top: 1px solid #B4B4B4;
+    border-top: 3px solid #dad9db;
 }
 footer a {
     margin-right: 3%;
@@ -116,11 +114,16 @@ footer a:last-child {
 /* Other Pages */
 #longtext {
     background: #ffffff;
-    border-top: 1px solid #B4B4B4;
+    border-top: 3px solid #dad9db;
     padding-bottom: 4%;
     padding-left: 20%;
     padding-right: 20%;
     margin-bottom: -4%;
+}
+
+hr {
+    border: 1px solid #dad9db;
+    width: 75%;
 }
 
 @media (max-width: 800px) {
