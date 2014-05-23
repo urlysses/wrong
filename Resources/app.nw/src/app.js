@@ -153,7 +153,7 @@
                     } else {
                         this.dispatchEvent(new Event("click"));
                         this.classList.remove("is-being-dragged-over");
-                        tm.insertText(data);
+                        tm.insertText(data, true);
                     }
                     return false;
                 }, false);

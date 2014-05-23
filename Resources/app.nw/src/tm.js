@@ -68,13 +68,18 @@ define(["history", "view"], function (History, View) {
             this._updateSelection();
         }
     };
-    TM.prototype.insertText = function (text) {
+    TM.prototype.insertText = function (text, andSelectIt) {
         var val = this.value,
             start = this.selectionStart,
             end = this.selectionEnd;
         this.value = [val.slice(0, start), text, val.slice(end)].join("");
         this.selectionEnd = start + text.length;
-        this.selectionStart = start;
+        if (andSelectIt) {
+            // We want to select the inserted text after it's been added.
+            this.selectionStart = start;
+        } else {
+            this.selectionStart = start + text.length;
+        }
         // Dispatch input event to update history.
         var e = new Event("input");
         this.doc.dispatchEvent(e);
@@ -131,10 +136,15 @@ define(["history", "view"], function (History, View) {
         this.selectionStart = this.lastCursor.selectionStart;
     };
     TM.prototype._selection = function () {
-        // range fix.
-        window.getSelection().addRange(document.createRange());
-        // regular stuff.
-        var range = window.getSelection().getRangeAt(0);
+        var range;
+        try {
+            // This sometimes doesn't work in desktop app.
+            range = window.getSelection().getRangeAt(0);
+        } catch (e) {
+            // Fix range by creating one.
+            window.getSelection().addRange(document.createRange());
+            range = window.getSelection().getRangeAt(0);
+        }
         var rangeClone = range.cloneRange();
         rangeClone.selectNodeContents(this.doc);
         rangeClone.setEnd(range.startContainer, range.startOffset);
@@ -231,7 +241,7 @@ define(["history", "view"], function (History, View) {
                 // replace selected text through insertText
                 var oldContent = this.value;
                 this.lastInput = null; // set lastInput to null so it forces an undo.
-                this.insertText(replacement);
+                this.insertText(replacement, true);
                 // Select the new word.
                 this.selectionEnd = this.selectionStart;
                 this.selectionStart -= replacement.length;
@@ -326,7 +336,7 @@ define(["history", "view"], function (History, View) {
             var data = e.dataTransfer.getData("text");
             if (data.length > 0) {
                 e.stopPropagation();
-                tm.insertText(data);
+                tm.insertText(data, true);
             }
         });
         tm.doc.onpaste = function (e) {
