@@ -35,6 +35,14 @@ h2 {
     font-style: italic;
     font-size: 1.8em;
 }
+h3 {
+    font-weight: 700;
+    font-style: italic;
+    font-family: "Merriweather Sans";
+}
+p {
+    line-height: 1.5em;
+}
 a {
     text-decoration: none;
     color: #007aff;
@@ -42,7 +50,16 @@ a {
     font-family: "Merriweather Sans", sans-serif;
 }
 a:hover {
-    color: rgba(4, 106, 221, 1);
+    color: #046ADD;
+}
+a:visited {
+    color: #747474;
+}
+a:visited:hover {
+    color: #545454;
+}
+a img {
+    border: none;
 }
 .tryme {
     padding: 1.5%;
@@ -54,7 +71,7 @@ a:hover {
     display: block;
     width: 50%;
     max-width: 799px;
-    min-width: 350px;
+    min-width: 250px;
     margin: 0 auto;
     height: 320px;
     max-height: 600px;
