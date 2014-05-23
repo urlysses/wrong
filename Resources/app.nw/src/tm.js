@@ -73,8 +73,8 @@ define(["history", "view"], function (History, View) {
             start = this.selectionStart,
             end = this.selectionEnd;
         this.value = [val.slice(0, start), text, val.slice(end)].join("");
-        this.selectionEnd = end + text.length;
-        this.selectionStart = start + text.length;
+        this.selectionEnd = start + text.length;
+        this.selectionStart = start;
         // Dispatch input event to update history.
         var e = new Event("input");
         this.doc.dispatchEvent(e);

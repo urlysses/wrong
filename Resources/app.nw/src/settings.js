@@ -94,23 +94,26 @@ define(["view"], function (View) {
         settings.parcel[name] = value;
         localStorage.parcel = JSON.stringify(settings.parcel);
         this.updateLocalParcel();
+        window.Settings.updateLocalParcel();
     };
 
     Settings.prototype.clearParcel = function (settings) {
         settings.parcel = {};
         delete localStorage.parcel;
         this.updateLocalParcel();
+        window.Settings.updateLocalParcel();
     };
 
     Settings.prototype.clearThemeInParcel = function (settings) {
+        settings.updateLocalParcel();
         Object.keys(settings.parcel).forEach(function (key, index) {
             // Keys with "," are theme keys.
             if (key.indexOf(",") !== -1) {
                 delete settings.parcel[key];
-                delete localStorage.parcel[key];
-                settings.updateLocalParcel();
             }
         });
+        localStorage.parcel = JSON.stringify(settings.parcel);
+        window.Settings.updateLocalParcel();
     };
 
     Settings.prototype.compileRuntimeCss = function (color, rgb, yiq) {
@@ -664,46 +667,51 @@ define(["view"], function (View) {
         // collect all the data in the customizer and
         // push to parcel with updateParcel();
         var theme = settings.theme;
-        if (theme.saved !== true && theme.customized === true) {
-            var body = theme.body,
-                text = theme.cm,
-                other = theme.other;
-            body.forEach(function (rule) {
-                var name = rule.name,
-                    selector = "#TM",
-                    value = rule.value;
-                if (name !== "background-color"
-                        || (name === "background-color" &&
-                            value !== settings.loadeddefaults.backgroundColor)) {
-                    settings.updateParcel(settings, selector + "," + name, value);
-                }
-            });
-            text.forEach(function (rule) {
-                var name = rule.name,
-                    selector = "#TM",
-                    value = rule.value;
-                if (name !== "color"
-                        || (name === "color" &&
-                            value !== settings.loadeddefaults.color)) {
-                    settings.updateParcel(settings, selector + "," + name, value);
-                }
-            });
-            other.forEach(function (rule) {
-                var name = rule.name,
-                    selector = rule.selector,
-                    value = rule.value;
-                if (selector === "::selection"
-                        && value !== settings.loadeddefaults.selection) {
-                    settings.updateParcel(settings, selector + "," + name, value);
-                } else if (selector === "::-webkit-scrollbar-track"
-                        && value !== settings.loadeddefaults.scrolltrackColor) {
-                    settings.updateParcel(settings, selector + "," + name, value);
-                } else if (selector === "::-webkit-scrollbar-thumb"
-                        && value !== settings.loadeddefaults.scrollthumbColor) {
-                    settings.updateParcel(settings, selector + "," + name, value);
-                } // no need for an else, these are all the "other"s so far.
-            });
-            settings.updateParcel(settings, "themeCustomized", true);
+        if (theme.saved !== true) {
+            if (theme.customized === true) {
+                var body = theme.body,
+                    text = theme.cm,
+                    other = theme.other;
+                settings.updateLocalParcel();
+                body.forEach(function (rule) {
+                    var name = rule.name,
+                        selector = "#TM",
+                        value = rule.value;
+                    if (name !== "background-color"
+                            || (name === "background-color" &&
+                                value !== settings.loadeddefaults.backgroundColor)) {
+                        settings.updateParcel(settings, selector + "," + name, value);
+                    }
+                });
+                text.forEach(function (rule) {
+                    var name = rule.name,
+                        selector = "#TM",
+                        value = rule.value;
+                    if (name !== "color"
+                            || (name === "color" &&
+                                value !== settings.loadeddefaults.color)) {
+                        settings.updateParcel(settings, selector + "," + name, value);
+                    }
+                });
+                other.forEach(function (rule) {
+                    var name = rule.name,
+                        selector = rule.selector,
+                        value = rule.value;
+                    if (selector === "::selection"
+                            && value !== settings.loadeddefaults.selection) {
+                        settings.updateParcel(settings, selector + "," + name, value);
+                    } else if (selector === "::-webkit-scrollbar-track"
+                            && value !== settings.loadeddefaults.scrolltrackColor) {
+                        settings.updateParcel(settings, selector + "," + name, value);
+                    } else if (selector === "::-webkit-scrollbar-thumb"
+                            && value !== settings.loadeddefaults.scrollthumbColor) {
+                        settings.updateParcel(settings, selector + "," + name, value);
+                    } // no need for an else, these are all the "other"s so far.
+                });
+                settings.updateParcel(settings, "themeCustomized", true);
+            } else {
+                settings.updateParcel(settings, "themeCustomized", false);
+            }
             settings.theme.saved = true;
             settings.theme.customized = false;
         }
@@ -994,6 +1002,7 @@ define(["view"], function (View) {
 
             reset = document.getElementById("wr-reset");
             reset.onclick = function () {
+                settings.updateLocalParcel();
                 // Order of actions important here.
                 if (initialTheme.name !== settings.getDefaultTheme().name) {
                     themes.querySelector("[data-value='" + initialTheme.name
@@ -1013,6 +1022,11 @@ define(["view"], function (View) {
                 customizer.style.display = "none";
                 customizerButtons.style.display = "none";
                 settings.clearThemeInParcel(settings);
+                settings.updateLocalParcel();
+                if (settings.parcel.themeCustomized === true
+                        && styleDiv.children.length === 0) {
+                    settings.theme.customized = false;
+                }
                 saveTheme(settings);
                 window.tm.focus();
             };
