@@ -1035,13 +1035,13 @@ define(["view"], function (View) {
                 if (hider.className.indexOf("wr-close-closed") === -1) {
                     customizer.style.left = "-254px";
                     customizerButtons.style.left = "-254px";
-                    hider.children[0].innerText = "show settings";
+                    hider.children[0].textContent = "show settings";
                     hider.className = "wr-close-closed";
                     window.tm.focus();
                 } else {
                     customizer.style.left = "0";
                     customizerButtons.style.left = "0";
-                    hider.children[0].innerText = "hide settings";
+                    hider.children[0].textContent = "hide settings";
                     hider.className = "";
                     customizer.focus();
                 }

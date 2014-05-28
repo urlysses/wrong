@@ -11,7 +11,7 @@ define([], function () {
         this.control.id = "tm-control";
         this.controlCloseButton = document.createElement("button");
         this.controlCloseButton.id = "tm-control-close-button";
-        this.controlCloseButton.innerText = "x";
+        this.controlCloseButton.textContent = "x";
         this.controlOpened = false;
         // Query Misc
         this.findquery = "";
