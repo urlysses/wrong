@@ -21,7 +21,7 @@ define(["control"], function (Control) {
             window.Wrong.win.toggleFullscreen();
         } else {
             if (this.tmWebEditor) {
-                if (this.isFullscreen() === false) {
+                if (!this.isFullscreen()) {
                     if (this.tmWebEditor.requestFullscreen) {
                         this.tmWebEditor.requestFullscreen();
                     } else if (this.tmWebEditor.msRequestFullscreen) {
