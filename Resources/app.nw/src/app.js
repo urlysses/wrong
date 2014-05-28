@@ -201,7 +201,7 @@
                 newTab.setAttribute("draggable", "true");
 
                 newTabCloseButton.classList.add("wr-tab-close-button");
-                newTabCloseButton.innerText = "x";
+                newTabCloseButton.textContent = "x";
                 newTab.appendChild(newTabCloseButton);
                 newTabCloseButton.onclick = function () {
                     // The tab closes automatically since click falls within
@@ -434,7 +434,7 @@
                 if (tabslen > 1) {
                     for (i = 0; i < tabslen; i++) {
                         var tab = tabsbar.children[i];
-                        if (tab && tab.children[1].innerText !== "") {
+                        if (tab && tab.children[1].textContent !== "") {
                             allFilesClean = false;
                         }
                     }
@@ -730,7 +730,7 @@
 
                                 opt = document.createElement("option");
                                 opt.value = fileName;
-                                opt.innerText = fileName;
+                                opt.textContent = fileName;
                                 opt.id = "wr-theme-" + fileName;
                                 themesSelector.appendChild(opt);
                             }

@@ -45,11 +45,11 @@ define(["history", "view"], function (History, View) {
         set text(value) {
             this.value = value;
         },
-        get innerText() {
-            return this.doc.innerText;
+        get textContent() {
+            return this.doc.textContent;
         },
-        set innerText(value) {
-            this.doc.innerText = value;
+        set textContent(value) {
+            this.doc.textContent = value;
         },
         get selectionStart() {
             this._selection();

@@ -134,7 +134,7 @@ define(["control"], function (Control) {
             dirt = "";
         }
 
-        document.getElementById("wr-dirt").innerText = dirt;
+        document.getElementById("wr-dirt").textContent = dirt;
     };
 
     View.prototype.setPageTitle = function (path) {
@@ -149,7 +149,7 @@ define(["control"], function (Control) {
         newTitle = docName;
 
         document.title = newTitle;
-        document.getElementById("wr-tab-selected").children[0].innerText = newTitle;
+        document.getElementById("wr-tab-selected").children[0].textContent = newTitle;
     };
 
 
@@ -178,7 +178,7 @@ define(["control"], function (Control) {
 
         // if the tab's second span contains anything (e.g., "- Edited")
         // then the tab is dirty.
-        if (di.innerText.length > 0) {
+        if (di.textContent.length > 0) {
             dirty = true;
         }
 
@@ -218,7 +218,7 @@ define(["control"], function (Control) {
             counterText = wordCount.doc + " " + wordS;
         }
 
-        counter.innerText = counterText;
+        counter.textContent = counterText;
     };
 
     View.prototype.toggleSuperfluous = function (hide, override) {
