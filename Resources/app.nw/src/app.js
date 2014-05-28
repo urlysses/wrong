@@ -307,6 +307,7 @@
                     View.toggleFullscreen();
                 };
                 function fullscreenchange() {
+                    console.log("um");
                     if (View.isFullscreen()) {
                         View.toggleTitlebar();
                         View.toggleAudio();
@@ -319,10 +320,10 @@
                         View.fullscreenbutton.parentNode.style.paddingRight = "0px";
                     }
                 }
-                View.tmWebEditor.addEventListener("fullscreenchange", fullscreenchange, false);
-                View.tmWebEditor.addEventListener("msfullscreenchange", fullscreenchange, false);
-                View.tmWebEditor.addEventListener("mozfullscreenchange", fullscreenchange, false);
-                View.tmWebEditor.addEventListener("webkitfullscreenchange", fullscreenchange, false);
+                window.top.addEventListener("fullscreenchange", fullscreenchange, false);
+                window.top.addEventListener("msfullscreenchange", fullscreenchange, false);
+                window.top.addEventListener("mozfullscreenchange", fullscreenchange, false);
+                window.top.addEventListener("webkitfullscreenchange", fullscreenchange, false);
 
                 View.windowbuttons.addEventListener("mouseover", function () {
                     var i, windowbuttons = View.windowbuttons;
