@@ -307,7 +307,6 @@
                     View.toggleFullscreen();
                 };
                 function fullscreenchange() {
-                    console.log("um");
                     if (View.isFullscreen()) {
                         View.toggleTitlebar();
                         View.toggleAudio();
