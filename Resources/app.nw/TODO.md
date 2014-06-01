@@ -14,3 +14,4 @@
 + Should redefine edit & window menu tabs. they use fns that could break app.
 + Add testing, which is a pretty important thing to do & which I should have
   done from the beginning but I was younger and more care-free in those days.
++ Inline comments can optionally be removed from the export. export as html comments?

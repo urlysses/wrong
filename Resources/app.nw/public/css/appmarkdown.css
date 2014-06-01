@@ -1,0 +1,26 @@
+#TM * {
+    padding: 0;
+    margin: 0;
+    font-size: inherit;
+    color: inherit;
+    line-height: inherit;
+    -webkit-font-smoothing: inherit;
+}
+
+#TM h1, #TM h2, #TM h3, #TM h4, #TM h5, #TM h6 {
+    font-weight: 700;
+}
+
+#TM i {
+    font-style: inherit;
+    font-weight: inherit;
+    opacity: 0.6;
+}
+
+#TM strong {
+    font-weight: 900;
+}
+
+#TM em {
+    font-style: italic;
+}

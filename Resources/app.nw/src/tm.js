@@ -1,7 +1,8 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
 /*global Event, define*/
-define(["history", "view"], function (History, View) {
+define(["history", "view", "markdown"], function (History, View, Markdown) {
     View = new View();
+    Markdown = new Markdown();
     function TM(val) {
         if (val === undefined) {
             val = "";
@@ -303,6 +304,11 @@ define(["history", "view"], function (History, View) {
             View.setFileDirty(true);
             View.displayWordCount();
             window.tm.store = window.tm.value;
+            var html = Markdown.toEditorHTML(value);
+            var sel = window.tm.getSelection();
+            window.tm.doc.innerHTML = html;
+            window.tm.selectionEnd = sel.selectionEnd;
+            window.tm.selectionStart = sel.selectionStart;
         });
         tm.doc.addEventListener("keydown", function (e) {
             View.toggleSuperfluous(true);
