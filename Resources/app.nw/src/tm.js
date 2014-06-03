@@ -245,12 +245,8 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
             var found = this.find(value, backward); // find and select thing
             if (found) {
                 // replace selected text through insertText
-                var oldContent = this.value;
                 this.lastInput = null; // set lastInput to null so it forces an undo.
                 this.insertText(replacement, true);
-                // Select the new word.
-                this.selectionEnd = this.selectionStart;
-                this.selectionStart -= replacement.length;
                 return true;
             }
         }
