@@ -1,5 +1,10 @@
-body {
+body.home {
     background: #ffffff url(Resources/app.nw/Themes/Blue%20Yonder/img/2D4.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+}
+body {
+    background: #ffffff;
     margin: 0;
     padding: 0;
     color: #212121;
@@ -7,12 +12,18 @@ body {
     font-family: "Merriweather", serif;
     font-weight: 400;
 }
-header {
-    text-align: center;
-    padding: 0;
-    margin: 0;
+header.home {
     margin-bottom: 3%;
     margin-top: 3%;
+    padding: 0;
+    background: none;
+}
+header {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    background: white;
+    padding-top: 3%;
     font-family: "Merriweather Sans", sans-serif;
 }
 header h1 {
@@ -20,7 +31,7 @@ header h1 {
     padding: 0;
 }
 header img {
-    max-width: 256px;
+    max-width: 150px;
     width: 50%;
     display: block;
     margin: 0 auto;
@@ -137,11 +148,12 @@ footer a:last-child {
 /* Other Pages */
 #longtext {
     background: #ffffff;
-    border-top: 3px solid #dad9db;
+    border-top: 3px solid #ffffff;
     padding-bottom: 4%;
     padding-left: 20%;
     padding-right: 20%;
     margin-bottom: -4%;
+    word-break: break-word;
 }
 
 hr {
