@@ -1,7 +1,8 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
 /*global Event, define*/
-define(["history", "view"], function (History, View) {
+define(["history", "view", "markdown"], function (History, View, Markdown) {
     View = new View();
+    Markdown = new Markdown();
     function TM(val) {
         if (val === undefined) {
             val = "";
@@ -35,6 +36,11 @@ define(["history", "view"], function (History, View) {
         },
         set value(value) {
             this.doc.textContent = value;
+            var html = Markdown.toEditorHTML(value);
+            var sel = this.getSelection();
+            this.doc.innerHTML = html;
+            this.selectionEnd = sel.selectionEnd;
+            this.selectionStart = sel.selectionStart;
             this._value = value;
         },
         get text() {
@@ -46,10 +52,10 @@ define(["history", "view"], function (History, View) {
             this.value = value;
         },
         get textContent() {
-            return this.doc.textContent;
+            return this.value;
         },
         set textContent(value) {
-            this.doc.textContent = value;
+            this.value = value;
         },
         get selectionStart() {
             this._selection();
@@ -303,6 +309,11 @@ define(["history", "view"], function (History, View) {
             View.setFileDirty(true);
             View.displayWordCount();
             window.tm.store = window.tm.value;
+            var html = Markdown.toEditorHTML(value);
+            var sel = window.tm.getSelection();
+            window.tm.doc.innerHTML = html;
+            window.tm.selectionEnd = sel.selectionEnd;
+            window.tm.selectionStart = sel.selectionStart;
         });
         tm.doc.addEventListener("keydown", function (e) {
             View.toggleSuperfluous(true);

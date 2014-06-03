@@ -10,6 +10,7 @@
         Keys,
         Control,
         Settings,
+        Markdown,
         tm,
         tabDragging,
         newFile,
@@ -30,6 +31,7 @@
             Keys = new K();
             Control = new C();
             Settings = new S();
+            Markdown = new M();
             tm = TM.init();
             global.tm = tm;
             global.Keys = Keys;
