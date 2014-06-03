@@ -275,6 +275,7 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
         var range = window.getSelection().getRangeAt(0),
             t = range.getBoundingClientRect().top;
         this.doc.scrollTop += t - window.innerHeight / 2;
+        this.storedScrollTop = this.doc.scrollTop;
     };
     TM.prototype.getWordCount = function () {
         var doc = this.value.match(/\S+/g),
