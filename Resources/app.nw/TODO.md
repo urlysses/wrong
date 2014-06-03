@@ -14,4 +14,6 @@
 + Should redefine edit & window menu tabs. they use fns that could break app.
 + Add testing, which is a pretty important thing to do & which I should have
   done from the beginning but I was younger and more care-free in those days.
-+ Inline comments can optionally be removed from the export. export as html comments?
++ Allow users to export their .wro files to html, pdf?, doc(x)?, odt.
+  There will be checkbox options for comments: keep as is (inline), keep as
+  footnotes, (if html, keep but hide), or remove entirely.

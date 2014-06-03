@@ -36,6 +36,11 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
         },
         set value(value) {
             this.doc.textContent = value;
+            var html = Markdown.toEditorHTML(value);
+            var sel = this.getSelection();
+            this.doc.innerHTML = html;
+            this.selectionEnd = sel.selectionEnd;
+            this.selectionStart = sel.selectionStart;
             this._value = value;
         },
         get text() {
@@ -47,10 +52,10 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
             this.value = value;
         },
         get textContent() {
-            return this.doc.textContent;
+            return this.value;
         },
         set textContent(value) {
-            this.doc.textContent = value;
+            this.value = value;
         },
         get selectionStart() {
             this._selection();

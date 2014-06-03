@@ -15,6 +15,7 @@
         Keys,
         Control,
         Settings,
+        Markdown,
         tm,
         tabDragging,
         saveFile,
@@ -102,8 +103,8 @@
     global.Wrong.menu = menu;
     global.Wrong.clip = clip;
     global.Wrong.gui = gui;
-    requirejs(["history", "view", "tm", "files", "keys", "control", "settings"],
-        function (H, V, T, F, K, C, S) {
+    requirejs(["history", "view", "tm", "files", "keys", "control", "settings", "markdown"],
+        function (H, V, T, F, K, C, S, M) {
             History = new H();
             View = new V();
             TM = new T();
@@ -111,6 +112,7 @@
             Keys = new K();
             Control = new C();
             Settings = new S();
+            Markdown = new M();
             tm = TM.init();
             global.tm = tm;
             global.Keys = Keys;
