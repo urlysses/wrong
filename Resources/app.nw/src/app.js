@@ -22,8 +22,8 @@
         constructDefaultPreview,
         completeInit;
 
-    requirejs(["history", "view", "tm", "files", "keys", "control", "settings"],
-        function (H, V, T, F, K, C, S) {
+    requirejs(["history", "view", "tm", "files", "keys", "control", "settings", "markdown"],
+        function (H, V, T, F, K, C, S, M) {
             History = new H();
             View = new V();
             TM = new T();
