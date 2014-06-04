@@ -106,8 +106,8 @@ define([], function () {
         // HTML-escape "<" so it doesn't fall into innerHTML.
         // Also html-escape other important characters so no glitches
         // are had.
-        value = value.replace(/</g, "&lt;")
-                .replace(/&/g, "&amp;")
+        value = value.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
                 .replace(/"/g, "&#34;")
                 .replace(/'/g, "&#39;");
         var html = value,
