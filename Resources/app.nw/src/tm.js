@@ -341,7 +341,11 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
             if (e.shiftKey && e.target.localName === "a") {
                 if (!window.Wrong.gui) {
                     // Not using native app.
-                    window.location = e.target.href;
+                    if (e.target.href.indexOf("javascript:") !== 0) {
+                        window.top.open(e.target.href, "_blank");
+                    } else {
+                        window.location = e.target.href;
+                    }
                 } else {
                     // If using Desktop app, open in browser.
                     window.Wrong.gui.Shell.openExternal(e.target.href);
