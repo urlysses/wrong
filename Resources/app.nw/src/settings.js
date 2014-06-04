@@ -588,7 +588,7 @@ define(["view"], function (View) {
                 selectColor = "rgba(0, 133, 255, 0.32)",
                 thumbColor = "rgba(0, 0, 0, 0.35)",
                 trackColor = "rgba(0, 0, 0, 0.19)",
-                styleSheet = document.styleSheets[5] || document.styleSheets[3];
+                styleSheet = document.styleSheets[6] || document.styleSheets[4];
 
             // 1. background color + image
             settings.bgcolor.dataset.value = bColor;
