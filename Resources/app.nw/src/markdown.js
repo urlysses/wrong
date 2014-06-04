@@ -104,7 +104,12 @@ define([], function () {
      */
     Markdown.prototype.inlineParse = function (value) {
         // HTML-escape "<" so it doesn't fall into innerHTML.
-        value = value.replace(/</gm, "&lt;");
+        // Also html-escape other important characters so no glitches
+        // are had.
+        value = value.replace(/</g, "&lt;")
+                .replace(/&/g, "&amp;")
+                .replace(/"/g, "&#34;")
+                .replace(/'/g, "&#39;");
         var html = value,
             editorhtml = value,
             rand,
