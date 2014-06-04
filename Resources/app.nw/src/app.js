@@ -22,6 +22,7 @@
         constructDefaultPreview,
         completeInit;
 
+    global.Wrong = {};
     requirejs(["history", "view", "tm", "files", "keys", "control", "settings", "markdown"],
         function (H, V, T, F, K, C, S, M) {
             History = new H();
@@ -165,7 +166,7 @@
                 }, false);
             };
 
-            global.Wrong = {newFile: newFile};
+            global.Wrong.newFile = newFile;
 
             closeTab = function (closethis) {
                 var currentTab = document.getElementById("wr-tab-selected"),
