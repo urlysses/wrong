@@ -32,7 +32,7 @@
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
 			<key>CFBundleTypeIconFile</key>
-			<string>app.icns</string>
+			<string>wro.icns</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -50,7 +50,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleTypeIconFile</key>
-			<string>app.icns</string>
+			<string>wro.icns</string>
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
 		</dict>
@@ -67,7 +67,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleTypeIconFile</key>
-			<string>app.icns</string>
+			<string>wro.icns</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -112,7 +112,7 @@
 			<key>UTTypeIdentifier</key>
 			<string>com.handstrings.Wrong</string>
 			<key>UTTypeIconFile</key>
-			<string>app.icns</string>
+			<string>wro.icns</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
