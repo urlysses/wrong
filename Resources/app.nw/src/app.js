@@ -115,12 +115,12 @@
             Markdown = new M();
             tm = TM.init();
             global.tm = tm;
-            global.Keys = Keys;
-            global.View = View;
-            global.Files = Files;
-            global.TM = TM;
-            global.History = History;
-            global.Settings = Settings;
+            global.Wrong.Keys = Keys;
+            global.Wrong.View = View;
+            global.Wrong.Files = Files;
+            global.Wrong.TM = TM;
+            global.Wrong.History = History;
+            global.Wrong.Settings = Settings;
 
             saveFile = function (path, callback) {
                 if (path !== undefined && path.indexOf("untitled-") === 0) {

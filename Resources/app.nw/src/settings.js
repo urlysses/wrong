@@ -94,14 +94,14 @@ define(["view"], function (View) {
         settings.parcel[name] = value;
         localStorage.parcel = JSON.stringify(settings.parcel);
         this.updateLocalParcel();
-        window.Settings.updateLocalParcel();
+        window.Wrong.Settings.updateLocalParcel();
     };
 
     Settings.prototype.clearParcel = function (settings) {
         settings.parcel = {};
         delete localStorage.parcel;
         this.updateLocalParcel();
-        window.Settings.updateLocalParcel();
+        window.Wrong.Settings.updateLocalParcel();
     };
 
     Settings.prototype.clearThemeInParcel = function (settings) {
@@ -113,7 +113,7 @@ define(["view"], function (View) {
             }
         });
         localStorage.parcel = JSON.stringify(settings.parcel);
-        window.Settings.updateLocalParcel();
+        window.Wrong.Settings.updateLocalParcel();
     };
 
     Settings.prototype.compileRuntimeCss = function (color, rgb, yiq) {
@@ -997,7 +997,7 @@ define(["view"], function (View) {
                 } else {
                     settings.updateParcel(settings, "playclicks", false);
                 }
-                window.Settings.updateLocalParcel();
+                window.Wrong.Settings.updateLocalParcel();
             });
 
             reset = document.getElementById("wr-reset");
