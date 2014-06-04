@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global Event, define*/
+/*global Event, define, $*/
 define(["history", "view", "markdown"], function (History, View, Markdown) {
     View = new View();
     Markdown = new Markdown();
@@ -331,11 +331,22 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
         tm.doc.addEventListener("keypress", function () {
             View.playClicks();
         });
-        tm.doc.addEventListener("mouseup", function () {
+        tm.doc.addEventListener("mouseup", function (e) {
             View.displayWordCount();
 
             // store the cursor position/selection.
             window.tm.lastCursor = window.tm.getSelection();
+
+            // For shift-clicking on links so that they open.
+            if (e.shiftKey && e.target.localName === "a") {
+                if (!window.Wrong.gui) {
+                    // Not using native app.
+                    window.location = e.target.href;
+                } else {
+                    // If using Desktop app, open in browser.
+                    window.Wrong.gui.Shell.openExternal(e.target.href);
+                }
+            }
         });
         tm.doc.addEventListener("dragenter", function (e) {
             View.toggleSuperfluous(false);
