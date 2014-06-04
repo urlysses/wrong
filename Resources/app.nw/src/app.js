@@ -41,6 +41,7 @@
             global.Wrong.TM = TM;
             global.Wrong.History = History;
             global.Wrong.Settings = Settings;
+            global.Wrong.Control = Control;
 
             newFile = function (data, callback) {
                 // I attempted to put this into files.js but I'm afraid
