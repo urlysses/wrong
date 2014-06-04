@@ -342,7 +342,7 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
                 if (!window.Wrong.gui) {
                     // Not using native app.
                     if (e.target.href.indexOf("javascript:") !== 0) {
-                        window.top.open(e.target.href, "_blank");
+                        window.open(e.target.href, "_top");
                     } else {
                         window.location = e.target.href;
                     }
