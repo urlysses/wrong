@@ -70,7 +70,7 @@ define(["control"], function (Control) {
             window.tm.doc.parentNode.classList.add("wr-tm-fullscreen");
             if (this.titlebar.classList.contains("wr-runtime-fullscreen-css") === false) {
                 this.titlebar.classList.add("wr-runtime-fullscreen-css");
-                window.Settings.compileRuntimeCss();
+                window.Wrong.Settings.compileRuntimeCss();
             }
             if (Control.controlOpened) {
                 Control.updateFullscreenStyle(true);
@@ -282,8 +282,8 @@ define(["control"], function (Control) {
 
 
     View.prototype.playClicks = function () {
-        var parcel = window.Settings.parcel,
-            sounds = window.Settings.sounds;
+        var parcel = window.Wrong.Settings.parcel,
+            sounds = window.Wrong.Settings.sounds;
         if (parcel.playclicks !== false) {
             if (this.isFullscreen()) {
                 var id, name, len, format, path, rand, sound;
@@ -307,8 +307,8 @@ define(["control"], function (Control) {
     View.prototype.toggleAudio = function (playAudio) {
         // Sometimes the local parcel doesn't update properly.
         // Force it to refresh.
-        window.Settings.updateLocalParcel();
-        var parcel = window.Settings.parcel;
+        window.Wrong.Settings.updateLocalParcel();
+        var parcel = window.Wrong.Settings.parcel;
         if (playAudio === undefined) {
             if (parcel.playaudio !== false) {
                 if (this.isFullscreen() === true) {

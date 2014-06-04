@@ -34,12 +34,12 @@
             Markdown = new M();
             tm = TM.init();
             global.tm = tm;
-            global.Keys = Keys;
-            global.View = View;
-            global.Files = Files;
-            global.TM = TM;
-            global.History = History;
-            global.Settings = Settings;
+            global.Wrong.Keys = Keys;
+            global.Wrong.View = View;
+            global.Wrong.Files = Files;
+            global.Wrong.TM = TM;
+            global.Wrong.History = History;
+            global.Wrong.Settings = Settings;
 
             newFile = function (data, callback) {
                 // I attempted to put this into files.js but I'm afraid
