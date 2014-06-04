@@ -121,6 +121,7 @@
             global.Wrong.TM = TM;
             global.Wrong.History = History;
             global.Wrong.Settings = Settings;
+            global.Wrong.Control = Control;
 
             saveFile = function (path, callback) {
                 if (path !== undefined && path.indexOf("untitled-") === 0) {

@@ -133,6 +133,15 @@ define([], function () {
             return repl;
         });
 
+        // Horizontal Rules.
+        // Need to single these out since they could style the text.
+        var hr = /^( *[\-*_]){3,} *(?:\n+|$)/gm;
+        editorhtml = editorhtml.replace(hr, function (match) {
+            rand = Math.random();
+            syntaxmap.push({str: match, chars: "HRESCAPE" + rand});
+            return "HRESCAPE" + rand;
+        });
+
         // Custom: inline comments
         // [(inline comment)] (also <!--html comments-->?)
         var comment = /(\[\()([\s\S]*?)(\)\])/g;
