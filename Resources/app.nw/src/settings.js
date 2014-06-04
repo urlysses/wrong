@@ -1,5 +1,5 @@
 /*jslint node: true, browser: true, devel:true, white: false*/
-/*global $, Event, define*/
+/*global $, Event, FileReader, define*/
 define(["view"], function (View) {
     View = new View();
     function Settings() {
@@ -837,6 +837,20 @@ define(["view"], function (View) {
             bgimg.onchange = function () {
                 var img = bgimg.value;
                 if (img !== "") {
+                    if (!window.Wrong.gui) {
+                        // Using online version. No server, so upload image
+                        // through FileReader.
+                        var reader = new FileReader();
+                        reader.onload = function () {
+                            updateElement(settings, "body", settings.theme.body,
+                                    "background-image", "url('" + reader.result + "')");
+                            settings.theme.bgImg = reader.result;
+                            bgimg.style.backgroundImage = "url('" + reader.result + "')";
+                            updateTheme(settings);
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                        img = "";
+                    }
                     updateElement(settings, "body", settings.theme.body, "background-image",
                             "url('" + img + "')");
                     settings.theme.bgImg = img;
