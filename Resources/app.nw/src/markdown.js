@@ -194,9 +194,19 @@ define([], function () {
 
         // Code
         // `code` or ``code with backtick (`) in it``
+        var code = /(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/g;
+        editorhtml = editorhtml.replace(code, "<code>$&</code>");
 
         // Links
         // [value](href "title")
+        var link = /!?\[((?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*)\]\(\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*\)/g;
+        editorhtml = editorhtml.replace(link, function (match, text, href) {
+            syntaxmap.forEach(function (el) {
+                href = href.split(el.chars).join(el.str.substr(1));
+                // substr(1) cuts the escape char.
+            });
+            return "<a href='" + href + "'>" + match + "</a>";
+        });
 
         // Images
         // ![Alt Text](imgSrc "title idk")

@@ -2,6 +2,9 @@
     padding: 0;
     margin: 0;
     font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    font-style: inherit;
     color: inherit;
     line-height: inherit;
     -webkit-font-smoothing: inherit;
@@ -22,6 +25,18 @@
     padding-left: 5px;
     border-left-width: 3px;
     border-left-style: solid;
+}
+
+#TM a {
+    cursor: pointer;
+}
+
+#TM code {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    padding: 4px;
+    padding-bottom: 2px;
 }
 
 #TM i {
