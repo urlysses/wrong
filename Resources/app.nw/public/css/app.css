@@ -198,7 +198,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 #wr-customizer #wr-hider span {
-    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
     display: block;
     width: 90px;
     position: absolute;
@@ -689,7 +689,7 @@ body#tm-control-body {
     left: 50%;
     right: 0;
     bottom: 0;
-    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
 }
 body.wr-tm-control-fullscreen {
     background: transparent;
