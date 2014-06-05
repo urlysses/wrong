@@ -29,8 +29,7 @@ define(["control"], function (Control) {
                     } else if (this.tmWebEditor.mozRequestFullScreen) {
                         this.tmWebEditor.mozRequestFullScreen();
                     } else if (this.tmWebEditor.webkitRequestFullScreen) {
-                        //this.tmWebEditor.webkitRequestFullScreen();
-                        this.tmWebEditor.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                        this.tmWebEditor.webkitRequestFullScreen();
                     }
                 } else {
                     if (document.exitFullscreen) {
