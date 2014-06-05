@@ -337,8 +337,8 @@ define(["history", "view", "markdown"], function (History, View, Markdown) {
             // store the cursor position/selection.
             window.tm.lastCursor = window.tm.getSelection();
 
-            // For shift-clicking on links so that they open.
-            if (e.shiftKey && e.target.localName === "a") {
+            // For cmd-clicking/alt-clicking on links so that they open.
+            if ((e.metaKey || e.altKey) && e.target.localName === "a") {
                 if (!window.Wrong.gui) {
                     // Not using native app.
                     if (e.target.href.indexOf("javascript:") !== 0) {
