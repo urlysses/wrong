@@ -16,8 +16,6 @@ body {
 
 #TMHolder {
     height: 100%;
-    display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
     flex-direction: column;
     background: none;
