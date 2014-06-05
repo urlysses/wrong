@@ -199,6 +199,7 @@ body {
 }
 #wr-customizer #wr-hider span {
     transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
     display: block;
     width: 90px;
     position: absolute;
@@ -555,7 +556,7 @@ li#wr-audio-stop span:last-child {
 #wr-tabs {
     height: 14px;
     border: solid 1px #007aff;
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
     border-radius: 2px;
     position: relative;
@@ -671,6 +672,8 @@ li#wr-audio-stop span:last-child {
 /*** CONTROL ***/
 body#tm-control-body {
     display: flex;
+    display: -ms-flex;
+    display: -webkit-flex;
     flex-direction: row;
 }
 #tm-wr-control {
@@ -678,6 +681,8 @@ body#tm-control-body {
     width: 100%;
     padding: 5px;
     -webkit-box-sizing: border-box;
+    display: -ms-flex;
+    display: -webkit-flex;
     flex: 1 1 auto;
     border: none;
     height: 53px;
@@ -690,6 +695,7 @@ body#tm-control-body {
     right: 0;
     bottom: 0;
     transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
 }
 body.wr-tm-control-fullscreen {
     background: transparent;
@@ -709,6 +715,8 @@ body.wr-tm-control-fullscreen {
     font-size: 1.2em;
     -webkit-font-smoothing: antialiased;
     -webkit-box-sizing: border-box;
+    display: -ms-flex;
+    display: -webkit-flex;
     flex: 1 1 auto;
 }
 #tm-control-close-button {
@@ -724,6 +732,8 @@ body.wr-tm-control-fullscreen {
     padding-left: 4px;
     color: rgb(231, 231, 231);
     border: none;
+    display: -ms-flex;
+    display: -webkit-flex;
     flex: 1 1 auto;
     outline: none;
     cursor: pointer;
