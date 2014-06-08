@@ -37,7 +37,6 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 // Cmd-S
                 if (!alt && !shift && k === 83) {
                     e.preventDefault();
-                    View.toggleSuperfluous(false);
                     window.Wrong.saveFile(window.filePath);
                 }
                 // Shift-Cmd-S 
