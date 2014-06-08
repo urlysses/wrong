@@ -1,5 +1,6 @@
 # Wrong
 writing app.
+![](wrongappscreenshot.png)
 * * *
 Installing Wrong:
 
