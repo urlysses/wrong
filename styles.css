@@ -35,6 +35,8 @@ header img {
     width: 50%;
     display: block;
     margin: 0 auto;
+    background: #dad9db;
+    border-radius: 100px;
 }
 h1 {
     font-weight: 300;
