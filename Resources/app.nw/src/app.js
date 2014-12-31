@@ -925,7 +925,7 @@
                     text: "Update",
                     onclick: function () {
                         delete localStorage.hasIgnoredUpdate;
-                        gui.Shell.openExternal("http://handstrings.github.io/wrong#dl");
+                        gui.Shell.openExternal("http://www.wrongapp.com/#dl");
                     },
                     type: "btn-blue",
                     focus: true
@@ -949,7 +949,7 @@
                         && !localStorage.hasIgnoredUpdate) {
                     var json = $.ajax({
                         dataType: "json",
-                        url: "https://api.github.com/repos/handstrings/wrong/releases",
+                        url: "https://api.github.com/repos/urlysses/wrong/releases",
                         success: function (data) {
                             if (data[0] && data[0].tag_name) {
                                 // Remove starting "v" from tag_name to get version number.

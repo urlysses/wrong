@@ -6,7 +6,7 @@ Installing Wrong:
 
 Download the latest version of Wrong, available here:
 
-https://github.com/handstrings/wrong/releases/latest
+https://github.com/urlysses/wrong/releases/latest
 
 Unzip the file and move it into your Applications folder. That's it.
 * * *
