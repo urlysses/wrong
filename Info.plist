@@ -23,7 +23,7 @@
 			</array>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.handstrings.Wrong</string>
+				<string>com.wrongapp.Wro</string>
 			</array>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
@@ -75,7 +75,7 @@
 	<key>CFBundleIconFile</key>
 	<string>app.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.handstrings.Wrong</string>
+	<string>com.wrongapp.Wrong</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -110,7 +110,7 @@
 			<key>UTTypeDescription</key>
 			<string>Wrong Document</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.handstrings.Wrong</string>
+			<string>com.wrongapp.Wro</string>
 			<key>UTTypeIconFile</key>
 			<string>wro.icns</string>
 			<key>UTTypeTagSpecification</key>
