@@ -858,9 +858,6 @@
                 document.getElementById("wr-minimize-button").onclick = function () {
                     win.minimize();
                 };
-                document.getElementById("wr-maximize-button").onclick = function () {
-                    win.maximize();
-                };
 
                 gui.App.on("open", function (path) {
                     newFile(path);

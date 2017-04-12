@@ -2,3 +2,4 @@ Frameworks
 MacOS
 PkgInfo
 *.swp
+.DS_Store
