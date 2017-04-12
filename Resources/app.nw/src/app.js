@@ -16,7 +16,6 @@
         newFile,
         closeWindow,
         minimizeWindow,
-        maximizeWindow,
         closeTab,
         closeAllTabs,
         constructDefaultPreview,
@@ -269,10 +268,6 @@
                 // You can do stuff here. Not useful for this preview though.
             };
 
-            maximizeWindow = function () {
-                // You can do stuff here. Not useful for this preview though.
-            };
-
             constructDefaultPreview = function () {
                 var homeText = "Hi, this is Wrong. You write in it.\n\nWrong is an app for Mac, but you can try it online too. Here: this one's yours, give it a whirl.\n\nYou can start by clicking the fullscreen button on the top right. Headphones are recommended. Take your time.\n\nWow, well listen to that. We've got a fire going in the background and there are some nice sounds that echo your keystrokes as you type too. (You can exit fullscreen mode at any time by pressing `Esc` or by clicking the fullscreen button at the top right again.)\n\nTo bring up the settings customizer, you can type `⌘-,` (Cmd+Comma). If you're not using a Mac or if `⌘-,` isn't working for you, [hold Alt and click here to open Wrong's preferences](javascript:Wrong.Settings.openSettings(\\)). /*That's how you make links, by the way, [text](http://url). Oh, and this is a comment!*/\n\nNow that you're in the customizer, you can change almost anything about Wrong. There are even different sound options too. Have a look and see if you can select another theme or customize this one to make it your own.\n\nGood? Good.\n\n";
                 homeText += "So what's the point of Wrong? Well, it's a distraction-free writing environment. When you write, you create a mental map of your text, its characters, its plot, &c.. There's no real point in trying to recreate a complex, virtual or physical representation of this mental map while you're writing: that's distracting and distractions are the spilling of metaphysical coffee on such mental maps.\n\nAfter being distracted, you'll have to sit and recreate your mental map or wait for the metaphysical coffee to dry before you can start writing again, regardless of whether or not you spent time making that virtual/physical representation. You could call this refractory period getting in the mood, getting into the zone, acquiring flow, channelling inspiration. Whatever you call it, Wrong helps you reduce the time it takes to get you there.\n\nWrong does away with distractions by making everything about you and your text. You don't need to worry about styles and formatting in Wrong. Just write.\n\n";
@@ -352,9 +347,6 @@
                 };
                 document.getElementById("wr-minimize-button").onclick = function () {
                     minimizeWindow();
-                };
-                document.getElementById("wr-maximize-button").onclick = function () {
-                    maximizeWindow();
                 };
 
                 document.addEventListener("dragover", function (e) {
