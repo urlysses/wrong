@@ -17,7 +17,7 @@ define(["tm"], function (TM) {
     Files.prototype.exists = function (filename, callback) {
         var tabs = this.tabs;
         var isOpen = false;
-        Object.keys(this.tabs).forEach(function (key) {
+        Object.keys(tabs).forEach(function (key) {
             if (key === filename) {
                 // File already exists (is already open)
                 isOpen = true;

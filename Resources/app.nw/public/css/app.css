@@ -5,11 +5,10 @@
 html, body {
     height: 100%;
 }
-body { 
+body {
     padding: 0;
     margin: 0;
     overflow: hidden;
-    background: black;
     display: flex;
     flex-direction: column;
 }
@@ -474,7 +473,6 @@ li#wr-audio-stop span:last-child {
 #wr-window-buttons {
     height: 14px;
     padding-left: 1px;
-    margin-top: 1px;
     min-width: 58px;
     width: 60px;
 }
@@ -879,12 +877,14 @@ body.wr-tm-control-fullscreen {
 }
 
 @media (max-width: 800px) {
-    body { 
+    body {
         background: white;
     }
     html.is-frameless {
         border-radius: 4px;
         background: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
     }
     body.is-frameless {
         border-radius: 4px;

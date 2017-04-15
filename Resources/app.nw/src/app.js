@@ -1,4 +1,4 @@
-/*jslint node: true, browser: true, devel:true, white: false*/
+/*jslint node: true, browser: true, devel:true*/
 /*global PROMPT, $, Audio, Event, tinycolor, requirejs*/
 (function (global) {
     "use strict";
@@ -15,11 +15,9 @@
         Keys,
         Control,
         Settings,
-        Markdown,
         tm,
         tabDragging,
         saveFile,
-        filePath,
         newFile,
         openFileDialog,
         readFile,
@@ -45,7 +43,7 @@
         promptForUpdate,
         programCheckForUpdates;
 
-    global.filePath = filePath;
+    global.filePath = null;
 
     recentFiles = localStorage.recentFiles ? JSON.parse(localStorage.recentFiles) : [];
 
@@ -78,7 +76,7 @@
             recentFiles.splice(index, 1);
         }
 
-        // place element at the top of the array by using unshift instead of 
+        // place element at the top of the array by using unshift instead of
         // push.
         recentFiles.unshift(path);
         localStorage.recentFiles = JSON.stringify(recentFiles);
@@ -104,7 +102,7 @@
     global.Wrong.clip = clip;
     global.Wrong.gui = gui;
     requirejs(["history", "view", "tm", "files", "keys", "control", "settings", "markdown"],
-        function (H, V, T, F, K, C, S, M) {
+        function (H, V, T, F, K, C, S) {
             History = new H();
             View = new V();
             TM = new T();
@@ -112,7 +110,6 @@
             Keys = new K();
             Control = new C();
             Settings = new S();
-            Markdown = new M();
             tm = TM.init();
             global.tm = tm;
             global.Wrong.Keys = Keys;
@@ -124,7 +121,7 @@
             global.Wrong.Control = Control;
 
             saveFile = function (path, callback) {
-                if (path !== undefined && path.indexOf("untitled-") === 0) {
+                if (path && path.indexOf("untitled-") === 0) {
                     // file path begins with "untitled-". We can assume that this
                     // is an undefined file since users wont be saving directly
                     // to the app's root while also saving with the prefix "untitled-".
@@ -133,7 +130,7 @@
                     path = undefined;
                 }
 
-                if (path !== undefined && typeof path !== "function") {
+                if (path && typeof path !== "function") {
                     var data = View.makeUTF8(tm.value);
                     fs.writeFile(path, data, function (err) {
                         if (err) {
@@ -196,8 +193,7 @@
                 var tabsbar = document.getElementById("wr-tabs"),
                     currentTab = document.getElementById("wr-tab-selected"),
                     newTab = document.createElement("li"),
-                    newTabCloseButton = document.createElement("button"),
-                    fileSuccess = true;
+                    newTabCloseButton = document.createElement("button");
 
                 newTab.id = "wr-tab-selected";
                 newTab.innerHTML = "<span>Untitled</span><span></span>";
@@ -213,17 +209,10 @@
                 };
 
                 if (file) {
-                    // The gates of callback hell.
-                    // All hope abandon ye who enter here.
-                    Files.exists(file, function (exists, element, err) {
-                        if (err) {
-                            return false;
-                        }
-
+                    Files.exists(file, function (exists) {
                         if (exists === true) {
                             var el = tabsbar.querySelector("[data-file='" + file + "']");
                             el.dispatchEvent(new Event("click"));
-                            fileSuccess = false;
                         } else {
                             fs.readFile(file, function (err, data) {
                                 if (err) {
@@ -288,15 +277,15 @@
                 newTab.dataset.file = file;
                 // Tab clicking.
                 newTab.onclick = function () {
-                    var file = this.dataset.file,
-                        currentTab = document.getElementById("wr-tab-selected");
-                    if (this !== currentTab) {
-                        currentTab.removeAttribute("id");
-                        Files.tabs[currentTab.dataset.file] = tm.clone();
+                    var nfile = this.dataset.file,
+                        ncurrentTab = document.getElementById("wr-tab-selected");
+                    if (this !== ncurrentTab) {
+                        ncurrentTab.removeAttribute("id");
+                        Files.tabs[ncurrentTab.dataset.file] = tm.clone();
                         this.id = "wr-tab-selected";
-                        global.filePath = file;
-                        tm.upgrade(Files.tabs[file]);
-                        tm = Files.tabs[file];
+                        global.filePath = nfile;
+                        tm.upgrade(Files.tabs[nfile]);
+                        tm = Files.tabs[nfile];
                         tm.update();
                         tm.focus();
                         View.getFileDirty(this);
@@ -304,7 +293,7 @@
                 };
                 // Tab dragging.
                 var dragTimer;
-                newTab.addEventListener("dragstart", function (e) {
+                newTab.addEventListener("dragstart", function () {
                     tabDragging = this;
                     this.classList.add("is-being-dragged");
                 }, false);
@@ -431,12 +420,13 @@
 
             closeAllTabs = function () {
                 var i,
+                    tab,
                     allFilesClean = true,
                     tabsbar = document.getElementById("wr-tabs"),
                     tabslen = tabsbar.children.length;
                 if (tabslen > 1) {
                     for (i = 0; i < tabslen; i++) {
-                        var tab = tabsbar.children[i];
+                        tab = tabsbar.children[i];
                         if (tab && tab.children[1].textContent !== "") {
                             allFilesClean = false;
                         }
@@ -491,7 +481,8 @@
                 * Delete: \u232B
                 **/
 
-                menubar = new gui.Menu({type: "menubar"});
+                menubar = new window.nw.Menu({type: "menubar"});
+                menubar.createMacBuiltin("Wrong");
                 win.menu = menubar;
 
                 /* MENUS */
@@ -499,14 +490,18 @@
                 filemenu = new gui.Menu();
 
                 filemenu.append(new gui.MenuItem({
-                    label: "New  (\u2318N)",
+                    label: "New",
+                    key: "N",
+                    modifiers: "command",
                     click: function () {
                         newFile();
                     }
                 }));
 
                 filemenu.append(new gui.MenuItem({
-                    label: "Open...  (\u2318O)",
+                    label: "Open...",
+                    key: "O",
+                    modifiers: "command",
                     click: function () {
                         openFileDialog();
                     }
@@ -521,7 +516,7 @@
 
                 if (hasRecentFiles() === true) {
                     /* iterate through recentFiles. */
-                    recentFiles.forEach(function (element, index, array) {
+                    recentFiles.forEach(function (element) {
                         openmenu.append(new gui.MenuItem({
                             label: element,
                             click: function () {
@@ -550,23 +545,20 @@
                 }));
 
                 filemenu.append(new gui.MenuItem({
-                    label: "Save  (\u2318S)",
+                    label: "Save",
+                    key: "S",
+                    modifiers: "command",
                     click: function () {
                         saveFile(global.filePath);
                     }
                 }));
 
                 filemenu.append(new gui.MenuItem({
-                    label: "Save As...  (\u21E7\u2318S)",
+                    label: "Save As...",
+                    key: "S",
+                    modifiers: "command+shift",
                     click: function () {
                         saveFile();
-                    }
-                }));
-
-                filemenu.append(new gui.MenuItem({
-                    label: "Close  (\u2318W)",
-                    click: function () {
-                        win.close();
                     }
                 }));
 
@@ -574,6 +566,8 @@
                 editmenu = new gui.Menu();
                 editmenu.append(new gui.MenuItem({
                     label: "Undo",
+                    key: "U",
+                    modifiers: "command",
                     click: function () {
                         global.tm.history.undo(global.tm);
                         if ((!global.tm.hasSaved && !global.tm.history.canUndo(global.tm))
@@ -587,6 +581,8 @@
                 }));
                 editmenu.append(new gui.MenuItem({
                     label: "Redo",
+                    key: "U",
+                    modifiers: "command+shift",
                     click: function () {
                         global.tm.history.redo(global.tm);
                         if (global.tm.hasSaved
@@ -602,27 +598,33 @@
                 }));
                 editmenu.append(new gui.MenuItem({
                     label: "Cut",
+                    key: "X",
+                    modifiers: "command",
                     click: function () {
-                        var T = global.tm;
-                        var selection = T.value.substring(T.selectionStart, T.selectionEnd);
+                        var TT = global.tm;
+                        var selection = TT.value.substring(TT.selectionStart, TT.selectionEnd);
                         clip.set(selection);
                         // replace selection with ""
-                        T.insertText("");
+                        TT.insertText("");
                     }
                 }));
                 editmenu.append(new gui.MenuItem({
                     label: "Copy",
+                    key: "C",
+                    modifiers: "command",
                     click: function () {
-                        var T = global.tm;
-                        clip.set(T.value.substring(T.selectionStart, T.selectionEnd));
+                        var TT = global.tm;
+                        clip.set(TT.value.substring(TT.selectionStart, TT.selectionEnd));
                     }
                 }));
                 editmenu.append(new gui.MenuItem({
                     label: "Paste",
+                    key: "V",
+                    modifiers: "command",
                     click: function () {
-                        var T = global.tm;
+                        var TT = global.tm;
                         var e = new Event("paste");
-                        T.doc.dispatchEvent(e);
+                        TT.doc.dispatchEvent(e);
                     }
                 }));
                 editmenu.append(new gui.MenuItem({
@@ -636,6 +638,8 @@
                 }));
                 editmenu.append(new gui.MenuItem({
                     label: "Select All",
+                    key: "A",
+                    modifiers: "command",
                     click: function () {
                         global.tm.select();
                     }
@@ -645,35 +649,45 @@
                 // (Menus) Find >
                 findmenu = new gui.Menu();
                 findmenu.append(new gui.MenuItem({
-                    label: "Find  (\u2318F)",
+                    label: "Find",
+                    key: "F",
+                    modifiers: "command",
                     click: function () {
                         Control.find(Keys, Files, View, tm);
                     }
                 }));
 
                 findmenu.append(new gui.MenuItem({
-                    label: "Find Next  (\u2318G)",
+                    label: "Find Next",
+                    key: "G",
+                    modifiers: "command",
                     click: function () {
                         Control.findNext(tm);
                     }
                 }));
 
                 findmenu.append(new gui.MenuItem({
-                    label: "Find Previous  (\u21E7\u2318G)",
+                    label: "Find Previous",
+                    key: "G",
+                    modifiers: "command+shift",
                     click: function () {
                         Control.findPrev(tm);
                     }
                 }));
 
                 findmenu.append(new gui.MenuItem({
-                    label: "Find & Replace  (\u2325\u2318F)",
+                    label: "Find & Replace",
+                    key: "F",
+                    modifiers: "command+shift",
                     click: function () {
                         Control.replace(Keys, Files, View, tm);
                     }
                 }));
 
                 findmenu.append(new gui.MenuItem({
-                    label: "Replace All  (\u21E7\u2325\u2318F)",
+                    label: "Replace All",
+                    key: "F",
+                    modifiers: "command+shift+alt",
                     click: function () {
                         Control.replaceAll(Keys, Files, View, tm);
                     }
@@ -683,7 +697,9 @@
                 viewmenu = new gui.Menu();
 
                 viewmenu.append(new gui.MenuItem({
-                    label: "Toggle Full Screen  (\u2318\u21A9 or \u21E7\u2318F)",
+                    label: "Toggle Full Screen",
+                    key: "\u21A9",
+                    modifiers: "command",
                     click: function () {
                         View.toggleFullscreen();
                     }
@@ -695,7 +711,7 @@
 
                 thememenu = new gui.Menu();
 
-                Settings.theme.presets.forEach(function (skin, index) {
+                Settings.theme.presets.forEach(function (skin) {
                     var defaultTheme = Settings.getDefaultTheme(),
                         iteminfo;
                     iteminfo = {
@@ -748,6 +764,8 @@
 
                 viewmenu.append(new gui.MenuItem({
                     label: "Settings",
+                    key: ",",
+                    modifiers: "command",
                     click: function () {
                         Settings.openSettings();
                     }
@@ -758,14 +776,18 @@
                 }));
 
                 viewmenu.append(new gui.MenuItem({
-                    label: "Go to Next Tab (\u2325\u2318\u2192)",
+                    label: "Go to Next Tab",
+                    key: String.fromCharCode(29),
+                    modifiers: "command+alt",
                     click: function () {
                         View.goToNextTab(Files);
                     }
                 }));
 
                 viewmenu.append(new gui.MenuItem({
-                    label: "Go to Previous Tab (\u2325\u2318\u2190)",
+                    label: "Go to Previous Tab",
+                    key: String.fromCharCode(28),
+                    modifiers: "command+alt",
                     click: function () {
                         View.goToPrevTab(Files);
                     }
@@ -785,7 +807,7 @@
                 win.menu.insert(new gui.MenuItem({
                     label: "Find",
                     submenu: findmenu
-                }), 3);
+                }), 4);
                 /* END MENUS */
             };
 
@@ -808,15 +830,20 @@
                 tm.focus();
 
                 // Window & Document Events.
+                var wasFullscreen = false;
                 win.on("enter-fullscreen", function () {
                     window.setTimeout(View.toggleTitlebar, 1000);
                     View.toggleAudio();
+                    wasFullscreen = true;
                 });
 
-                win.on("leave-fullscreen", function () {
-                    View.toggleAudio();
-                    View.toggleTitlebar();
-                    View.toggleSuperfluous(false, true);
+                win.on("restore", function () {
+                    if (wasFullscreen) {
+                        wasFullscreen = false;
+                        View.toggleAudio();
+                        View.toggleTitlebar();
+                        View.toggleSuperfluous(false, true);
+                    }
                 });
 
                 win.on("focus", function () {
@@ -890,20 +917,20 @@
                         var P = new PROMPT.init("Notice", "Close file without saving?");
                         P.addBtn({
                             text: "Save",
-                            onclick: function (e) {
+                            onclick: function () {
                                 saveAndClose();
                             },
                             type: "btn-blue",
                             focus: true
                         }).addBtn({
                             text: "Cancel",
-                            onclick: function (e) {
+                            onclick: function () {
                                 tm.focus();
                                 return false;
                             }
                         }).addBtn({
                             text: "Don't Save",
-                            onclick: function (e) {
+                            onclick: function () {
                                 closeTab();
                             },
                             type: "btn-red"
@@ -944,7 +971,7 @@
                 if ((!localStorage.lastUpdateCheck
                         || parseInt(localStorage.lastUpdateCheck, 10) + ADAY < timeNow)
                         && !localStorage.hasIgnoredUpdate) {
-                    var json = $.ajax({
+                    $.ajax({
                         dataType: "json",
                         url: "https://api.github.com/repos/urlysses/wrong/releases",
                         success: function (data) {

@@ -1,15 +1,17 @@
 {
-  "name": "Wrong",
-  "description": "Writing app",
-  "version": "0.19.0",
-  "window": {
-    "min_width": 400,
-    "min_height": 200,
-    "width": 717,
-    "height": 419,
-    "show": false,
-    "frame": false,
-    "toolbar": false
-  },
-  "main": "index.html"
+    "name": "Wrong",
+    "app-name": "Wrong",
+    "description": "Writing app",
+    "version": "0.19.0",
+    "window": {
+        "min_width": 400,
+        "min_height": 200,
+        "max_width": 799,
+        "width": 717,
+        "height": 419,
+        "show": false,
+        "frame": false,
+        "transparent": true
+    },
+    "main": "index.html"
 }

@@ -1,0 +1,5 @@
+CFBundleDisplayName = "Wrong";
+CFBundleGetInfoString = "Wrong 0.20.0. A writing app.";
+CFBundleName = "Wrong";
+NSContactsUsageDescription = "";
+NSHumanReadableCopyright = "";

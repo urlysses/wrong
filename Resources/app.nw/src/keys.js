@@ -5,6 +5,7 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
     Control = new Control();
     Settings = new Settings();
     function Keys() {
+        return this;
     }
     Keys.prototype.bindEditorShortcuts = function (el, Files) {
         var Key = this;
@@ -17,8 +18,8 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                 var tm = window.tm;
                 // All shortcuts here include "cmd" so no need to check for it.
                 /* Dev shortcuts */
-                // Cmd-Alt-J
-                if (alt && !shift && k === 74) {
+                // Cmd-Alt-I
+                if (alt && !shift && k === 73) {
                     if (window.Wrong.win) {
                         window.Wrong.win.showDevTools();
                     }
@@ -39,7 +40,7 @@ define(["view", "control", "settings", "files"], function (View, Control, Settin
                     e.preventDefault();
                     window.Wrong.saveFile(window.filePath);
                 }
-                // Shift-Cmd-S 
+                // Shift-Cmd-S
                 if (!alt && shift && k === 83) {
                     e.preventDefault();
                     View.toggleSuperfluous(false);
