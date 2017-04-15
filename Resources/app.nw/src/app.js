@@ -209,6 +209,7 @@
                 };
 
                 if (file) {
+                    file = file.indexOf("file://") === 0 ? file.replace("file://", "") : file;
                     Files.exists(file, function (exists) {
                         if (exists === true) {
                             var el = tabsbar.querySelector("[data-file='" + file + "']");
@@ -814,7 +815,7 @@
             completeInit = function (path) {
                 buildAppMenu();
                 var defaultTheme, themeSelector;
-                if (path === undefined) {
+                if (!path) {
                     newFile();
                 }
                 win.show();
@@ -890,6 +891,7 @@
                     newFile(path);
                     return false;
                 });
+
                 document.addEventListener("dragover", function (e) {
                     e.stopPropagation();
                     e.preventDefault();
@@ -1009,6 +1011,7 @@
             if (argv.length !== 0) {
                 delete localStorage.filePath;
                 argv.forEach(function (file, index) {
+                    file = file.indexOf("file://") === 0 ? file.replace("file://", "") : file;
                     fs.exists(file, function (exists) {
                         if (exists) {
                             if (index === 0) {
@@ -1032,6 +1035,7 @@
 
             View.audio.src = audiosrc;
             View.toggleAudio();
+
 
             if (localStorage.filePath) {
                 lsfp = localStorage.filePath;
